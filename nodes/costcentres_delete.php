@@ -1,0 +1,1 @@
+<h1>Deleting cost centres isn't currently supported.  Please contact the site Administrator</h1>

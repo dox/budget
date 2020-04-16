@@ -1,0 +1,127 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing:border-box
+}
+
+body {
+    color:#758193;
+    background:#f8f9fb;
+    font-family: Muli;
+    font-weight:400
+}
+
+body h1, h2 {
+    color:#000
+}
+
+h1, h2 {
+    font-weight:600
+}
+
+h2 {
+    font-size:1.25em
+}
+
+h3 {
+    font-size:1em
+}
+
+a {
+    text-decoration: none;
+    color:#179bd1
+}
+
+.row {
+    display:flex
+}
+
+.row.row--right {
+    justify-content:flex-end
+}
+
+.row.row--gutter {
+    margin-left: -20px;
+    margin-right:-20px
+}
+
+.row.row--gutter > .row__column {
+    padding-left: 20px;
+    padding-right:20px
+}
+
+.row .row__column {
+    flex:1
+}
+
+.row .row__column.row__column--compact {
+    flex:none
+}
+
+.row .row__column.row__column--double {
+    flex:2
+}
+
+.row .row__column.row__column--triple {
+    flex:3
+}
+
+.row .row__column.row__column--middle {
+    align-self:center
+}
+
+@media screen and (max-width: 900px) {
+    .row.row--responsive {
+        flex-direction:column
+    }
+
+    .row.row--responsive > .row__column {
+        margin-top:20px
+    }
+
+    .row.row--responsive > .row__column:first-child {
+        margin-top:0
+    }
+}
+
+
+.navbar {
+    border-bottom:1px solid #e4e8eb;
+    display: flex;
+    align-items: center;
+    height:70px
+}
+
+
+
+.card {
+    padding: 20px;
+    border-radius:5px
+}
+
+.card.card--blue {
+    border-top:2px solid #179bd1
+}
+
+.card.card--green {
+    border-top:2px solid #7fcd69
+}
+
+.card.card--red {
+    border-top:2px solid #f77b7c
+}
+
+
+
+
+.color-blue {
+    color:#179bd1
+}
+
+.color-green {
+    color:#7fcd69
+}
+
+.color-red {
+    color:#f77b7c
+}
