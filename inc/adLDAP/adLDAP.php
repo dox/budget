@@ -84,7 +84,7 @@ class adLDAP {
     * 
     * @var string
     */   
-	protected $accountSuffix = "@seh.ox.ac.uk";
+	protected $accountSuffix = LDAP_ACCOUNT_SUFFIX;
     
     /**
     * The base dn for your domain
@@ -93,7 +93,7 @@ class adLDAP {
     * 
     * @var string
     */
-	protected $baseDn = "DC=seh,DC=ox,DC=ac,DC=uk"; 
+	protected $baseDn = LDAP_BASE_DN; 
     
     /** 
     * Port used to talk to the domain controllers. 
@@ -108,7 +108,7 @@ class adLDAP {
     * 
     * @var array
     */
-    protected $domainControllers = array("163.1.215.216");
+    protected $domainControllers = array(LDAP_SERVER);
 	
     /**
     * Optional account with higher privileges for searching
