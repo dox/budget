@@ -9,7 +9,7 @@ foreach ($ordersThisMonth AS $order) {
 $totalSpend = array_sum($ordersTotalArray);
 ?>
 
-<h2>Dashboard <small class="text-muted">April, 2020</small></h2>
+<h2>Dashboard <small class="text-muted"><?php echo date('F, Y'); ?></small></h2>
 
 <br />
 <div class="container">
