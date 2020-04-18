@@ -53,7 +53,7 @@ $cost_centre_class = new class_cost_centres;
 $cost_centre = $cost_centre_class->getOne($order['cost_centre']);
 ?>
 <h1 class="text-right">Purchase Order</h1>
-<h2 class="text-right">Date: <?php echo $order['date']; ?></h2>
+<h2 class="text-right">Date: <?php echo date('Y-m-d H:i', strtotime($order['date'])); ?></h2>
 <h2 class="text-right">PO: <?php echo $order['po']; ?></h2>
 <h2 class="text-right">Supplier Order #: <?php echo $order['order_num']; ?></h2>
 <h2 class="text-right">Cost Centre: <?php echo $cost_centre['code'] . " - " . $cost_centre['name']; ?></h2>

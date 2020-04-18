@@ -23,7 +23,7 @@ $suppliersArray = array_unique($suppliersArray);
 			<div class="col-sm">
 				<div class="form-group">
 					<label for="date">Date</label>
-					<input type="text" class="form-control" id="date" name="date" placeholder="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d'); ?>">
+					<input type="text" class="form-control" id="date" name="date" placeholder="<?php echo date('Y-m-d H:i'); ?>" value="<?php echo date('Y-m-d H:i'); ?>">
 				</div>
 			</div>
 			<div class="col-sm">
