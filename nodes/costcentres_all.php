@@ -55,7 +55,7 @@ $cost_centres = $cost_centre_class->all();
 					// if the budget is spent, make it red
 					// if the budget is less than the current percentage way through the year, make it yellow
 					// otherwise, make it blue
-					if ($remainingValuePercentage == 0) {
+					if ($remainingValuePercentage <= 0) {
 						if ($remainingValue < 0) {
 							$progressBarClass = "bg-danger";
 						} else {
