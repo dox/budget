@@ -63,7 +63,7 @@ $cost_centres = $cost_centre_class->all();
 						}
 						$remainingValuePercentage = 100;
 						
-					} elseif ($remainingValuePercentage < percentageIntoBudget()) {
+					} elseif ($remainingValuePercentage < (100-percentageIntoBudget())) {
 						$progressBarClass = "bg-warning";
 					} else {
 						$progressBarClass = "bg-info";
