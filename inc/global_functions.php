@@ -32,7 +32,7 @@ function toast($title = null, $message = null) {
 		$message = "UNKNOWN";
 	}
 	
-	$output  = "<div class=\"toast\" role=\"alert\" aria-live=\"assertive\" aria-atomic=\"true\">";
+	$output  = "<div class=\"toast\" role=\"alert\" aria-live=\"assertive\" aria-atomic=\"true\" data-delay=\"5000\">";
 		$output .= "<div class=\"toast-header\">";
 			$output .= "<i class=\"far fa-bell\"></i>";
 			$output .= "<strong class=\"mr-auto\">" . $title . "</strong>";
