@@ -2,10 +2,10 @@
 session_start();
 
 require_once('inc/config.php');
+require_once('inc/global_functions.php');
 require_once('database/MysqliDb.php');
 require_once('inc/adLDAP/adLDAP.php');
 require_once('inc/logs.php');
-require_once('inc/navbar_messages.php');
 require_once('inc/departments.php');
 require_once('inc/cost_centres.php');
 require_once('inc/orders.php');
