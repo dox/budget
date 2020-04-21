@@ -10,6 +10,7 @@ require_once('inc/departments.php');
 require_once('inc/cost_centres.php');
 require_once('inc/orders.php');
 require_once('inc/users.php');
+require_once('inc/suppliers.php');
 
 $db = new MysqliDb ($db_host, $db_username, $db_password, $db_name);
 
@@ -19,15 +20,17 @@ if (isset($_GET['logout'])) {
 	$_SESSION = array();
 	session_destroy();
 	
-	$navBarMessagesClass = new class_navbar_messages;
-	$navBarMessage = $navBarMessagesClass->create("1","success","You have been logged out","0");	
+	$title = "Log Out complete";
+	$message = "You have been logged out";
+	echo toast($title, $message);	
 }
 
 if (isset($_GET['changedepartment'])) {
 	$log->insert("logon", "Temporary department change (" . $_SESSION['department'] . "->" . $_GET['changedepartment'] . ") successful for " . $_SESSION['username']);
 	
-	$navBarMessagesClass = new class_navbar_messages;
-	$navBarMessage = $navBarMessagesClass->create("1","warning","You have temporarily changed departments","0");	
+	$title = "Temporary Department Change";
+	$message = "You have temporarily changed departments";
+	echo toast($title, $message);
 	
 	$_SESSION['department'] = $_GET['changedepartment'];
 }
@@ -56,9 +59,6 @@ if (isset($_POST["loginformsubmit"])) { //prevent null bind
 			$user = $users_class->getOne($username);
 			
 			if ($user) {
-				$navBarMessagesClass = new class_navbar_messages;
-				$navBarMessage = $navBarMessagesClass->create("1","success","You have logged on","0");
-				
 				$_SESSION["username"] = $username;
 				$_SESSION["department"] = $user['department'];
 				$_SESSION["localUID"] = $user['uid'];
@@ -69,8 +69,9 @@ if (isset($_POST["loginformsubmit"])) { //prevent null bind
 				header($redir);
 			} else {
 				$log->insert("logon", "LDAP Logon successful for " . $_SESSION['username'] . " but resource access denied");
-				$navBarMessagesClass = new class_navbar_messages;
-				$navBarMessage = $navBarMessagesClass->create("1","error","You do not have access to this resource","0");
+				$title = "Access Denied";
+				$message = "You do not have access to this resource (although your username/password was correct";
+				echo toast($title, $message);
 				
 				$redir = "Location: http://budget.seh.ox.ac.uk/index.php?n=login";
 				header($redir);
@@ -81,8 +82,9 @@ if (isset($_POST["loginformsubmit"])) { //prevent null bind
 		} else {
 			$log->insert("logon", "Logon failed for " . $_POST['username']);
 			
-			$navBarMessagesClass = new class_navbar_messages;
-			$navBarMessage = $navBarMessagesClass->create("1","error","Incorrect username/password","0");
+			$title = "Access Denied";
+			$message = "Incorrect username/password supplied";
+			echo toast($title, $message);
 		}
 	}
 	
