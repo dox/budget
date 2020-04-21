@@ -1,9 +1,31 @@
 <?php
 $orders_class = new class_orders;
-$orders = $orders_class->all();		
+$orders = $orders_class->all();
+
+$suppliers_class = new class_suppliers;
+
+if (isset($_POST['name'])) {
+	$data = Array (
+		"name" => $_POST['name'],
+		"account_number" => $_POST['account_number'],
+		"address" => $_POST['address'],
+		"telephone" => $_POST['telephone'],
+		"mobile" => $_POST['mobile'],
+		"email" => $_POST['email'],
+		"website" => $_POST['website']
+	);
+	
+	$suppliers_class->update($_POST['name'], $data);
+	
+	$title = "Supplier Updated";
+	$message = "Supplier '" . $_POST['name'] . "' updated";
+	echo toast($title, $message);
+}
+
+$supplier = $suppliers_class->getOne($_GET['name']);
 ?>
 
-<h2>Orders from Supplier: <?php echo $_GET['name'];?></h2>
+<h2>Orders from Supplier: <a href="index.php?n=suppliers_edit&name=<?php echo $_GET['name'];?>"><?php echo $_GET['name'];?></a></h2>
 
 <table class="table bg-white">
 	<thead>

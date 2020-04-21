@@ -47,6 +47,9 @@ if (isset($_POST['po'])) {
 
 $order = $orders_class->getOne($_GET['uid']);
 
+$suppliers_class = new class_suppliers;
+$supplier = $suppliers_class->getOne($order['supplier']);
+
 $users_class = new class_users;
 $user = $users_class->getOne($order['username']);
 
@@ -77,7 +80,31 @@ echo $output;
 </p>
 
 <h2>Supplier: </h2>
-<h3><?php echo $order['supplier']; ?></h3>
+<?php
+if (isset ($supplier)) {
+	$output  = "<h3>" . $supplier['name'] . "</h3>";
+	$output .= "<h3>" . str_replace("\n", "<br />", $supplier['address'])  . "</h3>";
+	
+	if (!empty($supplier['account_number'])) {
+		$output .= "<h3>Account #: " . $supplier['account_number'] . "</h3>";
+	}
+	if (!empty($supplier['telephone'])) {
+		$output .= "<h3>Telephone: " . $supplier['telephone'] . "</h3>";
+	}
+	if (!empty($supplier['email'])) {
+		$output .= "<h3><a href=\"mailto:" . $supplier['email'] . "\">" . $supplier['email'] . "</a></h3>";
+	}
+	if (!empty($supplier['website'])) {
+		$output .= "<h3><a href=\"" . $supplier['website'] . "\">" . $supplier['website'] . "</a></h3>";
+	}
+} else {
+	$output  = "<h3>" . $order['supplier'] . "</h3>";
+}
+
+echo $output;
+?>
+
+
 
 
 <table class="table bg-white">
