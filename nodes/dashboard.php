@@ -11,6 +11,7 @@ $totalSpend = array_sum($ordersTotalArray);
 
 <h2>Dashboard <small class="text-muted"><?php echo date('F, Y'); ?></small></h2>
 
+<canvas id="myChart" width="400" height="100"></canvas>
 <br />
 <div class="container">
 	<div class="row">
@@ -84,9 +85,7 @@ $totalSpend = array_sum($ordersTotalArray);
 	} while ($i < 12);
 	$totalOrdersByMonthArray = array_reverse($totalOrdersByMonthArray);
 ?>
-	
-	
-<canvas id="myChart" width="400" height="200"></canvas>
+
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
