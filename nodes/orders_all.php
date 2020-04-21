@@ -15,8 +15,9 @@ if (isset($_POST['po'])) {
 	
 	$orders_class->insert($data);
 	
-	$navBarMessagesClass = new class_navbar_messages;
-	$navBarMessage = $navBarMessagesClass->create("1","success","New order '" . $_POST['name'] . "' created","0");
+	$title = "Order Created";
+	$message = "New order '" . $_POST['name'] . "' created";
+	echo toast($title, $message);
 }
 
 $orders = $orders_class->all();	

@@ -16,8 +16,9 @@ if (isset($_POST['code'])) {
 	
 	$cost_centre_class->insert($data);
 	
-	$navBarMessagesClass = new class_navbar_messages;
-	$navBarMessage = $navBarMessagesClass->create("1","success","New cost centre '" . $_POST['name'] . "' created","0");
+	$title = "Cost Centre Created";
+	$message = "New cost centre '" . $_POST['name'] . "' created";
+	echo toast($title, $message);
 }
 
 $cost_centres = $cost_centre_class->all();	

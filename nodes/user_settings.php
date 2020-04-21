@@ -6,23 +6,6 @@ $departments_class = new class_departments;
 $departments = $departments_class->all();
 ?>
 
-
-<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
-  <div class="toast-header">
-    <i class="far fa-bell"></i>
-    <strong class="mr-auto">Message Test</strong>
-    <small>11 mins ago</small>
-    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="toast-body">
-    Hello, world! This is a test message.
-  </div>
-</div>
-
-
-
 <h2><i class="fas fa-lock fa-sm"></i> User Settings <small class="text-muted"><?php echo $_SESSION['username'];?></small></h2>
 <form>
 	<div class="form-group">

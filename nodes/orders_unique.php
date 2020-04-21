@@ -40,8 +40,9 @@ if (isset($_POST['po'])) {
 	$log = new class_logs;
 	$log->insert("update", $db->getLastQuery());
 	
-	$navBarMessagesClass = new class_navbar_messages;
-	$navBarMessage = $navBarMessagesClass->create("1","success","Order '" . $_GET['uid'] . "' updated","0");
+	$title = "Order Updated";
+	$message = "rder '" . $_GET['uid'] . "' updated";
+	echo toast($title, $message);
 }
 
 $order = $orders_class->getOne($_GET['uid']);
