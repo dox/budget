@@ -17,6 +17,8 @@ function generateRandomString($length = 10) {
 ?>
 
 <h2>Logs</h2>
+	
+<canvas id="canvas" width="400" height="100"></canvas>
 
 <table class="table bg-white">
 	<thead>
@@ -78,3 +80,70 @@ function generateRandomString($length = 10) {
 	user-select: none;
 }
 </style>
+
+<?php
+$sql = "SELECT DATE(date) AS date, count(*) AS logsTotal
+		FROM logs
+		GROUP BY DATE(date)
+		ORDER BY DATE(date) DESC;";
+$logsTotal = $db->rawQuery($sql);
+
+foreach ($logsTotal AS $log) {
+	$logsArray["'" . $log['date'] . "'"] = "'" . $log['logsTotal'] . "'";
+}
+?>
+
+<script>
+	var timeFormat = 'YYYY/MM/DD';
+	
+	var config = {
+		type: 'line',
+		data: {
+			labels: [<?php echo implode(", ", array_keys($logsArray));?>],
+			datasets: [{
+				label: 'Logs',
+				data: [<?php echo implode(",", $logsArray); ?>],
+			}]
+		},
+		options: {
+			title: {
+				text: 'Logs'
+			},
+			elements: {
+				line: {
+					tension: 0
+				}
+			},
+			legend: {
+				display: false
+			},
+			scales: {
+				xAxes: [{
+					type: 'time',
+					time: {
+						parser: timeFormat,
+						// round: 'day'
+						tooltipFormat: 'll'
+					},
+					scaleLabel: {
+						display: false
+					}
+				}],
+				yAxes: [{
+					ticks: {
+						suggestedMin: 0
+					},
+					scaleLabel: {
+						display: false,
+						labelString: 'Total Logs'
+					}
+				}]
+			},
+		}
+	};
+	
+	window.onload = function() {
+		var ctx = document.getElementById('canvas').getContext('2d');
+		window.myLine = new Chart(ctx, config);
+	};
+</script>
