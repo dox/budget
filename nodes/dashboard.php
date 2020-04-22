@@ -7,7 +7,11 @@ $outstandingPayments = 0;
 foreach ($ordersThisMonth AS $order) {
 
 	if (date('Y-m',strtotime($order['date'])) == date('Y-m')) {
-		$monthlyOrdersTotalArray[$order['cost_centre']] = $order['cost_centre'] + $order['value'];
+		if (isset($monthlyOrdersTotalArray[$order['cost_centre']])) {
+			$monthlyOrdersTotalArray[$order['cost_centre']] = $monthlyOrdersTotalArray[$order['cost_centre']] + $order['value'];
+		} else {
+			$monthlyOrdersTotalArray[$order['cost_centre']] = $order['value'];
+		}
 		$YTDTotalSpend = $YTDTotalSpend + $order['value'];
 	} else {
 		$YTDTotalSpend = $YTDTotalSpend + $order['value'];
@@ -52,6 +56,7 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 <table class="table bg-white">
 	<thead>
 		<tr>
+			<th scope="col"></th>
 			<th scope="col">Cost Centre</th>
 			<th scope="col">Value</th>
 		</tr>
@@ -63,8 +68,9 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 			$cost_centre = $cost_centre_class->getOne($ordersTotal);
 			
 			$output  = "<tr>";
-			$output .= "<td>" . "<i class=\"fas fa-coins\" style=\"color: " . $cost_centre['colour'] . ";\"></i> " . $cost_centre['code'] . " (" . $cost_centre['name'] .")</td>";
-			$output .= "<th>£" . number_format($value) . "</th>";
+			$output .= "<td scope=\"row\" style=\"width: 50px;\"><div style=\"width: 15px; height: 15px; border-radius: 2px; background: " . $cost_centre['colour'] . ";\"></div></td>";
+			$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</td>";
+			$output .= "<td>£" . number_format($value) . "</td>";
 			
 			$output .= "</tr>";
 			
