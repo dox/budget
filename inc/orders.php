@@ -67,7 +67,7 @@ public function all($previousDays = null, $costCentre = null) {
 				$sql .= " AND orders.cost_centre = '" . $costCentre . "' ";
 			}
 	$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
-			ORDER BY orders.date DESC;";
+			ORDER BY orders.date DESC, orders.po DESC;";
 	$orders = $db->rawQuery($sql);
 	
 	return $orders;
@@ -97,7 +97,7 @@ public function allByMonth($date = null) {
 			AND YEAR(orders.date) = '" . date('Y',strtotime($date)) . "' 
 			AND MONTH(orders.date) = '" . date('m',strtotime($date)) . "' 
 			AND cost_centres.department = '" . $_SESSION['department'] . "' 
-			ORDER BY orders.date DESC;";
+			ORDER BY orders.date DESC, orders.po DESC;";
 	$orders = $db->rawQuery($sql);
 	
 	return $orders;
