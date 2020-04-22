@@ -10,6 +10,24 @@ public function all() {
 	return $meters;
 }
 
+public function purge($daysToKeep = 365) {
+	global $db;
+	
+	$lastPurge = $db->where("type", "purge");
+	$lastPurge = $db->where("DATE(date)", date('Y-m-d'));
+	$lastPurge = $db->getOne("logs");
+	
+	if (empty($lastPurge)) {
+		$db->where("UNIX_TIMESTAMP(date) < " . strtotime('-' . $daysToKeep . ' days'));
+		$db->delete('logs');
+		
+		$log = new class_logs;
+		$log->insert("purge", $db->getLastQuery());
+	} else {
+		// logs already purged today
+	}
+}
+
 public function insert($type = null, $description = null) {
 	global $db;
 	

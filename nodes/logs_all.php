@@ -1,5 +1,6 @@
 <?php
 $logs_class = new class_logs;
+$logs_class->purge();	
 $logs = $logs_class->all();	
 
 $user_class = new class_users;
