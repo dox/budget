@@ -1,12 +1,24 @@
 <?php
 $orders_class = new class_orders;
-$ordersThisMonth = $orders_class->allByMonth(date('Y-m-d'));
+$ordersThisMonth = $orders_class->all();
 
+$YTDTotalSpend = 0;
+$outstandingPayments = 0;
 foreach ($ordersThisMonth AS $order) {
-	$ordersTotalArray[$order['cost_centre']] = $order['cost_centre'] + $order['value'];
+
+	if (date('Y-m',strtotime($order['date'])) == date('Y-m')) {
+		$monthlyOrdersTotalArray[$order['cost_centre']] = $order['cost_centre'] + $order['value'];
+		$YTDTotalSpend = $YTDTotalSpend + $order['value'];
+	} else {
+		$YTDTotalSpend = $YTDTotalSpend + $order['value'];
+	}
+	
+	if (empty($order['paid'])) {
+		$outstandingPayments = $outstandingPayments + $order['value'];
+	}
 }
 
-$totalSpend = array_sum($ordersTotalArray);
+$totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 ?>
 
 <h2>Dashboard <small class="text-muted"><?php echo date('F, Y'); ?></small></h2>
@@ -17,20 +29,20 @@ $totalSpend = array_sum($ordersTotalArray);
 	<div class="row">
 		<div class="col-sm">
 			<div class="card card--blue">
-				<h2 style="font-size: 20px;">&pound; <?php echo number_format($totalSpend);?></h2>
-			<div class="mt-1" style="color: #A7AEBB;">Outgoings</div>
+				<h2 style="font-size: 20px;">&pound; <?php echo number_format($totalSpendMonthly);?></h2>
+			<div class="mt-1" style="color: #A7AEBB;">Outgoings This Month</div>
 		</div>
 		</div>
 		<div class="col-sm">
 			<div class="card card--red">
-				<h2 style="font-size: 20px;">&pound; 0.00</h2>
-				<div class="mt-1" style="color: #A7AEBB;">Other</div>
+				<h2 style="font-size: 20px;">&pound; <?php echo number_format($YTDTotalSpend);?></h2>
+				<div class="mt-1" style="color: #A7AEBB;">Outgoings This Budget Year</div>
 			</div>
 		</div>
 		<div class="col-sm">
 			<div class="card card--green">
-				<h2 style="font-size: 20px;">&pound; 0.00</h2>
-				<div class="mt-1" style="color: #A7AEBB;">Incomings</div>
+				<h2 style="font-size: 20px;">&pound; <?php echo number_format($outstandingPayments);?></h2>
+				<div class="mt-1" style="color: #A7AEBB;">Unpaid Orders</div>
 			</div>
 		</div>
 	</div>
@@ -46,7 +58,7 @@ $totalSpend = array_sum($ordersTotalArray);
 	</thead>
 	<tbody>
 		<?php
-		foreach ($ordersTotalArray AS $ordersTotal => $value) {
+		foreach ($monthlyOrdersTotalArray AS $ordersTotal => $value) {
 			$cost_centre_class = new class_cost_centres;
 			$cost_centre = $cost_centre_class->getOne($ordersTotal);
 			
