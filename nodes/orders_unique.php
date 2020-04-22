@@ -41,7 +41,7 @@ if (isset($_POST['po'])) {
 	$log->insert("update", $db->getLastQuery());
 	
 	$title = "Order Updated";
-	$message = "rder '" . $_GET['uid'] . "' updated";
+	$message = "Order '" . $_GET['uid'] . "' updated";
 	echo toast($title, $message);
 }
 
