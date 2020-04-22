@@ -37,9 +37,6 @@ if (isset($_POST['po'])) {
 	
 	$orders_class->update($_GET['uid'], $data);
 	
-	$log = new class_logs;
-	$log->insert("update", $db->getLastQuery());
-	
 	$title = "Order Updated";
 	$message = "Order '" . $_GET['uid'] . "' updated";
 	echo toast($title, $message);
