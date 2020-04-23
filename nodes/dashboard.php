@@ -56,9 +56,10 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 <table class="table bg-white">
 	<thead>
 		<tr>
-			<th scope="col"></th>
-			<th scope="col">Cost Centre</th>
-			<th scope="col">Value</th>
+			<th scope="col" style="width: 50px;"></th>
+			<th scope="col" style="width: 120px;">Code</th>
+			<th scope="col">Name</th>
+			<th scope="col" style="width: 100px;">Value</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -70,7 +71,9 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 			$output  = "<tr>";
 			$output .= "<td scope=\"row\" style=\"width: 50px;\"><div style=\"width: 15px; height: 15px; border-radius: 2px; background: " . $cost_centre['colour'] . ";\"></div></td>";
 			$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</td>";
-			$output .= "<td>£" . number_format($value) . "</td>";
+			$output .= "<td>" . $cost_centre['name'] . "</td>";
+			$output .= "<td class=\"text-right color-red\">£" . number_format($value) . " <i class=\"fas fa-long-arrow-alt-right fa-sm\"></i></td>";
+
 			
 			$output .= "</tr>";
 			
@@ -120,9 +123,16 @@ var myChart = new Chart(ctx, {
             yAxes: [{
                 ticks: {
                     beginAtZero: true
-                }
+                },
+                scaleLabel: {
+					display: true,
+					labelString: '£'
+				}
             }]
-        }
+        },
+        legend: {
+			display: false
+		}
     }
 });
 </script>

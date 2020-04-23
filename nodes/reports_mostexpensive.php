@@ -17,7 +17,7 @@ $orders = array_slice($orders, 0, 20);
 			<th scope="col" style="width: 120px;">Cost Centre</th>
 			<th scope="col">Item</th>
 			<th scope="col">Supplier</th>
-			<th scope="col" style="width: 120px;">Value</th>
+			<th scope="col" style="width: 100px;">Value</th>
 		</tr>
 	</thead>
 	<tbody>

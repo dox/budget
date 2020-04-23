@@ -29,12 +29,12 @@ $cost_centres = $cost_centre_class->all();
 <table class="table bg-white">
 	<thead>
 		<tr>
-			<th scope="col"></th>
-			<th scope="col">Code</th>
+			<th scope="col" style="width: 50px;"></th>
+			<th scope="col" style="width: 120px;">Code</th>
 			<th scope="col">Name</th>
 			<th scope="col">Budget</th>
 			<th scope="col">Remaining Budget</th>
-			<th scope="col"></th>
+			<th scope="col" style="width: 70px;"></th>
 		</tr>
 	</thead>
 	<tbody>
