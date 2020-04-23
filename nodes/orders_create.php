@@ -76,7 +76,7 @@ $suppliersArray = array_unique($suppliersArray);
 	</div>
 	<div class="form-group">
 		<label for="value">Value</label>
-		<input type="text" class="form-control" id="value" name="value" placeholder="Value (£)">
+		<input type="number" class="form-control" id="value" name="value" placeholder="Value (without £ or commas)">
 	</div>
 	<div class="form-group">
 		<label for="description">Description</label>
