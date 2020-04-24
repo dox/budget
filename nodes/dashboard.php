@@ -1,17 +1,22 @@
 <?php
+if (isset($_GET['month'])) {
+	$dateReference = $_GET['month'];
+	
+} else {
+	$dateReference = date('Y-m-d');
+}
+$previousMonth = date('Y-m-d', strtotime($dateReference . ' -1 month'));
+$nextMonth = date('Y-m-d', strtotime($dateReference . ' +1 month'));
+
 $orders_class = new class_orders;
-$ordersThisMonth = $orders_class->all();
+$ordersAll = $orders_class->all();
+$ordersThisMonth = $orders_class->allByMonth($dateReference);
 
 $YTDTotalSpend = 0;
 $outstandingPayments = 0;
-foreach ($ordersThisMonth AS $order) {
+foreach ($ordersAll AS $order) {
 
 	if (date('Y-m',strtotime($order['date'])) == date('Y-m')) {
-		if (isset($monthlyOrdersTotalArray[$order['cost_centre']])) {
-			$monthlyOrdersTotalArray[$order['cost_centre']] = $monthlyOrdersTotalArray[$order['cost_centre']] + $order['value'];
-		} else {
-			$monthlyOrdersTotalArray[$order['cost_centre']] = $order['value'];
-		}
 		$YTDTotalSpend = $YTDTotalSpend + $order['value'];
 	} else {
 		$YTDTotalSpend = $YTDTotalSpend + $order['value'];
@@ -22,10 +27,22 @@ foreach ($ordersThisMonth AS $order) {
 	}
 }
 
+foreach ($ordersThisMonth AS $order) {
+	if (date('Y-m',strtotime($order['date'])) == date('Y-m', strtotime($dateReference))) {
+		if (isset($monthlyOrdersTotalArray[$order['cost_centre']])) {
+			$monthlyOrdersTotalArray[$order['cost_centre']] = $monthlyOrdersTotalArray[$order['cost_centre']] + $order['value'];
+		} else {
+			$monthlyOrdersTotalArray[$order['cost_centre']] = $order['value'];
+		}
+	}
+}
+
+
 $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 ?>
 
-<h2>Dashboard <small class="text-muted"><?php echo date('F, Y'); ?></small></h2>
+<h2>Dashboard <small class="text-muted"><a href="index.php?n=dashboard&month=<?php echo $previousMonth;?>"><i class="fas fa-chevron-left"></i></a> <?php echo date('F, Y', strtotime($dateReference)); ?> <a href="index.php?n=dashboard&month=<?php echo $nextMonth;?>"><i class="fas fa-chevron-right"></i></a></small></h2>
+
 
 <canvas id="myChart" width="400" height="100"></canvas>
 <br />

@@ -79,6 +79,7 @@ public function allByMonth($date = null) {
 	if ($date == null) {
 		$date = date('Y-m-d');
 	}
+	
 	$sql  = "SELECT
 				orders.uid,
 				orders.date,
@@ -98,10 +99,10 @@ public function allByMonth($date = null) {
 			AND MONTH(orders.date) = '" . date('m',strtotime($date)) . "' 
 			AND cost_centres.department = '" . $_SESSION['department'] . "' 
 			ORDER BY orders.date DESC, orders.po DESC;";
+	
 	$orders = $db->rawQuery($sql);
 	
 	return $orders;
-
 }
 
 public function insert($data = null) {
