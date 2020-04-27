@@ -14,11 +14,12 @@ require_once('inc/suppliers.php');
 
 $db = new MysqliDb ($db_host, $db_username, $db_password, $db_name);
 
-if (isset($_GET['logout'])) {
+if (isset($_GET['logout']) && isset($_SESSION['username'])) {
 	$log->insert("logon", "Logout successful for " . $_SESSION['username']);
 	
 	$_SESSION = array();
 	session_destroy();
+	unset($_COOKIE['SEHbudget']);
 	
 	$title = "Log Out complete";
 	$message = "You have been logged out";
@@ -36,12 +37,12 @@ if (isset($_GET['changedepartment'])) {
 }
 
 //you should look into using PECL filter or some form of filtering here for POST variables
-if (isset($_POST["username"])) {
-	$username = strtoupper($_POST["username"]); //remove case sensitivity on the username
-	$password = $_POST["password"];
+if (isset($_POST['username'])) {
+	$username = strtoupper($_POST['username']); //remove case sensitivity on the username
+	$password = $_POST['password'];
 }
 
-if (isset($_POST["loginformsubmit"])) { //prevent null bind
+if (isset($_POST['loginformsubmit'])) { //prevent null bind
 	if ($username != NULL && $password != NULL){
         try {
 		    $adldap = new adLDAP();
@@ -59,11 +60,15 @@ if (isset($_POST["loginformsubmit"])) { //prevent null bind
 			$user = $users_class->getOne($username);
 			
 			if ($user) {
-				$_SESSION["username"] = $username;
-				$_SESSION["department"] = $user['department'];
-				$_SESSION["localUID"] = $user['uid'];
-				$_SESSION["userinfo"] = $adldap->user()->info($username);
+				$_SESSION['username'] = $username;
+				$_SESSION['department'] = $user['department'];
+				$_SESSION['localUID'] = $user['uid'];
+				$_SESSION['userinfo'] = $adldap->user()->info($username);
 				
+				if ($_POST['remember-me'] == "remember-me") {
+					setcookie("seh_budget_username", $_SESSION['username'], time()+3600);
+				}
+				setcookie("SEHbudget", $_SESSION['username'], time()+3600);
 				$log->insert("logon", "Logon successful for " . $username);
 				$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php?n=dashboard";
 				header($redir);
