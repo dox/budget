@@ -12,15 +12,15 @@ if (isset($_POST['po'])) {
 		"supplier" => $_POST['supplier'],
 		"description" => $_POST['description']
 	);
-	
+
 	$orders_class->insert($data);
-	
+
 	$title = "Order Created";
 	$message = "New order '" . $_POST['name'] . "' created";
 	echo toast($title, $message);
 }
 
-$orders = $orders_class->all();	
+$orders = $orders_class->all();
 ?>
 
 <h2>Orders <small class="text-muted"><?php echo "Budget Year: " . BUDGET_STARTDATE . " - " . BUDGET_ENDDATE; ?></small></h2>
@@ -33,7 +33,7 @@ $orders = $orders_class->all();
 			<th scope="col" style="width: 120px;">Cost Centre</th>
 			<th scope="col">Item</th>
 			<th scope="col">Supplier</th>
-			<th scope="col" style="width: 100px;">Value</th>
+			<th scope="col" style="width: 110px;">Value</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -41,7 +41,7 @@ $orders = $orders_class->all();
 		foreach ($orders AS $order) {
 			$cost_centre_class = new class_cost_centres;
 			$cost_centre = $cost_centre_class->getOne($order['cost_centre']);
-			
+
 			if (isset($order['paid'])) {
 				$class = "table-active";
 			} else {
@@ -55,12 +55,12 @@ $orders = $orders_class->all();
 			$output .= "<td><a href=\"index.php?n=suppliers_unique&name=" . $order['supplier'] . "\">" . $order['supplier'] . "</a></td>";
 			$output .= "<td class=\"text-right color-red\">£" . number_format($order['value']) . " <i class=\"fas fa-long-arrow-alt-right fa-sm\"></i></td>";
 			$output .= "</tr>";
-			
+
 			echo $output;
-			
-			
+
+
 		}
 		?>
-		
+
 	</tbody>
 </table>

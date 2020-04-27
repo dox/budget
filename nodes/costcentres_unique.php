@@ -1,6 +1,6 @@
 <?php
 $cost_centre_class = new class_cost_centres;
-$cost_centre = $cost_centre_class->getOne($_GET['uid']);	
+$cost_centre = $cost_centre_class->getOne($_GET['uid']);
 
 $orders_class = new class_orders;
 $orders = $orders_class->all(null, $cost_centre['uid']);
@@ -25,7 +25,7 @@ $orders = $orders_class->all(null, $cost_centre['uid']);
 	$budgetTotal = $cost_centre['value'];
 	$runningBudget["'" . BUDGET_STARTDATE . "'"] = "'" . ($budgetTotal) . "'";
 	foreach ($ordersRunningTotal AS $order) {;
-		
+
 		$runningBudget["'" . $order['date'] . "'"] = "'" . ($budgetTotal - $order['value']) . "'";
 		$budgetTotal = $budgetTotal - $order['value'];
 	}
@@ -35,7 +35,7 @@ $orders = $orders_class->all(null, $cost_centre['uid']);
 <canvas id="canvas" width="400" height="100"></canvas>
 <script>
 	var timeFormat = 'YYYY/MM/DD';
-	
+
 	var config = {
 		type: 'line',
 		data: {
@@ -81,7 +81,7 @@ $orders = $orders_class->all(null, $cost_centre['uid']);
 			},
 		}
 	};
-	
+
 	window.onload = function() {
 		var ctx = document.getElementById('canvas').getContext('2d');
 		window.myLine = new Chart(ctx, config);
@@ -96,7 +96,7 @@ $orders = $orders_class->all(null, $cost_centre['uid']);
 			<th scope="col" style="width: 120px;">Cost Centre</th>
 			<th scope="col">Item</th>
 			<th scope="col">Supplier</th>
-			<th scope="col" style="width: 100px;">Value</th>
+			<th scope="col" style="width: 110px;">Value</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -115,12 +115,12 @@ $orders = $orders_class->all(null, $cost_centre['uid']);
 			$output .= "<td><a href=\"index.php?n=suppliers_unique&name=" . $order['supplier'] . "\">" . $order['supplier'] . "</a></td>";
 			$output .= "<td class=\"text-right color-red\">£" . number_format($order['value']) . " <i class=\"fas fa-long-arrow-alt-right fa-sm\"></i></td>";
 			$output .= "</tr>";
-			
+
 			echo $output;
-			
-			
+
+
 		}
 		?>
-		
+
 	</tbody>
 </table>
