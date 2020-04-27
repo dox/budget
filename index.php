@@ -16,24 +16,14 @@ $db = new MysqliDb ($db_host, $db_username, $db_password, $db_name);
 
 if (isset($_GET['logout']) && isset($_SESSION['username'])) {
 	$log->insert("logon", "Logout successful for " . $_SESSION['username']);
-	
+
 	$_SESSION = array();
 	session_destroy();
 	unset($_COOKIE['SEHbudget']);
-	
+
 	$title = "Log Out complete";
 	$message = "You have been logged out";
-	echo toast($title, $message);	
-}
-
-if (isset($_GET['changedepartment'])) {
-	$log->insert("logon", "Temporary department change (" . $_SESSION['department'] . "->" . $_GET['changedepartment'] . ") successful for " . $_SESSION['username']);
-	
-	$title = "Temporary Department Change";
-	$message = "You have temporarily changed departments";
 	echo toast($title, $message);
-	
-	$_SESSION['department'] = $_GET['changedepartment'];
 }
 
 //you should look into using PECL filter or some form of filtering here for POST variables
@@ -48,23 +38,23 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 		    $adldap = new adLDAP();
         }
         catch (adLDAPException $e) {
-            echo $e; 
-            exit();   
+            echo $e;
+            exit();
         }
-        
+
 		//authenticate the user
 		if ($adldap->authenticate($username, $password)){
 			//establish your session and redirect
-			
+
 			$users_class = new class_users;
 			$user = $users_class->getOne($username);
-			
+
 			if ($user) {
 				$_SESSION['username'] = $username;
 				$_SESSION['department'] = $user['department'];
 				$_SESSION['localUID'] = $user['uid'];
 				$_SESSION['userinfo'] = $adldap->user()->info($username);
-				
+
 				if ($_POST['remember-me'] == "remember-me") {
 					setcookie("seh_budget_username", $_SESSION['username'], time()+3600);
 				}
@@ -77,22 +67,22 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 				$title = "Access Denied";
 				$message = "You do not have access to this resource (although your username/password was correct";
 				echo toast($title, $message);
-				
+
 				$redir = "Location: http://budget.seh.ox.ac.uk/index.php?n=login";
 				header($redir);
-				
+
 			}
-			
+
 			exit;
 		} else {
 			$log->insert("logon", "Logon failed for " . $_POST['username']);
-			
+
 			$title = "Access Denied";
 			$message = "Incorrect username/password supplied";
 			echo toast($title, $message);
 		}
 	}
-	
+
 	$message = "<div class=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><strong>Warning!</strong> Login attempt failed.</div>";
 }
 
@@ -104,13 +94,13 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 	<title>Dashboard - Budget</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<meta name="csrf-token" content="ZZxLKKzw7Jk0G1KVLSUXm7tNcF9eMLxH9nqH5LxW"/>
-	
+
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:400,400i,600,600i"/>
 	<link rel="stylesheet" href="css/fontawesome.css"/>
 	<link rel="stylesheet" href="css/app.css"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css" integrity="sha256-IvM9nJf/b5l2RoebiFno92E5ONttVyaEEsdemDC6iQA=" crossorigin="anonymous" />
-	
+
 	<link rel="apple-touch-icon" sizes="57x57" href="ico/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="ico/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="ico/apple-icon-72x72.png">
@@ -125,7 +115,7 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
     <link rel="icon" type="image/png" sizes="96x96" href="ico/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="ico/favicon-16x16.png">
     <link rel="shortcut icon" href="ico/favicon.ico" type="image/x-icon">
-    
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
@@ -142,7 +132,7 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 		if (isset($_SESSION['username'])) {
 			if (isset($_GET['n'])) {
 				$node = "nodes/" . $_GET['n'] . ".php";
-				
+
 				if (!file_exists($node)) {
 					$node = "nodes/404.php";
 				}
@@ -152,7 +142,7 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 		} else {
 			$node = "nodes/login.php";
 		}
-		
+
 		include_once($node);
 		?>
 	</div>

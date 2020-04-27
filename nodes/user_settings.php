@@ -35,9 +35,9 @@ $departments = $departments_class->all();
 				} else {
 					$selected = "";
 				}
-				
+
 				$output  = "<option value=\"\" " . $selected . ">" . $department['name'] . "</option>";
-				
+
 				echo $output;
 			}
 			?>
@@ -62,7 +62,7 @@ $departments = $departments_class->all();
 
 <div class="dropdown">
 	<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Temporarily Change Deparments</a>
-	
+
 	<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 		<?php
 		foreach ($departments AS $department) {
@@ -71,9 +71,9 @@ $departments = $departments_class->all();
 			} else {
 				$selected = "";
 			}
-			
-			$output  = "<a class=\"dropdown-item\" href=\"index.php?n=dashboard&changedepartment=" . $department['uid'] . "\">" . $department['name'] . "</a>";
-			
+
+			$output  = "<a class=\"dropdown-item emailParcelButton1\" href=\"#\" id=\"" . $department['uid'] . "\">" . $department['name'] . "</a>";
+
 			echo $output;
 		}
 		?>
