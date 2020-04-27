@@ -37,7 +37,10 @@ foreach ($ordersThisMonth AS $order) {
 	}
 }
 
-
+if (empty($monthlyOrdersTotalArray)){
+	$monthlyOrdersTotalArray = array();
+	
+}
 $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 ?>
 
