@@ -18,36 +18,32 @@ $suppliersArray = array_unique($suppliersArray);
 <h2>Create New Order</h2>
 
 <form method="POST" action="index.php?n=orders_all">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="date">Date</label>
-					<input type="text" class="form-control" id="date" name="date" placeholder="<?php echo date('Y-m-d H:i'); ?>" value="<?php echo date('Y-m-d H:i'); ?>">
-				</div>
+	<div class="row">
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="date">Date</label>
+				<input type="text" class="form-control" id="date" name="date" placeholder="<?php echo date('Y-m-d H:i'); ?>" value="<?php echo date('Y-m-d H:i'); ?>">
 			</div>
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="po">Purchase Order #</label>
-					<input type="text" class="form-control" id="po" name="po" placeholder="Purchase Order #" value="<?php echo $orders_class->nextOrderNumber(); ?>">
-					<small id="emailHelp" class="form-text text-muted">This is an auto-generated number based on the last order (format <strong><?php echo $department['po_code'];?></strong>000001).</small>
-				</div>
+		</div>
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="po">Purchase Order #</label>
+				<input type="text" class="form-control" id="po" name="po" placeholder="Purchase Order #" value="<?php echo $orders_class->nextOrderNumber(); ?>">
+				<small id="emailHelp" class="form-text text-muted">This is an auto-generated number based on the last order.</small>
 			</div>
 		</div>
 	</div>
-	<div class="container">
-		<div class="row">
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="supplier">Supplier</label>
-					<input type="text" class="form-control" data-provide="typeahead" id="supplier" name="supplier" placeholder="Supplier" autocomplete="off">
-				</div>
+	<div class="row">
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="supplier">Supplier</label>
+				<input type="text" class="form-control" data-provide="typeahead" id="supplier" name="supplier" placeholder="Supplier" autocomplete="off">
 			</div>
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="order_num">Supplier Order #</label>
-					<input type="text" class="form-control" id="order_num" name="order_num" placeholder="Supplier Order #">
-				</div>
+		</div>
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="order_num">Supplier Order #</label>
+				<input type="text" class="form-control" id="order_num" name="order_num" placeholder="Supplier Order #">
 			</div>
 		</div>
 	</div>
@@ -75,7 +71,7 @@ $suppliersArray = array_unique($suppliersArray);
 		</select>
 	</div>
 	<div class="form-group">
-		<label for="value">Value</label>
+		<label for="value">Value (£)</label>
 		<input type="number" step=".01" class="form-control" id="value" name="value" placeholder="Value (without £ or commas)">
 	</div>
 	<div class="form-group">

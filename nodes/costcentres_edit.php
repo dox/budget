@@ -35,40 +35,59 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 <h2>Edit Cost Centre '<?php echo $cost_centre['name'];?>'</h2>
 
 <form method="POST" action="index.php?n=costcentres_edit&uid=<?php echo $cost_centre['uid'];?>">
-	<div class="form-group">
-		<label for="code">Code</label>
-		<input type="text" class="form-control" id="code" name="code" placeholder="Code" value="<?php echo $cost_centre['code'];?>">
-	</div>
-	<div class="form-group">
-		<label for="name">Name</label>
-		<input type="text" class="form-control" id="name" name="name" placeholder="Name" value="<?php echo $cost_centre['name'];?>">
-	</div>
-	<div class="container">
-		<div class="row">
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="department">Department</label>
-					<select class="form-control" name="department">
-						<?php
-						foreach ($departments AS $department) {
-							if ($department['uid'] == $cost_centre['department']) {
-								$selected = " selected";
-							} else {
-								$selected = " ";
-							}
-							$output  = "<option " . $selected . " value=\"" .  $department['uid'] . "\">" . $department['name'] . "</option>";
-							
-							echo $output;
-						}
-						?>
-					</select>
-				</div>
+	<div class="row">
+		<div class="col">
+			<div class="form-group">
+				<label for="name">Name</label>
+				<input type="text" class="form-control" id="name" name="name" placeholder="Name" value="<?php echo $cost_centre['name'];?>">
 			</div>
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="grouping">Grouping</label>
-					<input type="text" class="form-control" id="grouping" name="grouping" placeholder="Grouping" value="<?php echo $cost_centre['grouping'];?>">
-				</div>
+		</div>
+		<div class="col-3">
+			<div class="form-group">
+				<label for="colour">Colour</label>
+					<input type="text" class="form-control" id="simple-color-picker" name="colour" value="<?php echo $cost_centre['colour'];?>"/>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col">
+			<div class="form-group">
+				<label for="code">Code</label>
+				<input type="text" class="form-control" id="code" name="code" placeholder="Code" value="<?php echo $cost_centre['code'];?>">
+			</div>
+		</div>
+		<div class="col">
+			<div class="form-group">
+				<label for="budget">Budget (£)</label>
+				<input type="text" class="form-control" id="budget" name="budget" placeholder="Budget (without £ or commas)" value="<?php echo $cost_centre['value'];?>">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="department">Department</label>
+				<select class="form-control" name="department">
+					<?php
+					foreach ($departments AS $department) {
+						if ($department['uid'] == $cost_centre['department']) {
+							$selected = " selected";
+						} else {
+							$selected = " ";
+						}
+						$output  = "<option " . $selected . " value=\"" .  $department['uid'] . "\">" . $department['name'] . "</option>";
+						
+						echo $output;
+					}
+					?>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="grouping">Grouping</label>
+				<input type="text" class="form-control" id="grouping" name="grouping" placeholder="Grouping" value="<?php echo $cost_centre['grouping'];?>">
 			</div>
 		</div>
 	</div>
@@ -76,14 +95,7 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 		<label for="description">Description</label>
 		<textarea class="form-control" id="description" name="description" rows="3"><?php echo $cost_centre['description'];?></textarea>
 	</div>
-	<div class="form-group">
-		<label for="colour">Colour</label>
-		<input type="text" class="form-control" id="simple-color-picker" name="colour" value="<?php echo $cost_centre['colour'];?>"/>
-	</div>
-	<div class="form-group">
-		<label for="budget">Budget</label>
-		<input type="text" class="form-control" id="budget" name="budget" placeholder="Budget (£)" value="<?php echo $cost_centre['value'];?>">
-	</div>
+
 	<input type="hidden" name="uid" value="<?php echo $cost_centre['uid'];?>">
 	<button type="submit" class="btn btn-primary">Submit</button>
 </form>

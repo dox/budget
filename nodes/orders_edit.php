@@ -20,36 +20,32 @@ $department = $departments_class->getOne($_SESSION['department']);
 <h2>Edit Order '<?php echo $order['name'];?>'</h2>
 
 <form method="POST" action="index.php?n=orders_unique&uid=<?php echo $order['uid']; ?>">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="date">Date</label>
-					<input type="text" class="form-control" id="date" name="date" placeholder="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d', strtotime($order['date'])); ?>">
-				</div>
+	<div class="row">
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="date">Date</label>
+				<input type="text" class="form-control" id="date" name="date" placeholder="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d', strtotime($order['date'])); ?>">
 			</div>
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="po">Purchase Order #</label>
-					<input type="text" class="form-control" id="po" name="po" placeholder="Purchase Order #" value="<?php echo $order['po']; ?>">
-					<small id="emailHelp" class="form-text text-muted">This is an auto-generated number based on the last order (format <strong><?php echo $department['po_code'];?></strong>000001).</small>
-				</div>
+		</div>
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="po">Purchase Order #</label>
+				<input type="text" class="form-control" id="po" name="po" placeholder="Purchase Order #" value="<?php echo $order['po']; ?>">
+				<small id="emailHelp" class="form-text text-muted">This is an auto-generated number based on the last order.</small>
 			</div>
 		</div>
 	</div>
-	<div class="container">
-		<div class="row">
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="supplier">Supplier</label>
-					<input type="text" class="form-control" data-provide="typeahead" id="supplier" name="supplier" placeholder="Supplier" value="<?php echo $order['supplier']; ?>" autocomplete="off">
-				</div>
+	<div class="row">
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="supplier">Supplier</label>
+				<input type="text" class="form-control" data-provide="typeahead" id="supplier" name="supplier" placeholder="Supplier" value="<?php echo $order['supplier']; ?>" autocomplete="off">
 			</div>
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="order_num">Supplier Order #</label>
-					<input type="text" class="form-control" id="order_num" name="order_num" placeholder="Supplier Order #" value="<?php echo $order['order_num']; ?>">
-				</div>
+		</div>
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="order_num">Supplier Order #</label>
+				<input type="text" class="form-control" id="order_num" name="order_num" placeholder="Supplier Order #" value="<?php echo $order['order_num']; ?>">
 			</div>
 		</div>
 	</div>
@@ -82,8 +78,8 @@ $department = $departments_class->getOne($_SESSION['department']);
 		</select>
 	</div>
 	<div class="form-group">
-		<label for="value">Value</label>
-		<input type="text" class="form-control" id="value" name="value" placeholder="Value (£)" value="<?php echo $order['value']; ?>">
+		<label for="value">Value (£)</label>
+		<input type="text" class="form-control" id="value" name="value" placeholder="Value (without £ or commas)" value="<?php echo $order['value']; ?>">
 	</div>
 	<div class="form-group">
 		<label for="description">Description</label>

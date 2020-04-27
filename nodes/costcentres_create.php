@@ -22,54 +22,65 @@ foreach ($groups AS $group) {
 <h2>Create New Cost Centre</h2>
 
 <form method="POST" action="index.php?n=costcentres_all">
-	<div class="form-group">
-		<label for="code">Code</label>
-		<input type="text" class="form-control" id="code" name="code" placeholder="Code">
-	</div>
-	<div class="form-group">
-		<label for="name">Name</label>
-		<input type="text" class="form-control" id="name" name="name" placeholder="Name">
-	</div>
-	<div class="container">
-		<div class="row">
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="department">Department</label>
-					<select class="form-control" name="department">
-						<?php
-						foreach ($departments AS $department) {
-							if ($department['uid'] == $_SESSION['department']) {
-								$selected = " selected";
-							} else {
-								$selected = " ";
-							}
-							$output  = "<option " . $selected . " value=\"" .  $department['uid'] . "\">" . $department['name'] . "</option>";
-							
-							echo $output;
-						}
-						?>
-					</select>
-				</div>
+	<div class="row">
+		<div class="col">
+			<div class="form-group">
+				<label for="name">Name</label>
+				<input type="text" class="form-control" id="name" name="name" placeholder="Name">
 			</div>
-			<div class="col-sm">
-				<div class="form-group">
-					<label for="grouping">Grouping</label>
-					<input type="text" class="form-control" data-provide="typeahead" id="grouping" name="grouping" placeholder="Grouping" autocomplete="off">
-				</div>
+		</div>
+		<div class="col-3">
+			<div class="form-group">
+				<label for="colour">Colour</label>
+					<input type="text" class="form-control" id="simple-color-picker" name="colour" value="#<?php echo random_color(); ?>"/>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<div class="form-group">
+				<label for="code">Code</label>
+				<input type="text" class="form-control" id="code" name="code" placeholder="Code">
+			</div>
+		</div>
+		<div class="col">
+			<div class="form-group">
+				<label for="budget">Budget (£)</label>
+				<input type="text" class="form-control" id="budget" name="budget" placeholder="Budget (without £ or commas)" value="0">
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="department">Department</label>
+				<select class="form-control" name="department">
+					<?php
+					foreach ($departments AS $department) {
+						if ($department['uid'] == $_SESSION['department']) {
+							$selected = " selected";
+						} else {
+							$selected = " ";
+						}
+						$output  = "<option " . $selected . " value=\"" .  $department['uid'] . "\">" . $department['name'] . "</option>";
+						
+						echo $output;
+					}
+					?>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="grouping">Grouping</label>
+				<input type="text" class="form-control" data-provide="typeahead" id="grouping" name="grouping" placeholder="Grouping" autocomplete="off">
 			</div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="description">Description</label>
 		<textarea class="form-control" id="description" name="description" rows="3"></textarea>
-	</div>
-	<div class="form-group">
-		<label for="colour">Colour</label>
-		<input type="text" class="form-control" id="simple-color-picker" name="colour" value="#<?php echo random_color(); ?>"/>
-	</div>
-	<div class="form-group">
-		<label for="budget">Budget</label>
-		<input type="text" class="form-control" id="budget" name="budget" placeholder="Budget (£)" value="0">
 	</div>
 	
 	<button type="submit" class="btn btn-primary">Submit</button>
