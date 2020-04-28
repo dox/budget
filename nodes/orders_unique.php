@@ -13,7 +13,7 @@ if (isset($_GET['paid'])) {
 			'paid' => date('Y-m-d H:i:s')
 		);
 	}
-	
+
 $db->where ('uid', $_GET['uid']);
 $db->update ('orders', $data);
 
@@ -34,9 +34,9 @@ if (isset($_POST['po'])) {
 		"supplier" => $_POST['supplier'],
 		"description" => $_POST['description']
 	);
-	
+
 	$orders_class->update($_GET['uid'], $data);
-	
+
 	$title = "Order Updated";
 	$message = "Order '" . $_GET['uid'] . "' updated";
 	echo toast($title, $message);
@@ -79,9 +79,9 @@ echo $output;
 <h2>Supplier: </h2>
 <?php
 if (isset ($supplier)) {
-	$output  = "<h3>" . $supplier['name'] . "</h3>";
+	$output  = "<h3><a href=\"index.php?n=suppliers_unique&name=" . $supplier['name'] . "\">" . $supplier['name'] . "</a></h3>";
 	$output .= "<h3>" . str_replace("\n", "<br />", $supplier['address'])  . "</h3>";
-	
+
 	if (!empty($supplier['account_number'])) {
 		$output .= "<h3>Account #: " . $supplier['account_number'] . "</h3>";
 	}
@@ -92,10 +92,10 @@ if (isset ($supplier)) {
 		$output .= "<h3><a href=\"mailto:" . $supplier['email'] . "\">" . $supplier['email'] . "</a></h3>";
 	}
 	if (!empty($supplier['website'])) {
-		$output .= "<h3><a href=\"" . $supplier['website'] . "\">" . $supplier['website'] . "</a></h3>";
+		$output .= "<h3><a href=\"" . tidyUrl($supplier['website']) . "\">" . $supplier['website'] . "</a></h3>";
 	}
 } else {
-	$output  = "<h3>" . $order['supplier'] . "</h3>";
+	$output  = "<h3><a href=\"index.php?n=suppliers_edit&name=" . $order['supplier'] . "\">" . $order['supplier'] . "</a></h3>";
 }
 
 echo $output;
