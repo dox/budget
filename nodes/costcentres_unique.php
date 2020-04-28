@@ -7,7 +7,7 @@ $orders = $orders_class->all(null, $cost_centre['uid']);
 
 ?>
 
-<h2><?php echo $cost_centre['name'];?></h2>
+<h2><?php echo $cost_centre['name'];?> <small class="text-muted"><?php echo $cost_centre['grouping'];?></small></h2>
 
 <?php
 	$sql = "SELECT
