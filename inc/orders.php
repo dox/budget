@@ -100,7 +100,11 @@ public function allBySearch($searchTerm = null) {
 				orders.po LIKE '%" . $searchTerm . "%' OR
 				orders.description LIKE '%" . $searchTerm . "%')
 			ORDER BY orders.date DESC, orders.po DESC;";
+	//$orders = $db->escape($db->rawQuery($sql));
 	$orders = $db->rawQuery($sql);
+	$log = new class_logs;
+	$message = "Search for " . $searchTerm . " with " . count($orders) . " results";
+	$log->insert("search", $message);
 
 	return $orders;
 }
