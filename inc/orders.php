@@ -39,7 +39,7 @@ public function nextOrderNumber() {
     return $department['po_code'] . sprintf('%05d', intval($number) + 1);
 }
 
-public function all($previousDays = null, $costCentre = null) {
+public function all($date = null, $costCentre = null, $supplier = null, $search = null) {
 	global $db;
 
 	$sql  = "SELECT
@@ -59,83 +59,30 @@ public function all($previousDays = null, $costCentre = null) {
 			WHERE orders.cost_centre = cost_centres.uid
 			AND (orders.date BETWEEN '" . BUDGET_STARTDATE . "' AND '" . BUDGET_ENDDATE . "')";
 
-			if (isset($previousDays)) {
-				$sql .= " AND orders.date BETWEEN CURDATE() - INTERVAL " . $previousDays . " DAY AND CURDATE() ";
+
+			if (isset($date)) {
+				$sql .= " AND YEAR(orders.date) = '" . date('Y',strtotime($date)) . "'
+				AND MONTH(orders.date) = '" . date('m',strtotime($date)) . "' ";
 			}
 
 			if (isset($costCentre)) {
 				$sql .= " AND orders.cost_centre = '" . $costCentre . "' ";
 			}
+
+			if (isset($supplier)) {
+				$sql .= " AND orders.supplier = '" . $supplier . "' ";
+			}
+
+			if (isset($search)) {
+				$sql .= " AND (
+					orders.name LIKE '%" . $search . "%' OR
+					orders.supplier LIKE '%" . $search . "%' OR
+					orders.order_num LIKE '%" . $search . "%' OR
+					orders.po LIKE '%" . $search . "%' OR
+					orders.description LIKE '%" . $search . "%') ";
+			}
 	$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
 			ORDER BY orders.date DESC, orders.po DESC;";
-	$orders = $db->rawQuery($sql);
-
-	return $orders;
-}
-
-public function allBySearch($searchTerm = null) {
-	global $db;
-
-	$sql  = "SELECT
-				orders.uid,
-				orders.date,
-				orders.cost_centre,
-				orders.po,
-				orders.order_num,
-				orders.name,
-				orders.value,
-				orders.supplier,
-				orders.description,
-				orders.paid,
-				cost_centres.code,
-				cost_centres.department
-			FROM orders, cost_centres
-			WHERE orders.cost_centre = cost_centres.uid
-			AND cost_centres.department = '" . $_SESSION['department'] . "'
-			AND (orders.date BETWEEN '" . BUDGET_STARTDATE . "' AND '" . BUDGET_ENDDATE . "')
-			AND (
-				orders.name LIKE '%" . $searchTerm . "%' OR
-				orders.supplier LIKE '%" . $searchTerm . "%' OR
-				orders.order_num LIKE '%" . $searchTerm . "%' OR
-				orders.po LIKE '%" . $searchTerm . "%' OR
-				orders.description LIKE '%" . $searchTerm . "%')
-			ORDER BY orders.date DESC, orders.po DESC;";
-	//$orders = $db->escape($db->rawQuery($sql));
-	$orders = $db->rawQuery($sql);
-	$log = new class_logs;
-	$message = "Search for " . $searchTerm . " with " . count($orders) . " results";
-	$log->insert("search", $message);
-
-	return $orders;
-}
-
-public function allByMonth($date = null) {
-	global $db;
-
-	if ($date == null) {
-		$date = date('Y-m-d');
-	}
-
-	$sql  = "SELECT
-				orders.uid,
-				orders.date,
-				orders.cost_centre,
-				orders.po,
-				orders.order_num,
-				orders.name,
-				orders.value,
-				orders.supplier,
-				orders.paid,
-				orders.description,
-				cost_centres.code,
-				cost_centres.department
-			FROM orders, cost_centres
-			WHERE orders.cost_centre = cost_centres.uid
-			AND YEAR(orders.date) = '" . date('Y',strtotime($date)) . "'
-			AND MONTH(orders.date) = '" . date('m',strtotime($date)) . "'
-			AND cost_centres.department = '" . $_SESSION['department'] . "'
-			ORDER BY orders.date DESC, orders.po DESC;";
-
 	$orders = $db->rawQuery($sql);
 
 	return $orders;

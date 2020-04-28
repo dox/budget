@@ -10,7 +10,7 @@ $nextMonth = date('Y-m-d', strtotime($dateReference . ' +1 month'));
 
 $orders_class = new class_orders;
 $ordersAll = $orders_class->all();
-$ordersThisMonth = $orders_class->allByMonth($dateReference);
+$ordersThisMonth = $orders_class->all($dateReference);
 
 $YTDTotalSpend = 0;
 $outstandingPayments = 0;
@@ -109,7 +109,7 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 	$i = 0;
 	$date = date('Y-m-d');
 	do {
-		$ordersThisMonth2 = $orders_class->allByMonth($date);
+		$ordersThisMonth2 = $orders_class->all($date);
 
 		foreach ($ordersThisMonth2 AS $orders) {
 			$arrayKeyValue = "'" . date('M',strtotime($orders['date'])) . "'";

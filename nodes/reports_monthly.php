@@ -4,8 +4,8 @@ $orders_class = new class_orders;
 	$i = 0;
 	$date = date('Y-m-d');
 	do {
-		$ordersThisMonth2 = $orders_class->allByMonth($date);
-		
+		$ordersThisMonth2 = $orders_class->all($date);
+
 		foreach ($ordersThisMonth2 AS $orders) {
 			$arrayKeyValue = "'" . date('M',strtotime($orders['date'])) . "'";
 			if (empty($totalOrdersByMonthArray[$arrayKeyValue])) {
@@ -19,8 +19,8 @@ $orders_class = new class_orders;
 	} while ($i < 12);
 	$totalOrdersByMonthArray = array_reverse($totalOrdersByMonthArray);
 ?>
-	
-	
+
+
 <canvas id="myChart" width="400" height="200"></canvas>
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');

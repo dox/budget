@@ -5,7 +5,8 @@ if (isset($_POST['search'])) {
 }
 
 $orders_class = new class_orders;
-$orders = $orders_class->allBySearch($_POST['search']);
+$orders = $orders_class->all(null, null, null, $_POST['search']);
+
 ?>
 
 <h2>Search Orders <small class="text-muted"><?php echo "Budget Year: " . BUDGET_STARTDATE . " - " . BUDGET_ENDDATE; ?></small></h2>

@@ -1,6 +1,6 @@
 <?php
 $orders_class = new class_orders;
-$orders = $orders_class->all();
+$orders = $orders_class->all(null, null, $_GET['name'], null);
 
 $suppliers_class = new class_suppliers;
 
