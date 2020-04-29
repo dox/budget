@@ -79,7 +79,7 @@ echo $output;
 <h2>Supplier: </h2>
 <?php
 if (isset ($supplier)) {
-	$output  = "<h3><a href=\"index.php?n=suppliers_unique&name=" . $supplier['name'] . "\">" . $supplier['name'] . "</a></h3>";
+	$output  = "<h3><a href=\"index.php?n=suppliers_edit&name=" . $supplier['name'] . "\">" . $supplier['name'] . "</a></h3>";
 	$output .= "<h3>" . str_replace("\n", "<br />", $supplier['address'])  . "</h3>";
 
 	if (!empty($supplier['account_number'])) {
