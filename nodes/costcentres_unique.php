@@ -42,7 +42,10 @@ $orders = $orders_class->all(null, $cost_centre['uid']);
 			labels: [<?php echo implode(", ", array_keys($runningBudget));?>],
 			datasets: [{
 				label: '£',
-				data: [<?php echo implode(",", $runningBudget); ?>],
+				borderColor: "<?php echo $cost_centre['colour'];?>",
+				backgroundColor: "<?php echo $cost_centre['colour'];?>30",
+				fill: true,
+				data: [<?php echo implode(",", $runningBudget); ?>]
 			}]
 		},
 		options: {
