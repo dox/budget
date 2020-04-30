@@ -8,6 +8,8 @@ $db_name		=	"database-name";
 $db_username	=	"database-username";
 $db_password	=	"database-password";
 
+define("UPLOAD_DIR", "/your/upload/path/here/");
+
 define("LDAP_SERVER", "ldap-server");
 define("LDAP_BASE_DN", "DC=some,DC=ldap,DC=base,DC=dn");
 define("LDAP_ACCOUNT_SUFFIX", "@some.ldap.account.suffix");

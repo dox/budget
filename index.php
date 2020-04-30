@@ -11,6 +11,7 @@ require_once('inc/cost_centres.php');
 require_once('inc/orders.php');
 require_once('inc/users.php');
 require_once('inc/suppliers.php');
+require_once('inc/uploads.php');
 
 $db = new MysqliDb ($db_host, $db_username, $db_password, $db_name);
 
@@ -121,7 +122,7 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js" integrity="sha256-TQq84xX6vkwR0Qs1qH5ADkP+MvH0W+9E7TdHJsoIQiM=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
-    <script src="js/app.js"></script>
+		<script src="js/app.js"></script>
 </head>
 <body>
 	<?php include('views/nav_top.php');?>

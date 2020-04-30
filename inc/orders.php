@@ -133,16 +133,25 @@ public function table($orders = null) {
 	foreach ($orders AS $order) {
 		$cost_centre_class = new class_cost_centres;
 		$cost_centre = $cost_centre_class->getOne($order['cost_centre']);
-
+		
+		$uploads_class = new class_uploads;
+		$uploads = $uploads_class->all($order['uid']);
+		
 		if (isset($order['paid'])) {
 			$class = "table-active";
 		} else {
 			$class = "";
 		}
+		
+		if (!empty($uploads)) {
+			$uploadsOutput = " <i class=\"fas text-muted fa-paperclip\"></i>";
+		} else {
+			$uploadsOutput = "";
+		}
 
 		$output .= "<tr class=\"" . $class . "\">";
 		$output .= "<td scope=\"row\">" . date('Y-m-d', strtotime($order['date'])) . "</td>";
-		$output .= "<td><a href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "\">" . $order['po'] . "</a></td>";
+		$output .= "<td><a href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "\">" . $order['po'] . $uploadsOutput . "</a></td>";
 		$output .= "<td><i class=\"fas fa-coins\" style=\"color: " . $cost_centre['colour'] . ";\"></i> <a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</a></td>";
 		$output .= "<td>" . $order['name'] . "</td>";
 		$output .= "<td><a href=\"index.php?n=suppliers_unique&name=" . $order['supplier'] . "\">" . $order['supplier'] . "</a></td>";

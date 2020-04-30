@@ -52,7 +52,30 @@ $user = $users_class->getOne($order['username']);
 
 $cost_centre_class = new class_cost_centres;
 $cost_centre = $cost_centre_class->getOne($order['cost_centre']);
+
+$uploads_class = new class_uploads;
+$uploads = $uploads_class->all($order['uid']);
+//print_r($uploads);
 ?>
+
+<div class="float-left">
+	<?php
+	foreach ($uploads AS $upload) {
+		$output  = "<div><a href=\"uploads/" . $upload['path'] . "\">";
+		$output .="<i class=\"fas fa-paperclip\"> " . $upload['name'] . "</i>";
+		$output .= "</a>";
+		$output .= "<i id=\"" . $upload['uid'] . "\" class=\"fas fa-trash float-right deleteUpload\"></i></div>";
+		
+		echo $output;
+	}
+	?>
+	<div id="upload_feedback">&nbsp;</div>
+	<div class="custom-file">
+		<input type="file" class="custom-file-input" name="fileToUpload" id="fileToUpload">
+		<label class="custom-file-label" for="fileToUpload">Upload file</label>
+	</div>
+</div>
+
 <h1 class="text-right">Purchase Order</h1>
 <h2 class="text-right">Date: <?php echo date('Y-m-d H:i', strtotime($order['date'])); ?></h2>
 <h2 class="text-right">PO: <?php echo $order['po']; ?></h2>
@@ -75,6 +98,7 @@ if (!isset($order['paid']) || empty($order['paid'])) {
 echo $output;
 ?>
 </p>
+
 
 <h2>Supplier: </h2>
 <?php
@@ -125,3 +149,37 @@ echo $output;
 		</tr>
 	</tbody>
 </table>
+
+<script src="js/simpleUpload.min.js"></script>
+<script>
+	$('input[type=file]').change(function(){
+	$(this).simpleUpload("/actions/file_upload.php?orderUID=<?php echo $order['uid'];?>", {
+		start: function(file){
+			//upload started
+			console.log("upload started");
+			$("#upload_feedback").html("Uploading File");
+		},
+		
+		progress: function(progress){
+			//received progress
+			console.log("upload progress: " + Math.round(progress) + "%");
+			
+		},
+		
+		success: function(data){
+			//upload successful
+			console.log("upload successful!");
+			console.log(data);
+			$("#upload_feedback").html("File uploaded - please refresh this page");
+
+		},
+		
+		error: function(error){
+			//upload failed
+			console.log("upload error: " + error.name + ": " + error.message);
+			$("#upload_feedback").html(" error!");
+
+		}
+	});
+});
+</script>
