@@ -1,16 +1,21 @@
 <?php
 $orders_class = new class_orders;
-$orders = $orders_class->all();	
+$orders = $orders_class->all();
+$YTDTotalSpend = 0;
 
 foreach ($orders AS $order) {
 	$supplierName = "'" . $order['supplier'] . "'";
-	
+
 	if (isset($suppliersArray[$supplierName])) {
 		$suppliersArray[$supplierName] = $suppliersArray[$supplierName] + $order['value'];
 	} else {
 		$suppliersArray[$supplierName] = $order['value'];
 	}
+
+	$YTDTotalSpend = $YTDTotalSpend + $order['value'];
 }
+
+
 
 arsort($suppliersArray);
 ?>
@@ -43,8 +48,9 @@ var myChart = new Chart(ctx, {
 <table class="table bg-white">
 	<thead>
 		<tr>
-			<th scope="col" style="width: 120px;">Supplier</th>
-			<th scope="col" style="width: 120px;">Total Spend</th>
+			<th scope="col">Supplier</th>
+			<th scope="col" style="width: 200px;">Total Spend</th>
+			<th scope="col" style="width: 80px;">%</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -52,18 +58,19 @@ var myChart = new Chart(ctx, {
 		foreach ($suppliersArray AS $supplier => $value) {
 			$cost_centre_class = new class_cost_centres;
 			$cost_centre = $cost_centre_class->getOne($order['cost_centre']);
-			
+
 			$output  = "<tr>";
-			$output .= "<th scope=\"row\"><a href=\"index.php?n=suppliers_unique&name=" . str_replace("'", "", $supplier) . "\">" . str_replace("'", "", $supplier) . "</a></td>";
-			$output .= "<th>£" . number_format($value,2) . "</td>";
-			
+			$output .= "<td scope=\"row\"><a href=\"index.php?n=suppliers_unique&name=" . str_replace("'", "", $supplier) . "\">" . str_replace("'", "", $supplier) . "</a></td>";
+			$output .= "<td>£" . number_format($value,2) . "</td>";
+			$output .= "<td>" . number_format(($value/$YTDTotalSpend)*100,1) . "</td>";
+
 			$output .= "</tr>";
-			
+
 			echo $output;
-			
-			
+
+
 		}
 		?>
-		
+
 	</tbody>
 </table>
