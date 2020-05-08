@@ -5,6 +5,10 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 $orders_class = new class_orders;
 $orders = $orders_class->all(null, $cost_centre['uid']);
 
+if (!$cost_centre['department'] == $_SESSION['department']) {
+	echo "You have tried to access a cost centre that you are not authorised to view";
+	exit;
+}
 ?>
 
 <h2><?php echo $cost_centre['name'];?> <small class="text-muted"><?php echo $cost_centre['grouping'];?></small></h2>

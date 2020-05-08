@@ -55,7 +55,11 @@ $cost_centre = $cost_centre_class->getOne($order['cost_centre']);
 
 $uploads_class = new class_uploads;
 $uploads = $uploads_class->all($order['uid']);
-//print_r($uploads);
+
+if (!$cost_centre['department'] == $_SESSION['department']) {
+	echo "You have tried to access an order that you are not authorised to view";
+	exit;
+}
 ?>
 
 <div class="float-left">
@@ -65,7 +69,7 @@ $uploads = $uploads_class->all($order['uid']);
 		$output .="<i class=\"fas fa-paperclip\"> " . $upload['name'] . "</i>";
 		$output .= "</a>";
 		$output .= "<i id=\"" . $upload['uid'] . "\" class=\"fas fa-trash float-right deleteUpload\"></i></div>";
-		
+
 		echo $output;
 	}
 	?>
@@ -159,13 +163,13 @@ echo $output;
 			console.log("upload started");
 			$("#upload_feedback").html("Uploading File");
 		},
-		
+
 		progress: function(progress){
 			//received progress
 			console.log("upload progress: " + Math.round(progress) + "%");
-			
+
 		},
-		
+
 		success: function(data){
 			//upload successful
 			console.log("upload successful!");
@@ -173,7 +177,7 @@ echo $output;
 			$("#upload_feedback").html("File uploaded - please refresh this page");
 
 		},
-		
+
 		error: function(error){
 			//upload failed
 			console.log("upload error: " + error.name + ": " + error.message);
