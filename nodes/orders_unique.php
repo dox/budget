@@ -104,14 +104,14 @@ if (!isset($order['paid']) || empty($order['paid'])) {
 		<span class="sr-only">Toggle Dropdown</span>
 	</button>
   <div class="dropdown-menu">
-		<a class="dropdown-item" href="index.php?n=orders_edit&uid=<?php echo $order['uid']; ?>">Edit Order</a>
+		<a class="dropdown-item" href="index.php?n=orders_edit&uid=<?php echo $order['uid']; ?>"><i class="far fa-edit"></i> Edit Order</a>
+		<a class="dropdown-item" href="index.php?n=orders_create&cloneUID=<?php echo $order['uid']; ?>"><i class="far fa-clone"></i> Clone Order</a>
+    <div class="dropdown-divider"></div>
 		<?php
 		if (isset($order['paid']) || !empty($order['paid'])) {
-			echo "<a class=\"dropdown-item\" href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "&paid=false\">Mark as Unpaid</a>";
+			echo "<a class=\"dropdown-item\" href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "&paid=false\"><i class=\"far fa-undo-alt\"></i> Mark as Unpaid</a>";
 		}
 		?>
-    <div class="dropdown-divider"></div>
-		<a class="dropdown-item" href="index.php?n=orders_create&cloneUID=<?php echo $order['uid']; ?>">Clone Order</a>
   </div>
 </div>
 
