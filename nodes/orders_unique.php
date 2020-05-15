@@ -89,20 +89,31 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 
 <?php
 if (!isset($order['paid']) || empty($order['paid'])) {
-	$output  = "<p class=\"text-right\">";
-	$output .= "<a href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "&paid=true\" class=\"btn btn-sm btn-success\">Mark as Paid</a> ";
-	$output .= "<a href=\"index.php?n=orders_edit&uid=" . $order['uid'] . "\" class=\"btn btn-sm btn-secondary\">Edit Order</a></p>";
+	$button  = "<button type=\"button\" class=\"btn btn-sm btn-success\" onclick=\"location.href='index.php?n=orders_unique&uid=" . $order['uid'] . "&paid=true'\">Mark As Paid</button>";
+	$button .= "<button type=\"button\" class=\"btn btn-sm btn-success dropdown-toggle dropdown-toggle-split\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">";
 } else {
 	$datePaid = date('Y-m-d', strtotime($order['paid']));
-	$output  = "<p class=\"text-right\">";
-	$output .= "<a href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "&paid=false\" class=\"btn btn-sm btn-secondary\">Paid on " . $datePaid . " - Mark as Unpaid</a> ";
-	$output .= "<a href=\"index.php?n=orders_edit&uid=" . $order['uid'] . "\" class=\"btn btn-sm btn-secondary\">Edit Order</a></p>";
+
+	$button  = "<button type=\"button\" class=\"btn btn-sm btn-secondary\">Paid on " . $datePaid . "</button>";
+	$button .= "<button type=\"button\" class=\"btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">";
 }
-
-echo $output;
 ?>
-</p>
 
+<div class="btn-group float-right">
+	<?php echo $button; ?>
+		<span class="sr-only">Toggle Dropdown</span>
+	</button>
+  <div class="dropdown-menu">
+		<a class="dropdown-item" href="index.php?n=orders_edit&uid=<?php echo $order['uid']; ?>">Edit Order</a>
+		<?php
+		if (isset($order['paid']) || !empty($order['paid'])) {
+			echo "<a class=\"dropdown-item\" href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "&paid=false\">Mark as Unpaid</a>";
+		}
+		?>
+    <div class="dropdown-divider"></div>
+		<a class="dropdown-item" href="index.php?n=orders_create&cloneUID=<?php echo $order['uid']; ?>">Clone Order</a>
+  </div>
+</div>
 
 <h2>Supplier: </h2>
 <?php
