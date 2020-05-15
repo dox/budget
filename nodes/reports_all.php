@@ -1,23 +1,38 @@
 <h2>Reports</h2>
 
-            <div class="row row--gutter row--responsive mt-3">
-                <div class="row__column">
-                    <div class="card">
-                        <a href="index.php?n=reports_monthly">Monthly Spend</a>
-                        <p class="mt-1">Spend per month, displayed in a graph.</p>
-                    </div>
-                </div>
-                <div class="row__column">
-                    <div class="card">
-                        <a href="index.php?n=reports_mostexpensive">Most Expensive Orders</a>
-                        <p class="mt-1">All-time most expensive orders.</p>
-                    </div>
-                </div>
-                <div class="row__column">
-                    <div class="card">
-                        <a href="index.php?n=reports_suppliers_all">Suppliers</a>
-                        <p class="mt-1">All-suppliers and how much has been spent with them.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+<div class="row">
+  <div class="col-sm">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Monthly Spend</h5>
+        <!--<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
+        <p class="card-text">Spend per month, displayed in a graph.</p>
+        <a href="index.php?n=reports_monthly" class="card-link">Run Report</a>
+        <a href="#" class="card-link"><strike>Edit</strike></a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Most Expensive Orders</h5>
+        <!--<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
+        <p class="card-text">All-time most expensive orders.</p>
+        <a href="index.php?n=reports_mostexpensive" class="card-link">Run Report</a>
+        <a href="#" class="card-link"><strike>Edit</strike></a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Suppliers</h5>
+        <!--<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
+        <p class="card-text">All-suppliers and how much has been spent with them.</p>
+        <a href="index.php?n=reports_suppliers_all" class="card-link">Run Report</a>
+        <a href="#" class="card-link"><strike>Edit</strike></a>
+      </div>
+    </div>
+  </div>
+</div>
