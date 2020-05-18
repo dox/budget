@@ -49,6 +49,7 @@ public function all($date = null, $costCentre = null, $supplier = null, $search 
 				orders.po,
 				orders.order_num,
 				orders.name,
+				orders.username,
 				orders.value,
 				orders.supplier,
 				orders.description,
@@ -133,16 +134,16 @@ public function table($orders = null) {
 	foreach ($orders AS $order) {
 		$cost_centre_class = new class_cost_centres;
 		$cost_centre = $cost_centre_class->getOne($order['cost_centre']);
-		
+
 		$uploads_class = new class_uploads;
 		$uploads = $uploads_class->all($order['uid']);
-		
+
 		if (isset($order['paid'])) {
 			$class = "table-active";
 		} else {
 			$class = "";
 		}
-		
+
 		if (!empty($uploads)) {
 			$uploadsOutput = " <i class=\"fas text-muted fa-paperclip\"></i>";
 		} else {
