@@ -156,7 +156,12 @@ public function table($orders = null) {
 		$output .= "<td><i class=\"fas fa-coins\" style=\"color: " . $cost_centre['colour'] . ";\"></i> <a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</a></td>";
 		$output .= "<td>" . $order['name'] . "</td>";
 		$output .= "<td><a href=\"index.php?n=suppliers_unique&name=" . $order['supplier'] . "\">" . $order['supplier'] . "</a></td>";
-		$output .= "<td class=\"text-right color-red\">£" . number_format($order['value']) . " <i class=\"fas fa-long-arrow-alt-right fa-sm\"></i></td>";
+
+		if ($order['value'] < 0) {
+			$output .= "<td class=\"text-right color-green\">£" . number_format($order['value']) . " <i class=\"fas fa-long-arrow-alt-left fa-sm\"></i></td>";
+		} else {
+			$output .= "<td class=\"text-right color-red\">£" . number_format($order['value']) . " <i class=\"fas fa-long-arrow-alt-right fa-sm\"></i></td>";
+		}
 		$output .= "</tr>";
 	}
 
