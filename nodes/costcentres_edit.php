@@ -21,15 +21,12 @@ if (isset($_POST['code'])) {
 		"colour" => $_POST['colour'],
 		"value" => $_POST['budget']
 	);
-	
+
 	$cost_centre_class->update($_POST['uid'], $data);
-	
-	$navBarMessagesClass = new class_navbar_messages;
-	$navBarMessage = $navBarMessagesClass->create("1","success","Cost centre '" . $_POST['name'] . "' updated","0");
 }
 
-$cost_centre = $cost_centre_class->getOne($_GET['uid']);	
-	
+$cost_centre = $cost_centre_class->getOne($_GET['uid']);
+
 ?>
 
 <h2>Edit Cost Centre '<?php echo $cost_centre['name'];?>'</h2>
@@ -49,7 +46,7 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col">
 			<div class="form-group">
@@ -77,7 +74,7 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 							$selected = " ";
 						}
 						$output  = "<option " . $selected . " value=\"" .  $department['uid'] . "\">" . $department['name'] . "</option>";
-						
+
 						echo $output;
 					}
 					?>
