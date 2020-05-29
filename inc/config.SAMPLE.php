@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $db_host		=	"localhost";
-$db_name		=	"database-name";	
+$db_name		=	"database-name";
 $db_username	=	"database-username";
 $db_password	=	"database-password";
 
@@ -17,4 +17,3 @@ define("LDAP_ACCOUNT_SUFFIX", "@some.ldap.account.suffix");
 define("BUDGET_STARTDATE", "2019-08-01");
 define("BUDGET_ENDDATE", "2020-07-31");
 ?>
-
