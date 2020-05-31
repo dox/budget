@@ -1,11 +1,13 @@
 <?php
 $suppliers_class = new class_suppliers;
 $supplier = $suppliers_class->getOne($_GET['name']);
+
+$supplierURL = "index.php?n=suppliers_unique&name=" . urlencode($_GET['name']);
 ?>
 
 <h2>Edit Supplier '<?php echo $_GET['name'];?>'</h2>
 
-<form method="POST" action="index.php?n=suppliers_unique&name=<?php echo $_GET['name']; ?>">
+<form method="POST" action="<?php echo $supplierURL; ?>">
 	<div class="form-group">
 		<label for="name">Name</label>
 		<input type="text" class="form-control" readonly id="name" name="name" placeholder="Name" value="<?php echo $_GET['name']; ?>">

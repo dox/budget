@@ -155,7 +155,9 @@ public function table($orders = null) {
 		$output .= "<td><a href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "\">" . $order['po'] . $uploadsOutput . "</a></td>";
 		$output .= "<td><i class=\"fas fa-coins\" style=\"color: " . $cost_centre['colour'] . ";\"></i> <a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</a></td>";
 		$output .= "<td>" . $order['name'] . "</td>";
-		$output .= "<td><a href=\"index.php?n=suppliers_unique&name=" . $order['supplier'] . "\">" . $order['supplier'] . "</a></td>";
+
+		$supplierURL = "index.php?n=suppliers_unique&name=" . urlencode($order['supplier']);
+		$output .= "<td><a href=\"" . $supplierURL . "\">" . $order['supplier'] . "</a></td>";
 
 		if ($order['value'] < 0) {
 			$output .= "<td class=\"text-right color-green\">£" . number_format($order['value']) . " <i class=\"fas fa-long-arrow-alt-left fa-sm\"></i></td>";

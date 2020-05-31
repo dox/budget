@@ -23,9 +23,10 @@ if (isset($_POST['name'])) {
 }
 
 $supplier = $suppliers_class->getOne($_GET['name']);
+$supplierURL = "index.php?n=suppliers_edit&name=" . urlencode($_GET['name']);
 ?>
 
-<h2>Orders from Supplier: <a href="index.php?n=suppliers_edit&name=<?php echo $_GET['name'];?>"><?php echo $_GET['name'];?></a></h2>
+<h2>Orders from Supplier: <a href="<?php echo $supplierURL;?>"><?php echo $_GET['name'];?></a></h2>
 
 <?php
 echo $orders_class->table($orders);

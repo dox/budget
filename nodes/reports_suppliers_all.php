@@ -58,9 +58,10 @@ var myChart = new Chart(ctx, {
 		foreach ($suppliersArray AS $supplier => $value) {
 			$cost_centre_class = new class_cost_centres;
 			$cost_centre = $cost_centre_class->getOne($order['cost_centre']);
+			$supplierURL = "index.php?n=suppliers_unique&name=" . urlencode(str_replace("'", "", $supplier));
 
 			$output  = "<tr>";
-			$output .= "<td scope=\"row\"><a href=\"index.php?n=suppliers_unique&name=" . str_replace("'", "", $supplier) . "\">" . str_replace("'", "", $supplier) . "</a></td>";
+			$output .= "<td scope=\"row\"><a href=\"" . $supplierURL . "\">" . str_replace("'", "", $supplier) . "</a></td>";
 			$output .= "<td>£" . number_format($value,2) . "</td>";
 			$output .= "<td>" . number_format(($value/$YTDTotalSpend)*100,1) . "</td>";
 
