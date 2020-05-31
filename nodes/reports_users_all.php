@@ -8,7 +8,7 @@ foreach ($orders AS $order) {
 	$users_class = new class_users;
 	$userLookup = $users_class->getOne($order['username']);
 
-	$username = "'" . $userLookup['firstname'] . "'";
+	$username = "'" . $userLookup['firstname'] . " " . $userLookup['lastname'] . "'";
 
 	if (isset($usersArray[$username])) {
 		$usersArray[$username] = $usersArray[$username] + $order['value'];
