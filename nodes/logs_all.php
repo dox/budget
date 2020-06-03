@@ -1,7 +1,7 @@
 <?php
 $logs_class = new class_logs;
-$logs_class->purge();	
-$logs = $logs_class->all();	
+$logs_class->purge();
+$logs = $logs_class->all();
 
 $user_class = new class_users;
 $user = $user_class->getOne($_SESSION['username']);
@@ -18,9 +18,12 @@ function generateRandomString($length = 10) {
 ?>
 
 <h2>Logs</h2>
-	
-<canvas id="canvas" width="400" height="100"></canvas>
 
+<canvas id="canvas" width="400" height="100"></canvas>
+<form class="form-inline">
+  <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Quick Filter</label>
+  <input type="text" class="form-control mb-2 mr-sm-2 flex-fill" id="logSearchInput" placeholder="Filter Logs...">
+</form>
 <table class="table bg-white">
 	<thead>
 		<tr>
@@ -31,7 +34,7 @@ function generateRandomString($length = 10) {
 			<th scope="col">Username</th>
 		</tr>
 	</thead>
-	<tbody>
+	<tbody id="logsTable">
 		<?php
 		foreach ($logs AS $log) {
 			if ($user['type'] == "administrator") {
@@ -40,7 +43,7 @@ function generateRandomString($length = 10) {
 				$description = $log['description'];
 				$ip = $log['ip'];
 				$username = $log['username'];
-				
+
 				$class = "";
 			} else {
 				$date = date('Y-m-d H:i:s');
@@ -48,10 +51,10 @@ function generateRandomString($length = 10) {
 				$description = generateRandomString(rand(30,55));
 				$ip = generateRandomString(rand(13,15));
 				$username = generateRandomString(rand(6,12));
-				
+
 				$class = "blurry";
 			}
-			
+
 			$output  = "<tr class=\"" . $class . "\">";
 			$output .= "<th scope=\"row\">" . $date . "</th>";
 			$output .= "<th>" . $type . "</th>";
@@ -59,13 +62,13 @@ function generateRandomString($length = 10) {
 			$output .= "<th>" . $ip . "</th>";
 			$output .= "<th>" . $username . "</th>";
 			$output .= "</tr>";
-			
+
 			echo $output;
-			
-			
+
+
 		}
 		?>
-		
+
 	</tbody>
 </table>
 
@@ -96,7 +99,7 @@ foreach ($logsTotal AS $log) {
 
 <script>
 	var timeFormat = 'YYYY/MM/DD';
-	
+
 	var config = {
 		type: 'line',
 		data: {
@@ -142,9 +145,18 @@ foreach ($logsTotal AS $log) {
 			},
 		}
 	};
-	
+
 	window.onload = function() {
 		var ctx = document.getElementById('canvas').getContext('2d');
 		window.myLine = new Chart(ctx, config);
 	};
+
+$(document).ready(function(){
+  $("#logSearchInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#logsTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
 </script>
