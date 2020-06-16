@@ -90,7 +90,11 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 			$output .= "<td scope=\"row\" style=\"width: 50px;\"><div style=\"width: 15px; height: 15px; border-radius: 2px; background: " . $cost_centre['colour'] . ";\"></div></td>";
 			$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</td>";
 			$output .= "<td>" . $cost_centre['name'] . "</td>";
-			$output .= "<td class=\"text-right color-red\">£" . number_format($value) . " <i class=\"fas fa-long-arrow-alt-right fa-sm\"></i></td>";
+			if ($value < 0) {
+				$output .= "<td class=\"text-right color-green\">£" . number_format($value) . " <i class=\"fas fa-long-arrow-alt-left fa-sm\"></i></td>";
+			} else {
+				$output .= "<td class=\"text-right color-red\">£" . number_format($value) . " <i class=\"fas fa-long-arrow-alt-right fa-sm\"></i></td>";
+			}
 
 
 			$output .= "</tr>";
