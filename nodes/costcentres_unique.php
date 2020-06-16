@@ -81,7 +81,7 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 						suggestedMin: 0
 					},
 					scaleLabel: {
-						display: true,
+						display: false,
 						labelString: '£'
 					}
 				}]

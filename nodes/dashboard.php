@@ -147,7 +147,7 @@ var myChart = new Chart(ctx, {
                     beginAtZero: true
                 },
                 scaleLabel: {
-					display: true,
+					display: false,
 					labelString: '£'
 				}
             }]
