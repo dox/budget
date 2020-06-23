@@ -2,10 +2,10 @@
 	<div class="container">
 
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active"><a class="nav-link" href="index.php?n=dashboard"><span class="d-none d-sm-block"><i class="fas fa-home fa-sm color-blue"></i> Dashboard</span><span class="d-block d-sm-none"><i class="far fa-home fa-lg color-blue"></i></span></a></li>
-				<li class="nav-item"><a class="nav-link" href="index.php?n=orders_all"><span class="d-none d-sm-block"><i class="fas fa-exchange-alt fa-sm color-green"></i> Orders</span><span class="d-block d-sm-none"><i class="far fa-exchange-alt fa-lg color-green"></i></span></a></li>
-				<li class="nav-item"><a class="nav-link" href="index.php?n=costcentres_all"><span class="d-none d-sm-block"><i class="fas fa-coins fa-sm color-red"></i> Cost Centres</span><span class="d-block d-sm-none"><i class="far fa-coins fa-lg color-red"></i></span></a></li>
-				<li class="nav-item"><a class="nav-link" href="index.php?n=reports_all"><span class="d-none d-sm-block"><i class="fas fa-chart-line fa-sm color-blue"></i> Reports</span><span class="d-block d-sm-none"><i class="far fa-chart-line fa-lg color-blue"></i></span></a></li>
+				<li class="nav-item active"><a class="nav-link" href="index.php?n=dashboard"><span class="d-none d-sm-block"><i class="fas fa-home fa-sm color-blue"></i> Dashboard</span><span class="d-block d-sm-none"><i class="fas fa-home fa-lg color-blue"></i></span></a></li>
+				<li class="nav-item"><a class="nav-link" href="index.php?n=orders_all"><span class="d-none d-sm-block"><i class="fas fa-exchange-alt fa-sm color-green"></i> Orders</span><span class="d-block d-sm-none"><i class="fas fa-exchange-alt fa-lg color-green"></i></span></a></li>
+				<li class="nav-item"><a class="nav-link" href="index.php?n=costcentres_all"><span class="d-none d-sm-block"><i class="fas fa-coins fa-sm color-red"></i> Cost Centres</span><span class="d-block d-sm-none"><i class="fas fa-coins fa-lg color-red"></i></span></a></li>
+				<li class="nav-item"><a class="nav-link" href="index.php?n=reports_all"><span class="d-none d-sm-block"><i class="fas fa-chart-line fa-sm color-blue"></i> Reports</span><span class="d-block d-sm-none"><i class="fas fa-chart-line fa-lg color-blue"></i></span></a></li>
 			</ul>
 			<form class="form-inline my-2 my-lg-0 d-none d-sm-block" method="POST" action="index.php?n=search">
 				<input class="form-control mr-sm-2 " type="search" name="search" placeholder="Search" aria-label="Search">
