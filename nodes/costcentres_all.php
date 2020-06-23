@@ -13,15 +13,15 @@ if (isset($_POST['code'])) {
 		"colour" => $_POST['colour'],
 		"value" => $_POST['budget']
 	);
-	
+
 	$cost_centre_class->insert($data);
-	
+
 	$title = "Cost Centre Created";
 	$message = "New cost centre '" . $_POST['name'] . "' created";
 	echo toast($title, $message);
 }
 
-$cost_centres = $cost_centre_class->all();	
+$cost_centres = $cost_centre_class->all();
 ?>
 
 <h2>Cost Centres <small class="text-muted"><?php echo "Budget Year: " . BUDGET_STARTDATE . " - " . BUDGET_ENDDATE; ?></small></h2>
@@ -41,18 +41,18 @@ $cost_centres = $cost_centre_class->all();
 		<?php
 		foreach($groups AS $group) {
 			$output  = "<tr><td colspan='6'>" . ($group) ."</td></tr>";
-			
+
 			foreach ($cost_centres AS $cost_centre) {
 				$output .= "";
 				$remainingValue = $cost_centre['value'] - $cost_centre_class->totalSpendByCostCentre($cost_centre['uid']);
-				
+
 				if ($cost_centre['grouping'] == $group) {
 					if ($cost_centre['value'] <= 0) {
 						$remainingValuePercentage = 0;
 					} else {
 						$remainingValuePercentage = round(($remainingValue / $cost_centre['value'])*100);
 					}
-					
+
 					// if the budget is spent, make it red
 					// if the budget is less than the current percentage way through the year, make it yellow
 					// otherwise, make it blue
@@ -63,27 +63,27 @@ $cost_centres = $cost_centre_class->all();
 							$progressBarClass = "bg-info";
 						}
 						$remainingValuePercentage = 100;
-						
+
 					} elseif ($remainingValuePercentage < (100-percentageIntoBudget())) {
 						$progressBarClass = "bg-warning";
 					} else {
 						$progressBarClass = "bg-info";
 					}
-					
+
 					$output .= "<td scope=\"row\"><div style=\"width: 15px; height: 15px; border-radius: 2px; background: " . $cost_centre['colour'] . ";\"></div></td>";
 					$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</td>";
 					$output .= "<td>" . $cost_centre['name'] . "</td>";
 					$output .= "<td>£" . number_format($cost_centre['value']) . "</td>";
 					$output .= "<td><div class=\"progress\" ><div class=\"progress-bar " . $progressBarClass . "\" role=\"progressbar\" style=\"width: " . $remainingValuePercentage . "%;\" aria-valuenow=\"" . $remainingValuePercentage . "\" aria-valuemin=\"0\" aria-valuemax=\"100\">£" . number_format($remainingValue) . " </div></div>" . "</td>";
-					$output .= "<td>" . "<a href=\"index.php?n=costcentres_edit&uid=" . $cost_centre['uid'] . "\"><i class=\"far fa-pencil-alt\"></i></a> ";
-					$output .= "<a href=\"index.php?n=costcentres_delete&uid=" . $cost_centre['uid'] . "\"><i class=\"far fa-trash-alt\"></i></a>" . "</td>";
+					$output .= "<td>" . "<a href=\"index.php?n=costcentres_edit&uid=" . $cost_centre['uid'] . "\"><i class=\"fas fa-pencil-alt\"></i></a> ";
+					$output .= "<a href=\"index.php?n=costcentres_delete&uid=" . $cost_centre['uid'] . "\"><i class=\"fas fa-trash-alt\"></i></a>" . "</td>";
 					$output .= "</tr>";
 				}
-				
+
 			}
 			echo $output;
 		}
 		?>
-		
+
 	</tbody>
 </table>
