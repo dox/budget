@@ -82,4 +82,57 @@ function tidyUrl($url) {
 	// return url string
 	return $url;
 }
+
+function sendMail($subject = "No Subject Specified", $recipients = NULL, $body = NULL, $senderAddress = NULL, $senderName = NULL) {
+	require_once($_SERVER['DOCUMENT_ROOT'] . '/inc/PHPMailer/class.phpmailer.php');
+
+	$mail = new PHPMailer;
+
+	$mail->IsSMTP();
+	$mail->Host = smtp_server;
+	$mail->IsHTML(true);
+
+	if (isset($senderAddress)) {
+		$mail->From = $senderAddress;
+		$mail->FromName = $senderName;
+		$mail->AddReplyTo($senderAddress, $senderName);
+	} else {
+		$mail->From = "communications@seh.ox.ac.uk";
+		$mail->FromName = "SEH Communications";
+		$mail->AddReplyTo("communications@seh.ox.ac.uk", "SEH Communications");
+
+	}
+
+	//$recipients = explode(",", $recipients);
+
+	//echo $recipients;
+
+	//$mail->AddAddress("noreply@seh.ox.ac.uk");
+	foreach ($recipients AS $recipient) {
+		$mail->addBCC($recipient);
+	}
+
+
+
+
+	$mail->WordWrap = 50;                                 // Set word wrap to 50 characters
+	//$mail->AddAttachment('/var/tmp/file.tar.gz');         // Add attachments
+	//$mail->AddAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+	$mail->IsHTML(true);                                  // Set email format to HTML
+
+	$mail->Subject = $subject;
+	$mail->Body    = $body;
+	//$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+	if($mail->Send()) {
+		//$logInsert = (new Logs)->insert("email","success",null,"Email message sent to " . implode(", ",$recipients) . " <code>Subject: " . $subject . "</code>");
+	} else {
+		//$logInsert = (new Logs)->insert("email","error",null,"Email message could not be sent to " . implode(", ",$recipients) . " <code>" . $mail->ErrorInfo . "</code>");
+		echo 'Message could not be sent.';
+		echo 'Mailer Error: ' . $mail->ErrorInfo;
+		exit;
+	}
+
+	//echo 'Message has been sent';
+}
 ?>
