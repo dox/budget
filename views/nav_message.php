@@ -1,5 +1,5 @@
 <?php
-$navBarMessages = "";	
+$navBarMessages = "";
 
 //$navBarColour = "#6cc758"; // green
 $navBarColour = "#F86380"; // red
