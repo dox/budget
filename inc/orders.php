@@ -89,6 +89,42 @@ public function all($date = null, $costCentre = null, $supplier = null, $search 
 	return $orders;
 }
 
+public function all_previous_years($search = null) {
+	global $db;
+
+	$sql  = "SELECT
+				orders.uid,
+				orders.date,
+				orders.cost_centre,
+				orders.po,
+				orders.order_num,
+				orders.name,
+				orders.username,
+				orders.value,
+				orders.supplier,
+				orders.description,
+				orders.paid,
+				cost_centres.code,
+				cost_centres.department
+			FROM orders, cost_centres
+			WHERE orders.cost_centre = cost_centres.uid
+			AND orders.date < '" . BUDGET_STARTDATE . "' ";
+
+			if (isset($search)) {
+				$sql .= " AND (
+					orders.name LIKE '%" . $search . "%' OR
+					orders.supplier LIKE '%" . $search . "%' OR
+					orders.order_num LIKE '%" . $search . "%' OR
+					orders.po LIKE '%" . $search . "%' OR
+					orders.description LIKE '%" . $search . "%') ";
+			}
+	$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
+			ORDER BY orders.date DESC, orders.po DESC;";
+	$orders = $db->rawQuery($sql);
+
+	return $orders;
+}
+
 public function insert($data = null) {
 	global $db;
 
