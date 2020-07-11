@@ -58,7 +58,7 @@ $departments = $departments_class->all();
 
 <hr />
 <h2><i class="fas fa-wrench fa-sm"></i> System Maintenance</h2>
-<a href="index.php?n=index&logout" class="btn btn-warning">Log Out</a><br /><br />
+<a href="index.php?n=index&logout" class="btn btn-warning"><i class="fas fa-sign-out-alt"></i> Sign Out</a><br /><br />
 
 <?php if ($user['type'] == "administrator" || $user['type'] == "accountant") { ?>
 <div class="dropdown">

@@ -125,8 +125,12 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 		<script src="js/app.js"></script>
 </head>
 <body>
-	<?php include('views/nav_top.php');?>
-	<?php include('views/nav_message.php');?>
+	<?php
+	if (isset($_SESSION['username'])) {
+		include('views/nav_top.php');
+		include('views/nav_message.php');
+	}
+	?>
 	<br />
 	<div class="container">
 		<?php
@@ -147,7 +151,11 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 		include_once($node);
 		?>
 	</div>
-	<?php include('views/footer.php');?>
+	<?php
+	if (isset($_SESSION['username'])) {
+		include('views/footer.php');
+	}
+	?>
 </body>
 
 </html>
