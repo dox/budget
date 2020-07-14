@@ -56,7 +56,12 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 		<?php
 		$valueOfordersThisMonth = $orders_class->ordersTotalValueByMonth($dateReference);
 		$valueOfordersPreviousMonth = $orders_class->ordersTotalValueByMonth($previousMonth);
-		$percentageDifference = round((($valueOfordersThisMonth/$valueOfordersPreviousMonth) * 100)-100, 2);
+
+		if ($valueOfordersThisMonth > 0 && $valueOfordersPreviousMonth > 0) {
+			$percentageDifference = round((($valueOfordersThisMonth/$valueOfordersPreviousMonth) * 100)-100, 2);
+		} else {
+			$percentageDifference = 0;
+		}
 
 		if ($percentageDifference > 0) {
 			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-up color-red\"></i></div>";
@@ -79,7 +84,13 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 		// this needs fixing to include the whole of the budget year!
 		$valueOfordersThisYear = $orders_class->ordersTotalValueByYear(date('Y'));
 		$valueOfordersPreviousYear = $orders_class->ordersTotalValueByYear(date('Y')-1);
-		$percentageDifference = round((($valueOfordersThisMonth/$valueOfordersPreviousYear) * 100)-100, 2);
+
+		if ($valueOfordersThisYear > 0 && $valueOfordersPreviousYear > 0) {
+			$percentageDifference = round((($valueOfordersThisYear/$valueOfordersPreviousYear) * 100)-100, 2);
+		} else {
+			$percentageDifference = 0;
+		}
+
 
 		if ($percentageDifference > 0) {
 			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-up color-red\"></i></div>";
