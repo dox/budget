@@ -102,7 +102,7 @@ public function ordersTotalValueByMonth($date = null) {
 	return $totalValue;
 }
 
-public function ordersTotalValueByYear($year = null) {
+public function ordersTotalValueByYear($date = null) {
 	global $db;
 
 	$sql  = "SELECT
@@ -120,11 +120,9 @@ public function ordersTotalValueByYear($year = null) {
 				cost_centres.code,
 				cost_centres.department
 			FROM orders, cost_centres
-			WHERE orders.cost_centre = cost_centres.uid";
-
-	$sql .= " AND YEAR(orders.date) = '" . date('Y',strtotime($year)) . "'";
-
-	$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
+			WHERE orders.cost_centre = cost_centres.uid
+			AND (orders.date BETWEEN '" . budgetStartDate($date) . "' AND '" . budgetEndDate($date) . "')
+			AND cost_centres.department = '" . $_SESSION['department'] . "'
 			ORDER BY orders.date DESC, orders.po DESC;";
 
 	$orders = $db->rawQuery($sql);

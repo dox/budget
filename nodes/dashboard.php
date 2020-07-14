@@ -14,16 +14,8 @@ $ordersAll = $orders_class->all();
 
 $ordersThisMonth = $orders_class->all($dateReference);
 
-$YTDTotalSpend = 0;
 $outstandingPayments = 0;
 foreach ($ordersAll AS $order) {
-
-	if (date('Y-m',strtotime($order['date'])) == date('Y-m')) {
-		$YTDTotalSpend = $YTDTotalSpend + $order['value'];
-	} else {
-		$YTDTotalSpend = $YTDTotalSpend + $order['value'];
-	}
-
 	if (empty($order['paid'])) {
 		$outstandingPayments = $outstandingPayments + $order['value'];
 	}
@@ -83,7 +75,7 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 		<?php
 		// this needs fixing to include the whole of the budget year!
 		$valueOfordersThisYear = $orders_class->ordersTotalValueByYear(date('Y'));
-		$valueOfordersPreviousYear = $orders_class->ordersTotalValueByYear(date('Y')-1);
+		$valueOfordersPreviousYear = $orders_class->ordersTotalValueByYear(date('Y-m-d', strtotime('1 year ago')));
 
 		if ($valueOfordersThisYear > 0 && $valueOfordersPreviousYear > 0) {
 			$percentageDifference = round((($valueOfordersThisYear/$valueOfordersPreviousYear) * 100)-100, 2);
@@ -103,7 +95,7 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 		<div class="card card--red">
 			<div class=\"clearfix\">
 				<?php echo $arrow; ?>
-			<h2 style="font-size: 20px;">&pound; <?php echo number_format($YTDTotalSpend);?></h2>
+				<h2 style="font-size: 20px;">&pound; <?php echo number_format($valueOfordersThisYear);?></h2>
 			<div class="mt-1" style="color: #A7AEBB;">Outgoings This Budget Year</div>
 		</div>
 	</div>
