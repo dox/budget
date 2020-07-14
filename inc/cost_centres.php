@@ -22,7 +22,7 @@ public function totalSpendByCostCentre($uid = null) {
 	global $db;
 
 	$totalSpend = $db->where("cost_centre", $uid);
-	$totalSpend = $db->where('date', Array (BUDGET_STARTDATE, BUDGET_ENDDATE), 'BETWEEN');
+	$totalSpend = $db->where('date', Array (budgetStartDate(), budgetEndDate()), 'BETWEEN');
 	$totalSpend = $db->getOne ("orders", "sum(value) AS value");
 
 	return $totalSpend['value'];

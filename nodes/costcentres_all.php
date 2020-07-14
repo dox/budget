@@ -24,7 +24,7 @@ if (isset($_POST['code'])) {
 $cost_centres = $cost_centre_class->all();
 ?>
 
-<h2>Cost Centres <small class="text-muted"><?php echo "Budget Year: " . BUDGET_STARTDATE . " - " . BUDGET_ENDDATE; ?></small></h2>
+<h2>Cost Centres <small class="text-muted"><?php echo "Budget Year: " . budgetStartDate() . " - " . budgetEndDate(); ?></small></h2>
 
 <table class="table bg-white">
 	<thead>

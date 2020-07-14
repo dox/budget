@@ -23,7 +23,7 @@ if (isset($_POST['po'])) {
 $orders = $orders_class->all();
 ?>
 
-<h2>Orders <small class="text-muted"><?php echo "Budget Year: " . BUDGET_STARTDATE . " - " . BUDGET_ENDDATE; ?></small></h2>
+<h2>Orders <small class="text-muted"><?php echo "Budget Year: " . budgetStartDate() . " - " . budgetEndDate(); ?></small></h2>
 
 <?php
 echo $orders_class->table($orders);

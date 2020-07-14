@@ -12,7 +12,7 @@ $log = new class_logs;
 $log->insert("search", $db->getLastQuery());
 ?>
 
-<h2>Search Orders <small class="text-muted"><?php echo "Budget Year: " . BUDGET_STARTDATE . " - " . BUDGET_ENDDATE; ?></small></h2>
+<h2>Search Orders <small class="text-muted"><?php echo "Budget Year: " . budgetStartDate() . " - " . budgetEndDate(); ?></small></h2>
 <form class="form-inline" method="POST" action="index.php?n=search">
 	<div class="form-group mb-2">
 		<input class="form-control form-control-lg" type="search" name="search" placeholder="Search" aria-label="Search" value="<?php echo $_POST['search']; ?>">

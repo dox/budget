@@ -1,6 +1,6 @@
 <?php
 function daysIntoBudget() {
-	$timediff = time() - strtotime(BUDGET_STARTDATE);
+	$timediff = time() - strtotime(budgetStartDate());
 	$datediff = round($timediff / (60 * 60 * 24));
 
 	return ($datediff);

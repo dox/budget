@@ -52,8 +52,8 @@ $departments = $departments_class->all();
 
 <hr />
 <h2><i class="fas fa-cogs fa-sm"></i> System Settings</h2>
-<?php echo "Budget Start Date: " . BUDGET_STARTDATE . "<br />"; ?>
-<?php echo "Budget End Date: " . BUDGET_ENDDATE . "<br /><br />"; ?>
+<?php echo "Budget Start Date: " . budgetStartDate() . "<br />"; ?>
+<?php echo "Budget End Date: " . budgetEndDate() . "<br /><br />"; ?>
 <?php echo "Percentage Into the Budget Year: " . percentageIntoBudget() ."%"; ?>
 
 <hr />

@@ -58,8 +58,7 @@ public function all($date = null, $costCentre = null, $supplier = null, $search 
 				cost_centres.department
 			FROM orders, cost_centres
 			WHERE orders.cost_centre = cost_centres.uid
-			AND (orders.date BETWEEN '" . BUDGET_STARTDATE . "' AND '" . BUDGET_ENDDATE . "')";
-
+			AND (orders.date BETWEEN '" . budgetStartDate() . "' AND '" . budgetEndDate() . "')";
 
 			if (isset($date)) {
 				$sql .= " AND YEAR(orders.date) = '" . date('Y',strtotime($date)) . "'
@@ -84,6 +83,7 @@ public function all($date = null, $costCentre = null, $supplier = null, $search 
 			}
 	$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
 			ORDER BY orders.date DESC, orders.po DESC;";
+
 	$orders = $db->rawQuery($sql);
 
 	return $orders;
@@ -156,7 +156,7 @@ public function all_previous_years($search = null) {
 				cost_centres.department
 			FROM orders, cost_centres
 			WHERE orders.cost_centre = cost_centres.uid
-			AND orders.date < '" . BUDGET_STARTDATE . "' ";
+			AND orders.date < '" . budgetStartDate() . "' ";
 
 			if (isset($search)) {
 				$sql .= " AND (
@@ -257,4 +257,35 @@ public function table($orders = null) {
 	return $output;
 }
 } //end CLASS
+
+function budgetStartDate($date = null) {
+	if ($date == null) {
+		$date = date('Y-m-d');
+	}
+
+	if (date('m-d', strtotime($date)) >= '01-01' && date('m-d', strtotime($date)) < BUDGET_STARTDATE) {
+		$dateFrom = date('Y', strtotime($date))-1 . "-" . BUDGET_STARTDATE;
+	} else {
+		$dateFrom = date('Y', strtotime($date)) . "-" . BUDGET_STARTDATE;
+	}
+
+	return $dateFrom;
+}
+
+
+
+function budgetEndDate($date = null) {
+	if ($date == null) {
+		$date = date('Y-m-d');
+	}
+
+	if (date('m-d', strtotime($date)) >= '01-01' && date('m-d', strtotime($date)) < BUDGET_ENDDATE) {
+		$dateTo = date('Y', strtotime($date)) . "-" . BUDGET_ENDDATE;
+	} else {
+		$dateTo = date('Y', strtotime($date))+1 . "-" . BUDGET_ENDDATE;
+	}
+
+	return $dateTo;
+}
+
 ?>

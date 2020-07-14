@@ -22,18 +22,18 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 				cost_centres.department
 			FROM orders, cost_centres
 			WHERE orders.cost_centre = cost_centres.uid
-			AND (orders.date BETWEEN '" . BUDGET_STARTDATE . "' AND '" . BUDGET_ENDDATE . "')
+			AND (orders.date BETWEEN '" . budgetStartDate() . "' AND '" . budgetEndDate() . "')
 			AND orders.cost_centre = '" . $cost_centre['uid'] . "'
 			ORDER BY orders.date ASC;";
 	$ordersRunningTotal = $db->rawQuery($sql);
 	$budgetTotal = $cost_centre['value'];
-	$runningBudget["'" . BUDGET_STARTDATE . "'"] = "'" . ($budgetTotal) . "'";
+	$runningBudget["'" . budgetStartDate() . "'"] = "'" . ($budgetTotal) . "'";
 	foreach ($ordersRunningTotal AS $order) {;
 
 		$runningBudget["'" . $order['date'] . "'"] = "'" . ($budgetTotal - $order['value']) . "'";
 		$budgetTotal = $budgetTotal - $order['value'];
 	}
-	$runningBudget["'" . BUDGET_ENDDATE . "'"] = "'" . ($budgetTotal) . "'";
+	$runningBudget["'" . budgetEndDate() . "'"] = "'" . ($budgetTotal) . "'";
 ?>
 
 <canvas id="canvas" width="400" height="100"></canvas>
