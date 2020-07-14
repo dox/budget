@@ -89,6 +89,54 @@ public function all($date = null, $costCentre = null, $supplier = null, $search 
 	return $orders;
 }
 
+public function ordersTotalValueByMonth($date = null) {
+	global $db;
+
+	$orders = $this->all($date);
+
+	$totalValue = 0;
+	foreach ($orders AS $order) {
+		$totalValue = $totalValue + $order['value'];
+	}
+
+	return $totalValue;
+}
+
+public function ordersTotalValueByYear($year = null) {
+	global $db;
+
+	$sql  = "SELECT
+				orders.uid,
+				orders.date,
+				orders.cost_centre,
+				orders.po,
+				orders.order_num,
+				orders.name,
+				orders.username,
+				orders.value,
+				orders.supplier,
+				orders.description,
+				orders.paid,
+				cost_centres.code,
+				cost_centres.department
+			FROM orders, cost_centres
+			WHERE orders.cost_centre = cost_centres.uid";
+
+	$sql .= " AND YEAR(orders.date) = '" . date('Y',strtotime($year)) . "'";
+
+	$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
+			ORDER BY orders.date DESC, orders.po DESC;";
+
+	$orders = $db->rawQuery($sql);
+
+	$totalValue = 0;
+	foreach ($orders AS $order) {
+		$totalValue = $totalValue + $order['value'];
+	}
+
+	return $totalValue;
+}
+
 public function all_previous_years($search = null) {
 	global $db;
 

@@ -1,15 +1,17 @@
 <?php
 if (isset($_GET['month'])) {
 	$dateReference = $_GET['month'];
-
+	$thisMonthText = "Outgoings For " . date('F, Y', strtotime($dateReference));
 } else {
 	$dateReference = date('Y-m-d');
+	$thisMonthText = "Outgoings This Month";
 }
 $previousMonth = date('Y-m-d', strtotime($dateReference . ' -1 month'));
 $nextMonth = date('Y-m-d', strtotime($dateReference . ' +1 month'));
 
 $orders_class = new class_orders;
 $ordersAll = $orders_class->all();
+
 $ordersThisMonth = $orders_class->all($dateReference);
 
 $YTDTotalSpend = 0;
@@ -51,22 +53,57 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 <br />
 <div class="row">
 	<div class="col-sm">
+		<?php
+		$valueOfordersThisMonth = $orders_class->ordersTotalValueByMonth($dateReference);
+		$valueOfordersPreviousMonth = $orders_class->ordersTotalValueByMonth($previousMonth);
+		$percentageDifference = round((($valueOfordersThisMonth/$valueOfordersPreviousMonth) * 100)-100, 2);
+
+		if ($percentageDifference > 0) {
+			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-up color-red\"></i></div>";
+		} elseif ($percentageDifference < 0) {
+			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-down color-green\"></i></div>";
+		} else {
+			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-right\"></i></div>";
+		}
+		?>
 		<div class="card card--blue">
-			<h2 style="font-size: 20px;">&pound; <?php echo number_format($totalSpendMonthly);?></h2>
-		<div class="mt-1" style="color: #A7AEBB;">Outgoings This Month</div>
-	</div>
+			<div class=\"clearfix\">
+				<?php echo $arrow; ?>
+				<h2 style="font-size: 20px;">&pound; <?php echo number_format($totalSpendMonthly);?></h2>
+				<div class="mt-1" style="color: #A7AEBB;"><?php echo $thisMonthText; ?></div>
+			</div>
+		</div>
 	</div>
 	<div class="col-sm">
+		<?php
+		// this needs fixing to include the whole of the budget year!
+		$valueOfordersThisYear = $orders_class->ordersTotalValueByYear(date('Y'));
+		$valueOfordersPreviousYear = $orders_class->ordersTotalValueByYear(date('Y')-1);
+		$percentageDifference = round((($valueOfordersThisMonth/$valueOfordersPreviousYear) * 100)-100, 2);
+
+		if ($percentageDifference > 0) {
+			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-up color-red\"></i></div>";
+		} elseif ($percentageDifference < 0) {
+			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-down color-green\"></i></div>";
+		} else {
+			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-right\"></i></div>";
+		}
+		?>
 		<div class="card card--red">
+			<div class=\"clearfix\">
+				<?php echo $arrow; ?>
 			<h2 style="font-size: 20px;">&pound; <?php echo number_format($YTDTotalSpend);?></h2>
 			<div class="mt-1" style="color: #A7AEBB;">Outgoings This Budget Year</div>
 		</div>
 	</div>
+	</div>
 	<div class="col-sm">
 		<div class="card card--green">
+			<div class=\"clearfix\">
 			<h2 style="font-size: 20px;">&pound; <?php echo number_format($outstandingPayments);?></h2>
 			<div class="mt-1" style="color: #A7AEBB;">Unpaid Orders</div>
 		</div>
+	</div>
 	</div>
 </div>
 <br />
