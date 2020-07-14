@@ -30,9 +30,9 @@
 }
 </style>
 
-
 <form class="form-signin text-center" method="POST" action="index.php?n=dashbosard">
 	<!--  <img class="mb-4" src="/docs/4.4/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">-->
+  <i class="fas fa-8x fa-flip-horizontal fa-piggy-bank" style="color: #F86380;"></i>
 	<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 	<label for="username" class="sr-only">Username</label>
 	<input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
@@ -41,9 +41,13 @@
 	<!--<div class="checkbox mb-3">
 		<label><input type="checkbox" name="remember-me" value="remember-me"> Remember me</label>
 	</div>-->
-	
+
 	<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-	<button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="top" title="This is your St Edmund Hall username/password (the same as you use to login to the SEH computers)">Forgot your password?</button>
+  <?php
+  if (RESET_URL != null) {
+    echo "<hr /><a href=\"" . RESET_URL . "\">Forgot your password?</a>";
+  }
+  ?>
 	<input type="hidden" name="loginformsubmit">
 </form>
 
