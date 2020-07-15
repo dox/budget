@@ -90,7 +90,7 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<title>Dashboard - Budget</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -125,14 +125,17 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 		<script src="js/app.js"></script>
 </head>
 <body>
+	<header>
 	<?php
 	if (isset($_SESSION['username'])) {
 		include('views/nav_top.php');
 		include('views/nav_message.php');
 	}
 	?>
+	</header>
 	<br />
-	<div class="container">
+	<main>
+	<main class="container">
 		<?php
 		if (isset($_SESSION['username'])) {
 			if (isset($_GET['n'])) {
@@ -150,7 +153,7 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 
 		include_once($node);
 		?>
-	</div>
+	</main>
 	<?php
 	if (isset($_SESSION['username'])) {
 		include('views/footer.php');
