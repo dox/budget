@@ -17,7 +17,7 @@
 					<a class="dropdown-item" href="index.php?n=search"><i class="fas fa-search"></i> Search</a>
 					<div class="dropdown-divider"></div>
 					<a class="dropdown-item" href="index.php?n=costcentres_create"><i class="fas fa-coins"></i> Create Cost Centre</a>
-					<a class="dropdown-item" href="#"><i class="fas fa-file-upload"></i> Create Import</a>
+					<a class="dropdown-item" href="./export.php" target="_blank"><i class="fas fa-file-download"></i> Create Export</a>
 					<div class="dropdown-divider"></div>
 					<a class="dropdown-item" href="index.php?n=user_settings"><i class="fas fa-user"></i> User Settings</a>
 					<a class="dropdown-item" href="index.php?n=logs_all"><i class="fas fa-clock"></i> Logs</a>
