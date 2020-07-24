@@ -60,7 +60,7 @@ foreach ($cost_centres AS $costCentre) {
   $outputMonth = null;
 
   $outputByCostCentre  = "{";
-  $outputByCostCentre .= "label: '" . $costCentre['name'] . "', ";
+  $outputByCostCentre .= "label: '" . str_replace("'", "\'", $costCentre['name']) . "', ";
   $outputByCostCentre .= "backgroundColor: '" . $costCentre['colour'] . "', ";
 
   $i = 11;
@@ -76,8 +76,6 @@ foreach ($cost_centres AS $costCentre) {
   $outputByCostCentre .= "}";
   $outputArray[] = $outputByCostCentre;
 }
-
-$outputByCostCentre .= "}";
 
 ?>
 

@@ -85,7 +85,7 @@ public function all($date = null, $costCentre = null, $supplier = null, $search 
 			ORDER BY orders.date DESC, orders.po DESC;";
 
 	$orders = $db->rawQuery($sql);
-
+	
 	return $orders;
 }
 
