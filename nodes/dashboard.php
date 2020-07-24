@@ -61,7 +61,7 @@ foreach ($cost_centres AS $costCentre) {
 
   $outputByCostCentre  = "{";
   $outputByCostCentre .= "label: '" . str_replace("'", "\'", $costCentre['name']) . "', ";
-  $outputByCostCentre .= "backgroundColor: '" . $costCentre['colour'] . "', ";
+  $outputByCostCentre .= "backgroundColor: '" . $costCentre['colour'] . "99', ";
 
   $i = 11;
   $data = array();
