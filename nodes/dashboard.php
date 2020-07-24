@@ -38,10 +38,52 @@ if (empty($monthlyOrdersTotalArray)){
 $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 ?>
 
+
+<?php
+$cost_centre_class = new class_cost_centres;
+$cost_centres = $cost_centre_class->all();
+
+$date = date('Y-m-d');
+
+$i = 11;
+do {
+  $date = date('Y-m-d', strtotime($i . " month ago"));
+  $monthNames[] = "'" . date('F', strtotime($date)) . "'";
+
+  $i--;
+} while ($i >= 0);
+
+// itterate through each cost centre
+$outputArray = null;
+foreach ($cost_centres AS $costCentre) {
+  $data = null;
+  $outputMonth = null;
+
+  $outputByCostCentre  = "{";
+  $outputByCostCentre .= "label: '" . $costCentre['name'] . "', ";
+  $outputByCostCentre .= "backgroundColor: '" . $costCentre['colour'] . "', ";
+
+  $i = 11;
+  $data = array();
+  do {
+    $date = date('Y-m-d', strtotime($i . " month ago"));
+    $ordersByCostCentreByMonth = $orders_class->ordersTotalValueByCostCentreAndMonth($date, $costCentre['uid']);
+    $data[] = round($ordersByCostCentreByMonth, 2);
+    $i--;
+  } while ($i >= 0);
+
+  $outputByCostCentre .= "data: " . json_encode($data, JSON_NUMERIC_CHECK);
+  $outputByCostCentre .= "}";
+  $outputArray[] = $outputByCostCentre;
+}
+
+$outputByCostCentre .= "}";
+
+?>
+
 <h2>Dashboard <small class="text-muted"><a href="index.php?n=dashboard&month=<?php echo $previousMonth;?>"><i class="fas fa-chevron-left"></i></a> <?php echo date('F, Y', strtotime($dateReference)); ?> <a href="index.php?n=dashboard&month=<?php echo $nextMonth;?>"><i class="fas fa-chevron-right"></i></a></small></h2>
 
-
-<canvas id="myChart" width="400" height="100"></canvas>
+<canvas id="canvas" width="400" height="100"></canvas>
 <br />
 <div class="row">
 	<div class="col-sm">
@@ -170,31 +212,36 @@ $totalSpendMonthly = array_sum($monthlyOrdersTotalArray);
 ?>
 
 <script>
-var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: [<?php echo implode(", ", array_keys($totalOrdersByMonthArray));?>],
-        datasets: [{
-            label: '£',
-            data: [<?php echo implode(",", $totalOrdersByMonthArray); ?>]
-        }]
+var ctx = document.getElementById('canvas').getContext('2d');
+
+var chart = new Chart(ctx, {
+  // The type of chart we want to create
+  type: 'bar',
+
+  // The data for our dataset
+  data: {
+    labels: [<?php echo implode(",", $monthNames); ?>],
+    datasets:[
+      <?php echo implode(",", $outputArray); ?>
+    ]
+  },
+
+  // Configuration options go here
+  options: {
+    legend: {
+      display: false
     },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                },
-                scaleLabel: {
-					display: false,
-					labelString: '£'
-				}
-            }]
+    scales: {
+      xAxes: [{
+        stacked: true
+      }],
+      yAxes: [{
+        ticks: {
+          min: 0
         },
-        legend: {
-			display: false
-		}
+        stacked: true
+      }]
     }
+  }
 });
 </script>

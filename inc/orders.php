@@ -102,6 +102,21 @@ public function ordersTotalValueByMonth($date = null) {
 	return $totalValue;
 }
 
+public function ordersTotalValueByCostCentreAndMonth($date = null, $costCentre = null) {
+	global $db;
+
+	$orders = $this->all($date, $costCentre);
+
+	$totalValue = 0;
+	foreach ($orders AS $order) {
+		$totalValue = $totalValue + $order['value'];
+	}
+
+	return $totalValue;
+}
+
+
+
 public function ordersTotalValueByYear($date = null) {
 	global $db;
 
