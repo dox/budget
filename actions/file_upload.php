@@ -1,19 +1,6 @@
 <?php
-session_start();
+require_once('../inc/autoload.php');
 
-require_once('../inc/config.php');
-require_once('../inc/global_functions.php');
-require_once('../database/MysqliDb.php');
-require_once('../inc/adLDAP/adLDAP.php');
-require_once('../inc/logs.php');
-require_once('../inc/departments.php');
-require_once('../inc/cost_centres.php');
-require_once('../inc/orders.php');
-require_once('../inc/users.php');
-require_once('../inc/suppliers.php');
-require_once('../inc/uploads.php');
-
-$db = new MysqliDb ($db_host, $db_username, $db_password, $db_name);
 $uploads_class = new class_uploads;
 
 $orderUID = $_GET['orderUID'];
@@ -46,14 +33,14 @@ if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg
 if ($uploadOk == 1) {
 	if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file_path)) {
         $logMessage = "File '" . $target_file . "' uploaded";
-        
+
         $data = Array (
 			"name" => $original_file,
 			"date_upload" => date('Y-m-d H:i:s'),
 			"path" => $target_file,
 			"order_uid" => $_GET['orderUID']
 		);
-		
+
 		$uploads_class->insert($data);
         $output = array("success" => true, "message" => "Success!");
     } else {

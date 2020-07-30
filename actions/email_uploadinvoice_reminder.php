@@ -1,16 +1,6 @@
 <?php
-session_start();
+require_once('../inc/autoload.php');
 
-require_once('../inc/config.php');
-require_once('../inc/global_functions.php');
-require_once('../database/MysqliDb.php');
-require_once('../inc/logs.php');
-require_once('../inc/orders.php');
-require_once('../inc/users.php');
-require_once('../inc/suppliers.php');
-require_once('../inc/uploads.php');
-
-$db = new MysqliDb ($db_host, $db_username, $db_password, $db_name);
 $usernameUID = $_GET['uid'];
 
 $users_class = new class_users;
