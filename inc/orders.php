@@ -85,7 +85,7 @@ public function all($date = null, $costCentre = null, $supplier = null, $search 
 			ORDER BY orders.date DESC, orders.po DESC;";
 
 	$orders = $db->rawQuery($sql);
-	
+
 	return $orders;
 }
 
@@ -229,16 +229,22 @@ public function table($orders = null) {
 	$output .=		"<tbody>";
 
 	foreach ($orders AS $order) {
+		$orderDateAge = date('U', strtotime($order['date'])) - date('U', strtotime('60 seconds ago'));
+
 		$cost_centre_class = new class_cost_centres;
 		$cost_centre = $cost_centre_class->getOne($order['cost_centre']);
 
 		$uploads_class = new class_uploads;
 		$uploads = $uploads_class->all($order['uid']);
 
-		if (isset($order['paid'])) {
-			$class = "table-active";
+		if ($orderDateAge > -10) {
+			$class = "table-success";
 		} else {
-			$class = "";
+			if (isset($order['paid'])) {
+				$class = "table-secondary";
+			} else {
+				$class = "";
+			}
 		}
 
 		if (!empty($uploads)) {
