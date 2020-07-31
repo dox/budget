@@ -298,7 +298,7 @@ function budgetEndDate($date = null) {
 		$date = date('Y-m-d');
 	}
 
-	if (date('m-d', strtotime($date)) >= '01-01' && date('m-d', strtotime($date)) < BUDGET_ENDDATE) {
+	if (date('m-d', strtotime($date)) >= '01-01' && date('m-d', strtotime($date)) <= BUDGET_ENDDATE) {
 		$dateTo = date('Y', strtotime($date)) . "-" . BUDGET_ENDDATE;
 	} else {
 		$dateTo = date('Y', strtotime($date))+1 . "-" . BUDGET_ENDDATE;

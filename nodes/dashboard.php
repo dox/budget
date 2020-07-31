@@ -188,27 +188,6 @@ foreach ($cost_centres AS $costCentre) {
 	</tbody>
 </table>
 
-
-<?php
-	$i = 0;
-	$date = date('Y-m-d');
-	do {
-		$ordersThisMonth2 = $orders_class->all($date);
-
-		foreach ($ordersThisMonth2 AS $orders) {
-			$arrayKeyValue = "'" . date('M',strtotime($orders['date'])) . "'";
-			if (empty($totalOrdersByMonthArray[$arrayKeyValue])) {
-				$totalOrdersByMonthArray[$arrayKeyValue] = $orders['value'];
-			} else {
-				$totalOrdersByMonthArray[$arrayKeyValue] = $totalOrdersByMonthArray[$arrayKeyValue] + $orders['value'];
-			}
-		}
-		$date = date('Y-m-d', strtotime("-1 months", strtotime($date)));
-		$i++;
-	} while ($i < 12);
-	$totalOrdersByMonthArray = array_reverse($totalOrdersByMonthArray);
-?>
-
 <script>
 var ctx = document.getElementById('canvas').getContext('2d');
 
