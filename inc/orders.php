@@ -1,14 +1,35 @@
 <?php
 class class_orders {
 
-public function getOne($uid = null) {
-	global $db;
+	public function getOne($uid = null) {
+		global $db;
 
-	$order = $db->where("uid", $uid);
-	$order = $db->getOne("orders");
+		$order = $db->where("uid", $uid);
+		$order = $db->getOne("orders");
 
-	return $order;
-}
+		return $order;
+	}
+
+	public function recentSuppliers() {
+		global $db;
+
+		$sql  = "SELECT
+					orders.date,
+					orders.cost_centre,
+					orders.supplier,
+					cost_centres.code,
+					cost_centres.department
+				FROM orders, cost_centres
+				WHERE orders.cost_centre = cost_centres.uid
+				AND orders.date BETWEEN CURDATE() - INTERVAL 1 YEAR AND CURDATE()";
+
+		$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
+				ORDER BY orders.date DESC, orders.po DESC;";
+
+		$orders = $db->rawQuery($sql);
+
+		return $orders;
+	}
 
 public function nextOrderNumber() {
 	global $db;

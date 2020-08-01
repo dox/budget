@@ -8,9 +8,11 @@ $department = $departments_class->getOne($_SESSION['department']);
 
 $orders_class = new class_orders;
 $orders = $orders_class->all();
-foreach ($orders AS $order) {
-	$suppliersArray[] = "\"" . $order['supplier'] . "\"";
+
+foreach ($orders_class->recentSuppliers() AS $supplier) {
+	$suppliersArray[] = "\"" . $supplier['supplier'] . "\"";
 }
+
 
 $suppliersArray = array_unique($suppliersArray);
 
