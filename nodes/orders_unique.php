@@ -24,7 +24,6 @@ $log->insert("update", $logMessage);
 
 if (isset($_POST['po'])) {
 	$data = Array (
-		"username" => $_SESSION['localUID'],
 		"date" => $_POST['date'],
 		"cost_centre" => $_POST['cost_centre'],
 		"po" => $_POST['po'],
