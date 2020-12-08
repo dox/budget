@@ -60,6 +60,7 @@ if (isset($_GET['cloneUID'])) {
 	<div class="form-group">
 		<label for="cost_centre">Cost Centre</label>
 		<select class="form-control" readonly id="cost_centre" name="cost_centre">
+			<option></option>
 			<?php
 			foreach ($groups AS $group) {
 				$output  = "<optgroup label=\"" . $group . "\">";

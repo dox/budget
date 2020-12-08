@@ -52,6 +52,13 @@ $(".orderCreateButton").click(function() {
 		$("input#po").removeClass("is-invalid");
 	}
 
+	if (cost_centre.length == 0) {
+		$("select#cost_centre").addClass("is-invalid");
+		submit = false;
+	} else {
+		$("select#cost_centre").removeClass("is-invalid");
+	}
+
 	if (!$.isNumeric($("input#value").val())) {
 		$("input#value").addClass("is-invalid");
 		submit = false;
