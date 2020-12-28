@@ -239,12 +239,12 @@ public function table($orders = null) {
 	$output .=	"<table class=\"table bg-white\">";
 	$output .=		"<thead>";
 	$output .=			"<tr>";
-	$output .=				"<th scope=\"col\" style=\"width: 120px;\">Date</th>";
-	$output .=				"<th scope=\"col\" style=\"width: 120px;\">PO</th>";
+	$output .=				"<th scope=\"col\" style=\"width: 115px;\">Date</th>";
+	$output .=				"<th scope=\"col\" style=\"width: 115px;\">PO</th>";
 	$output .=				"<th scope=\"col\" style=\"width: 120px;\">Cost Centre</th>";
 	$output .=				"<th scope=\"col\">Item</th>";
 	$output .=				"<th scope=\"col\">Supplier</th>";
-	$output .=				"<th scope=\"col\" style=\"width: 110px;\">Value</th>";
+	$output .=				"<th scope=\"col\" style=\"width: 120px;\">Value</th>";
 	$output .=			"</tr>";
 	$output .=		"</thead>";
 	$output .=		"<tbody>";
@@ -284,9 +284,9 @@ public function table($orders = null) {
 		$output .= "<td><a href=\"" . $supplierURL . "\">" . $order['supplier'] . "</a></td>";
 
 		if ($order['value'] < 0) {
-			$output .= "<td class=\"text-right color-green\">£" . number_format($order['value']) . " <i class=\"fas fa-long-arrow-alt-left fa-sm\"></i></td>";
+			$output .= "<td class=\"text-right color-green\">£" . number_format($order['value'], 2) . " <i class=\"fas fa-long-arrow-alt-left fa-sm\"></i></td>";
 		} else {
-			$output .= "<td class=\"text-right color-red\">£" . number_format($order['value']) . " <i class=\"fas fa-long-arrow-alt-right fa-sm\"></i></td>";
+			$output .= "<td class=\"text-right color-red\">£" . number_format($order['value'], 2) . " <i class=\"fas fa-long-arrow-alt-right fa-sm\"></i></td>";
 		}
 		$output .= "</tr>";
 	}
