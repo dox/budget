@@ -236,7 +236,7 @@ public function update($uid = null, $data = null) {
 
 public function table($orders = null) {
 	$output = "";
-	$output .=	"<table class=\"table bg-white\">";
+	$output .=	"<table class=\"table \">";
 	$output .=		"<thead>";
 	$output .=			"<tr>";
 	$output .=				"<th scope=\"col\" style=\"width: 115px;\">Date</th>";
@@ -269,7 +269,7 @@ public function table($orders = null) {
 		}
 
 		if (!empty($uploads)) {
-			$uploadsOutput = " <i class=\"fas text-muted fa-paperclip\"></i>";
+			$uploadsOutput = " <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-paperclip\" viewBox=\"0 0 16 16\"><path d=\"M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0V3z\"/></svg>";
 		} else {
 			$uploadsOutput = "";
 		}
@@ -277,16 +277,22 @@ public function table($orders = null) {
 		$output .= "<tr class=\"" . $class . "\">";
 		$output .= "<td scope=\"row\">" . date('Y-m-d', strtotime($order['date'])) . "</td>";
 		$output .= "<td><a href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "\">" . $order['po'] . $uploadsOutput . "</a></td>";
-		$output .= "<td><i class=\"fas fa-coins\" style=\"color: " . $cost_centre['colour'] . ";\"></i> <a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</a></td>";
+		$output .= "<td style=\"color: " . $cost_centre['colour'] . ";\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-archive-fill\" viewBox=\"0 0 16 16\">
+		  <path d=\"M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15h9.286zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zM.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8H.8z\"/>
+		</svg> <a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</a></td>";
 		$output .= "<td>" . $order['name'] . "</td>";
 
 		$supplierURL = "index.php?n=suppliers_unique&name=" . urlencode($order['supplier']);
 		$output .= "<td><a href=\"" . $supplierURL . "\">" . $order['supplier'] . "</a></td>";
 
 		if ($order['value'] < 0) {
-			$output .= "<td class=\"text-right color-green\">£" . number_format($order['value'], 2) . " <i class=\"fas fa-long-arrow-alt-left fa-sm\"></i></td>";
+			$output .= "<td class=\"text-right color-green\">£" . number_format($order['value'], 2) . " <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-arrow-left-short\" viewBox=\"0 0 16 16\">
+			  <path fill-rule=\"evenodd\" d=\"M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z\"/>
+			</svg></td>";
 		} else {
-			$output .= "<td class=\"text-right color-red\">£" . number_format($order['value'], 2) . " <i class=\"fas fa-long-arrow-alt-right fa-sm\"></i></td>";
+			$output .= "<td class=\"text-right color-red\">£" . number_format($order['value'], 2) . " <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-arrow-right-short\" viewBox=\"0 0 16 16\">
+			  <path fill-rule=\"evenodd\" d=\"M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z\"/>
+			</svg></td>";
 		}
 		$output .= "</tr>";
 	}

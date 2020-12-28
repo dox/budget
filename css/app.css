@@ -1,25 +1,12 @@
 body {
     color:#758193;
     background:#f8f9fb;
-    font-family: Muli;
-    font-weight:400
 }
 
 body h1, h2 {
     color:#000
 }
 
-h1, h2 {
-    font-weight:600
-}
-
-h2 {
-    font-size:1.25em
-}
-
-h3 {
-    font-size:1em
-}
 
 a {
     text-decoration: none;
