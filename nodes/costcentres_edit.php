@@ -1,6 +1,3 @@
-<link href="css/bootstrap-colorpicker.css" rel="stylesheet">
-<script src="js/bootstrap-colorpicker.js"></script>
-
 <?php
 $departments_class = new class_departments;
 $departments = $departments_class->all();
@@ -42,7 +39,7 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 		<div class="col-3">
 			<div class="form-group">
 				<label for="colour">Colour</label>
-					<input type="text" class="form-control" id="simple-color-picker" name="colour" value="<?php echo $cost_centre['colour'];?>"/>
+				<input type="color" class="form-control form-control-color" name="colour" value="<?php echo $cost_centre['colour'];?>" title="Colour">
 			</div>
 		</div>
 	</div>

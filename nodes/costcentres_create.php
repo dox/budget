@@ -1,6 +1,3 @@
-<link href="css/bootstrap-colorpicker.css" rel="stylesheet">
-<script src="js/bootstrap-colorpicker.js"></script>
-
 <?php
 function random_color_part() {
     return str_pad( dechex( mt_rand( 0, 255 ) ), 2, '0', STR_PAD_LEFT);
@@ -32,7 +29,7 @@ foreach ($groups AS $group) {
 		<div class="col-3">
 			<div class="form-group">
 				<label for="colour">Colour</label>
-					<input type="text" class="form-control" id="simple-color-picker" name="colour" value="#<?php echo random_color(); ?>"/>
+          <input type="color" class="form-control form-control-color" name="colour" value="#<?php echo random_color(); ?>" title="Colour">
 			</div>
 		</div>
 	</div>
@@ -50,7 +47,7 @@ foreach ($groups AS $group) {
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-sm">
 			<div class="form-group">
@@ -64,7 +61,7 @@ foreach ($groups AS $group) {
 							$selected = " ";
 						}
 						$output  = "<option " . $selected . " value=\"" .  $department['uid'] . "\">" . $department['name'] . "</option>";
-						
+
 						echo $output;
 					}
 					?>
@@ -82,7 +79,7 @@ foreach ($groups AS $group) {
 		<label for="description">Description</label>
 		<textarea class="form-control" id="description" name="description" rows="3"></textarea>
 	</div>
-	
+
 	<button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
