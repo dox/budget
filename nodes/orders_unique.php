@@ -66,12 +66,16 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 	<div class="col-md">
 		<form action="" enctype="multipart/form-data" id="file-form" method="POST">
 		  <div id="upup">
-		    <p id="progressdiv"><progress max="100" value="0" id="progress" style="display: none;"></progress></p>
-		    <input type="file" class="form-control" name="file-select" id="file-select"><br />
-		    <button type="submit" class="btn btn-primary w-100" id="upload-button">Upload</button>
+				<div class="input-group mb-3">
+					<input type="file" class="form-control" name="file-select" id="file-select">
+					<button type="submit" class="btn btn-primary" id="upload-button">Upload</button>
+				</div>
 		  </div>
 			<input type="hidden" id="orderUID" value="<?php echo $order['uid']; ?>" />
 		</form>
+		<div class="progress">
+			<div id="progressdiv" class="progress-bar" role="progressbar" style="width: 0%"></div>
+		</div>
 
 		<br />
 
@@ -160,10 +164,8 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
   form.onsubmit = function(event) {
     event.preventDefault();
 
-    var progress = document.getElementById('progress');
     var progressdiv = document.getElementById('progressdiv');
 
-    progress.style.display = "block";
     uploadButton.innerHTML = 'Uploading...';
 
 
@@ -180,7 +182,6 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
     xhr.onload = function (e) {
       if (xhr.status === 200) {
         uploadButton.innerHTML = 'Upload';
-        progressdiv.innerHTML = "<h3>Sucess</h3>";
 				location.reload();
       } else {
         alert('An error occurred!');
@@ -192,8 +193,8 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
   function update_progress(e){
       if (e.lengthComputable){
           var percentage = Math.round((e.loaded/e.total)*100);
-          progress.value = percentage;
-          uploadButton.innerHTML = 'Upload '+percentage+'%';
+					uploadButton.innerHTML = 'Upload '+percentage+'%';
+					progressdiv.style["width"] = percentage + '%';
           console.log("percent " + percentage + '%' );
       }
       else{
