@@ -75,8 +75,8 @@ $cost_centres = $cost_centre_class->all();
 					$output .= "<td>" . $cost_centre['name'] . "</td>";
 					$output .= "<td>£" . number_format($cost_centre['value']) . "</td>";
 					$output .= "<td><div class=\"progress\" ><div class=\"progress-bar " . $progressBarClass . "\" role=\"progressbar\" style=\"width: " . $remainingValuePercentage . "%;\" aria-valuenow=\"" . $remainingValuePercentage . "\" aria-valuemin=\"0\" aria-valuemax=\"100\">£" . number_format($remainingValue) . " </div></div>" . "</td>";
-					$output .= "<td>" . "<a href=\"index.php?n=costcentres_edit&uid=" . $cost_centre['uid'] . "\"><i class=\"fas fa-pencil-alt\"></i></a> ";
-					$output .= "<a href=\"index.php?n=costcentres_delete&uid=" . $cost_centre['uid'] . "\"><i class=\"fas fa-trash-alt\"></i></a>" . "</td>";
+					$output .= "<td>" . "<a href=\"index.php?n=costcentres_edit&uid=" . $cost_centre['uid'] . "\"><svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#pencil-square\"/></svg></a> ";
+					$output .= "<a href=\"index.php?n=costcentres_delete&uid=" . $cost_centre['uid'] . "\"><svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#trash\"/></svg></a>" . "</td>";
 					$output .= "</tr>";
 				}
 
