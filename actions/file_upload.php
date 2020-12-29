@@ -3,58 +3,80 @@ require_once('../inc/autoload.php');
 
 $uploads_class = new class_uploads;
 
-$orderUID = $_GET['orderUID'];
-$original_file = basename($_FILES["fileToUpload"]["name"]);;
-$imageFileType = strtolower(pathinfo(basename($_FILES["fileToUpload"]["name"]),PATHINFO_EXTENSION));
-$target_file = $orderUID . "_" . date('Y-m-d-H-i-s') . "." . $imageFileType;
+header('Content-Type: text/plain; charset=utf-8');
 
-$target_file_path = UPLOAD_DIR . $target_file;
+try {
 
-$uploadOk = 1;
+    // Undefined | Multiple Files | $_FILES Corruption Attack
+    // If this request falls under any of them, treat it invalid.
+    if (
+        !isset($_FILES['upfile']['error']) ||
+        is_array($_FILES['upfile']['error'])
+    ) {
+        throw new RuntimeException('Invalid parameters.');
+    }
 
-// Check if file already exists
-if (file_exists($target_file)) {
-    //echo "Sorry, file already exists.";
-    $logMessage = "File '" . $target_file . "' already exists";
-    $uploadOk = 0;
-}
+    // Check $_FILES['upfile']['error'] value.
+    switch ($_FILES['upfile']['error']) {
+        case UPLOAD_ERR_OK:
+            break;
+        case UPLOAD_ERR_NO_FILE:
+            throw new RuntimeException('No file sent.');
+        case UPLOAD_ERR_INI_SIZE:
+        case UPLOAD_ERR_FORM_SIZE:
+            throw new RuntimeException('Exceeded filesize limit.');
+        default:
+            throw new RuntimeException('Unknown errors.');
+    }
 
-// Check file size
-if ($_FILES["fileToUpload"]["size"] > 50000000) {
-    $logMessage = "File '" . $target_file . "' is too large";
-    $uploadOk = 0;
-}
-// Allow certain file formats
-if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "pdf" && $imageFileType != "doc" && $imageFileType != "docx" && $imageFileType != "xls" && $imageFileType != "xlsx") {
-    $logMessage = "File type for file '" . $target_file . "' not allowed";
-    $uploadOk = 0;
-}
-// Check if $uploadOk is set to 0 by an error
-if ($uploadOk == 1) {
-	if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file_path)) {
-        $logMessage = "File '" . $target_file . "' uploaded";
+    // You should also check filesize here.
+    if ($_FILES['upfile']['size'] > 1000000) {
+        throw new RuntimeException('Exceeded filesize limit.');
+    }
 
-        $data = Array (
-			"name" => $original_file,
+    // DO NOT TRUST $_FILES['upfile']['mime'] VALUE !!
+    // Check MIME Type by yourself.
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    if (false === $ext = array_search(
+        $finfo->file($_FILES['upfile']['tmp_name']),
+        array(
+            'jpg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+        ),
+        true
+    )) {
+        throw new RuntimeException('Invalid file format.');
+    }
+
+    // You should name it uniquely.
+    // DO NOT USE $_FILES['upfile']['name'] WITHOUT ANY VALIDATION !!
+    // On this example, obtain safe unique name from its binary data.
+    $target_file = '../uploads/' . $_POST['orderUID'] . "_" . date('Y-m-d H:i:s') . "." . $ext;
+    if (!move_uploaded_file($_FILES['upfile']['tmp_name'], $target_file)) {
+        throw new RuntimeException('Failed to move uploaded file.');
+    }
+
+    //
+    $logMessage = "File '" . $_FILES['upfile']['name'] . "' uploaded as " . "'" . $target_file . "'";
+    $log->insert("file", $logMessage);
+
+    $data = Array (
+			"name" => $_FILES['upfile']['name'],
 			"date_upload" => date('Y-m-d H:i:s'),
 			"path" => $target_file,
-			"order_uid" => $_GET['orderUID']
+			"order_uid" => $_POST['orderUID']
 		);
 
 		$uploads_class->insert($data);
-        $output = array("success" => true, "message" => "Success!");
-    } else {
-		$logMessage = "There was an unknown error trying to upload file '" . $target_file . "' to '" . $target_file_path . "'";
-		$output = array("success" => false, "error" => "Failure!");
-    }
-} else {
-	$output = array("success" => false, "error" => "Failure!");
+
+    echo 'File is uploaded successfully.';
+
+} catch (RuntimeException $e) {
+  $logMessage = "File '" . $_FILES['upfile']['name'] . "' FAILED to upload. Error: " . $e->getMessage();
+  $log->insert("file", $logMessage);
+
+    echo $e->getMessage();
+
 }
-
-$log->insert("file", $logMessage);
-
-
-header("Content-Type: application/json; charset=utf-8");
-echo json_encode($output);
-
 ?>

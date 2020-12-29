@@ -62,7 +62,7 @@ $departments = $departments_class->all();
 
 <?php if ($user['type'] == "administrator" || $user['type'] == "accountant") { ?>
 <div class="dropdown">
-	<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Temporarily Change Deparments</a>
+	<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Temporarily Change Deparments</a>
 
 	<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 		<?php
@@ -73,7 +73,7 @@ $departments = $departments_class->all();
 				$selected = "";
 			}
 
-			$output  = "<a class=\"dropdown-item emailParcelButton1\" href=\"#\" id=\"" . $department['uid'] . "\">" . $department['name'] . "</a>";
+			$output  = "<a class=\"dropdown-item\" onclick=\"departmentChange(this.id)\" id=\"" . $department['uid'] . "\">" . $department['name'] . "</a>";
 
 			echo $output;
 		}

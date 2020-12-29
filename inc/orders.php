@@ -235,19 +235,7 @@ public function update($uid = null, $data = null) {
 }
 
 public function table($orders = null) {
-	$output = "";
-	$output .=	"<table class=\"table \">";
-	$output .=		"<thead>";
-	$output .=			"<tr>";
-	$output .=				"<th scope=\"col\" style=\"width: 115px;\">Date</th>";
-	$output .=				"<th scope=\"col\" style=\"width: 115px;\">PO</th>";
-	$output .=				"<th scope=\"col\" style=\"width: 120px;\">Cost Centre</th>";
-	$output .=				"<th scope=\"col\">Item</th>";
-	$output .=				"<th scope=\"col\">Supplier</th>";
-	$output .=				"<th scope=\"col\" style=\"width: 120px;\">Value</th>";
-	$output .=			"</tr>";
-	$output .=		"</thead>";
-	$output .=		"<tbody>";
+	$output = "<div class=\"list-group card-list-group\">";
 
 	foreach ($orders AS $order) {
 		$orderDateAge = date('U', strtotime($order['date'])) - date('U', strtotime('60 seconds ago'));
@@ -269,36 +257,71 @@ public function table($orders = null) {
 		}
 
 		if (!empty($uploads)) {
-			$uploadsOutput = " <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-paperclip\" viewBox=\"0 0 16 16\"><path d=\"M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0V3z\"/></svg>";
+			$uploadsOutput = " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#paperclip\"/></svg>";
 		} else {
-			$uploadsOutput = "";
+			$uploadsOutput = " <svg width=\"16\" height=\"16\" class=\"invisible\"><use xlink:href=\"img/icons.svg#paperclip\"/></svg>";
 		}
+		/*
+				<div class="col-auto lh-1">
+					<div class="dropdown">
+						<a href="#" class="link-secondary" data-bs-toggle="dropdown"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle></svg>
+						</a>
+						<div class="dropdown-menu dropdown-menu-end">
+							<a class="dropdown-item" href="#">
+								Action
+							</a>
+							<a class="dropdown-item" href="#">
+								Another action
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		*/
+		$output .= "<div class=\"list-group-item\">";
+			$output .= "<div class=\"row g-2 align-items-center\">";
+				$output .= "<div class=\"col-auto text-h3\">" . date('Y-m-d', strtotime($order['date'])) . "</div>";
+				$output .= "<div class=\"col-auto\"><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\"><svg width=\"16\" height=\"16\" style=\"color: " . $cost_centre['colour'] . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg></a></div>";//$cost_centre['code']
+				$output .= "<div class=\"col-auto\">" . $uploadsOutput . "</div>";
+				$output .= "<div class=\"col\">";
+					$output .= "<strong>" . $order['po'] . ":</strong> " . $order['name'];
+					$output .= "<div class=\"text-muted\">";
+						$output .= $order['description'];
+					$output .= "</div>";
+				$output .= "</div>";
+				$output .= "<div class=\"col-auto text-muted\">";
+					if ($order['value'] < 0) {
+						$output .= "<span class=\"text-right colour-green\">£" . number_format($order['value'], 2) . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#arrow-left-short\"/></svg></span>";
+					} else {
+						$output .= "<span class=\"text-right colour-red\">£" . number_format($order['value'], 2) . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#arrow-right-short\"/></svg></span>";
+					}
+				$output .= "</div>";
+				$output .= "<div class=\"col-auto\">";
+					$output .= "<a href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "\" class=\"link-secondary\">";
+					//$output .= "<button class=\"switch-icon\" data-bs-toggle=\"switch-icon\">";
+					$output .= "<span class=\"switch-icon-a text-muted\">";
+					$output .= "<svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#pencil-square\"/></svg>";
+					$output .= "</span>";
+					$output .= "<span class=\"switch-icon-b text-red\">";
+					//$output .= "<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M19.5 13.572l-7.5 7.428l-7.5 -7.428m0 0a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path></svg>";
+					$output .= "</span>";
+					//$output .= "</button>";
+					$output .= "</a>";
+				$output .= "</div>";
 
+			$output .= "</div>";
+		$output .= "</div>";
+
+		/*
 		$output .= "<tr class=\"" . $class . "\">";
-		$output .= "<td scope=\"row\">" . date('Y-m-d', strtotime($order['date'])) . "</td>";
-		$output .= "<td><a href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "\">" . $order['po'] . $uploadsOutput . "</a></td>";
-		$output .= "<td style=\"color: " . $cost_centre['colour'] . ";\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-archive-fill\" viewBox=\"0 0 16 16\">
-		  <path d=\"M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15h9.286zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zM.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8H.8z\"/>
-		</svg> <a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</a></td>";
-		$output .= "<td>" . $order['name'] . "</td>";
+
 
 		$supplierURL = "index.php?n=suppliers_unique&name=" . urlencode($order['supplier']);
 		$output .= "<td><a href=\"" . $supplierURL . "\">" . $order['supplier'] . "</a></td>";
-
-		if ($order['value'] < 0) {
-			$output .= "<td class=\"text-right color-green\">£" . number_format($order['value'], 2) . " <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-arrow-left-short\" viewBox=\"0 0 16 16\">
-			  <path fill-rule=\"evenodd\" d=\"M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z\"/>
-			</svg></td>";
-		} else {
-			$output .= "<td class=\"text-right color-red\">£" . number_format($order['value'], 2) . " <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-arrow-right-short\" viewBox=\"0 0 16 16\">
-			  <path fill-rule=\"evenodd\" d=\"M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z\"/>
-			</svg></td>";
-		}
-		$output .= "</tr>";
+		*/
 	}
 
-	$output .=	"</tbody>";
-	$output .= "</table>";
+	$output .=	"</div>";
 
 	return $output;
 }

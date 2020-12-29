@@ -63,26 +63,32 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 <h1 class="text-right">Purchase Order <?php echo $order['po']; ?></h1>
 
 <div class="row">
-	<div class="col">
+	<div class="col-md">
+		<form action="" enctype="multipart/form-data" id="file-form" method="POST">
+		  <div id="upup">
+		    <p id="progressdiv"><progress max="100" value="0" id="progress" style="display: none;"></progress></p>
+		    <input type="file" class="form-control" name="file-select" id="file-select"><br />
+		    <button type="submit" class="btn btn-primary w-100" id="upload-button">Upload</button>
+		  </div>
+			<input type="hidden" id="orderUID" value="<?php echo $order['uid']; ?>" />
+		</form>
+
+		<br />
+
 		<?php
 		foreach ($uploads AS $upload) {
-			$output  = "<div><a href=\"uploads/" . $upload['path'] . "\">";
-			$output .="<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-paperclip\" viewBox=\"0 0 16 16\">
-			  <path d=\"M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0V3z\"/>
-			</svg> " . $upload['name'] . "</i>";
+			$output  = "<div id=\"uploadLine_" . $upload['uid'] . "\" class=\"d-flex justify-content-between\">";
+			$output .= "<a href=\"uploads/" . $upload['path'] . "\">";
+			$output .="<svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#paperclip\"/></svg> " . $upload['name'] . "</i>";
 			$output .= "</a>";
-			$output .= "<i id=\"" . $upload['uid'] . "\" class=\"fas fa-trash float-right deleteUpload\"></i></div>";
+			$output .= "<svg id=\"" . $upload['uid'] . "\" width=\"16\" height=\"16\" onclick=\"uploadDelete(this.id)\"><use xlink:href=\"img/icons.svg#trash\"/></svg>";
+			$output .= "</div>";
 
 			echo $output;
 		}
 		?>
-		<div id="upload_feedback">&nbsp;</div>
-		<div class="custom-file">
-			<label class="form-label" for="fileToUpload">Upload file</label>
-			<input type="file" class="form-control" name="fileToUpload" id="fileToUpload">
-		</div>
 	</div>
-	<div class="col">
+	<div class="col-md">
 		<h2>Date: <?php echo date('Y-m-d H:i', strtotime($order['date'])); ?></h2>
 		<h2>Supplier Order #: <?php echo $order['order_num']; ?></h2>
 		<h2>Cost Centre: <?php echo $cost_centre['code'] . " - " . $cost_centre['name']; ?></h2>
@@ -115,16 +121,10 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 				?>
 		  </div>
 		</div>
-
-		<h2>Supplier: <a href="index.php?n=suppliers_edit&name=<?php echo $order['supplier']; ?>"><?php echo $order['supplier']; ?></a>
 	</div>
 </div>
-
-
-
-
-
-
+<i class="bi bi-alarm-fill"></i>
+<h2>Supplier: <a href="index.php?n=suppliers_edit&name=<?php echo $order['supplier']; ?>"><?php echo $order['supplier']; ?></a></h2>
 
 <table class="table bg-white">
 	<thead>
@@ -148,36 +148,57 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 	</tbody>
 </table>
 
-<script src="js/simpleUpload.min.js"></script>
-<script>
-	$('input[type=file]').change(function(){
-	$(this).simpleUpload("/actions/file_upload.php?orderUID=<?php echo $order['uid'];?>", {
-		start: function(file){
-			//upload started
-			console.log("upload started");
-			$("#upload_feedback").html("Uploading File");
-		},
 
-		progress: function(progress){
-			//received progress
-			console.log("upload progress: " + Math.round(progress) + "%");
 
-		},
 
-		success: function(data){
-			//upload successful
-			console.log("upload successful!");
-			console.log(data);
-			$("#upload_feedback").html("File uploaded - please refresh this page");
+<script type="text/javascript">
+  var form = document.getElementById('file-form');
+  var fileSelect = document.getElementById('file-select');
+	var uploadButton = document.getElementById('upload-button');
+	var orderUID = document.getElementById('orderUID').value;
 
-		},
 
-		error: function(error){
-			//upload failed
-			console.log("upload error: " + error.name + ": " + error.message);
-			$("#upload_feedback").html(" error!");
 
-		}
-	});
-});
+  form.onsubmit = function(event) {
+    event.preventDefault();
+
+    var progress = document.getElementById('progress');
+    var progressdiv = document.getElementById('progressdiv');
+
+    progress.style.display = "block";
+    uploadButton.innerHTML = 'Uploading...';
+
+
+    var files = fileSelect.files;
+    var formData = new FormData();
+    var file = files[0];
+		formData.append('upfile', file, file.name);
+		formData.append('orderUID', orderUID);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'actions/file_upload.php', true);
+    xhr.upload.onprogress = function (e) {
+      update_progress(e);
+    }
+    xhr.onload = function (e) {
+      if (xhr.status === 200) {
+        uploadButton.innerHTML = 'Upload';
+        progressdiv.innerHTML = "<h3>Sucess</h3>";
+      } else {
+        alert('An error occurred!');
+      }
+    };
+    xhr.send(formData);
+  }
+
+  function update_progress(e){
+      if (e.lengthComputable){
+          var percentage = Math.round((e.loaded/e.total)*100);
+          progress.value = percentage;
+          uploadButton.innerHTML = 'Upload '+percentage+'%';
+          console.log("percent " + percentage + '%' );
+      }
+      else{
+        console.log("Unable to compute progress information since the total size is unknown");
+      }
+  }
 </script>

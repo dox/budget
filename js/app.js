@@ -1,26 +1,87 @@
-//alert('Test');
+function departmentChange(this_id) {
+  event.preventDefault()
+  var formData = new FormData();
+
+  formData.append("departmentUID", this_id);
+
+  //https://javascript.info/xmlhttprequest GREAT documentation!
+  var request = new XMLHttpRequest();
+
+  request.open("POST", "../actions/user_change_department.php", true);
+  request.send(formData);
+
+  // 4. This will be called after the response is received
+  request.onload = function() {
+    if (request.status != 200) { // analyze HTTP status of the response
+      alert("Something went wrong.  Please refresh this page and try again.");
+      alert(`Error ${request.status}: ${request.statusText}`); // e.g. 404: Not Found
+    } else { // show the result
+			alert('You have changed departments - please remember to change back!');
+			//alert(this.responseText);
+    }
+  };
+
+  request.onerror = function() {
+    alert("Request failed");
+  };
+
+  return false;
+}
+
+function uploadDelete(this_id) {
+  event.preventDefault()
+
+  var uploadLine = document.getElementById("uploadLine_" + this_id);
+
+  var formData = new FormData();
+
+  formData.append("uploadUID", this_id);
+
+  //https://javascript.info/xmlhttprequest GREAT documentation!
+  var request = new XMLHttpRequest();
+
+  request.open("POST", "../actions/file_delete.php", true);
+  request.send(formData);
+
+  // 4. This will be called after the response is received
+  request.onload = function() {
+    if (request.status != 200) { // analyze HTTP status of the response
+      alert("Something went wrong.  Please refresh this page and try again.");
+      alert(`Error ${request.status}: ${request.statusText}`); // e.g. 404: Not Found
+    } else { // show the result
+
+			alert('File deleted!');
+      uploadLine.classList.add("visually-hidden");
+    }
+  };
+
+  request.onerror = function() {
+    alert("Request failed");
+  };
+
+  return false;
+}
+
+
+
 
 $(document).ready(function(){
 $('.toast').toast('show');
 
-$(".emailParcelButton1").click(function() {
-	//$(this).parent().parent().fadeOut();
 
-	var departmentUID = $(this).attr('id');
-	//alert(departmend_id);
 
-	var url = 'actions/user_change_department.php';
 
-	// perform the post to the action (take the info and submit to database)
-	$.post(url,{
-		departmentUID: departmentUID
-	}, function(data){
-		//$("#andrew").append(data);
-		alert('You have changed departments - please remember to change back!');
-	},'html');
 
-	return false;
-});
+
+
+
+
+
+
+
+
+
+
 
 $(".orderCreateButton").click(function() {
 	$(this).prop("disabled", true);

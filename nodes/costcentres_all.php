@@ -70,7 +70,7 @@ $cost_centres = $cost_centre_class->all();
 						$progressBarClass = "bg-info";
 					}
 
-					$output .= "<td scope=\"row\"><div style=\"width: 15px; height: 15px; border-radius: 2px; background: " . $cost_centre['colour'] . ";\"></div></td>";
+					$output .= "<td scope=\"row\"><svg width=\"16\" height=\"16\" style=\"color: " . $cost_centre['colour'] . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg></td>";
 					$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</td>";
 					$output .= "<td>" . $cost_centre['name'] . "</td>";
 					$output .= "<td>£" . number_format($cost_centre['value']) . "</td>";

@@ -3,20 +3,12 @@ body {
     background:#f8f9fb;
 }
 
-body h1, h2 {
-    color:#000
-}
-
-
 a {
     text-decoration: none;
     color:#179bd1
 }
 
-.navbar {
-    border-bottom:1px solid #e4e8eb;
-    height:70px
-}
+
 
 .card {
     padding: 20px;
@@ -35,14 +27,18 @@ a {
     border-top:2px solid #f77b7c
 }
 
-.color-blue {
+.colour-blue {
     color:#179bd1
 }
 
-.color-green {
+.colour-green {
     color:#7fcd69
 }
 
-.color-red {
+.colour-red {
     color:#f77b7c
+}
+
+.colour-grey {
+    color:#808080
 }

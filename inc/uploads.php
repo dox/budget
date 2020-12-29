@@ -28,17 +28,17 @@ public function insert($data = null) {
 
 public function delete($uid = null) {
 	global $db;
-	
+
 	$upload = self::getOne($uid);
-	
+
 	$target_file = UPLOAD_DIR . $upload['path'];
 	unlink($target_file);
-	
+
 	$db->where ('uid', $uid);
 	$id = $db->delete('uploads');
-	
+
 	$log = new class_logs;
-	$log->insert("file", "Deleted file '" . $upload['uid'] . "' for order '" . $upload['order_uid'] . "'");
+	$log->insert("file", "Deleted file '" . $upload['name'] . "' for order " . $upload['order_uid']);
 }
 } //end CLASS
 

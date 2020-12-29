@@ -79,11 +79,7 @@ foreach ($cost_centres AS $costCentre) {
 
 ?>
 
-<h2>Dashboard <small class="text-muted"><a href="index.php?n=dashboard&month=<?php echo $previousMonth;?>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-</svg></a> <?php echo date('F, Y', strtotime($dateReference)); ?> <a href="index.php?n=dashboard&month=<?php echo $nextMonth;?>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-</svg></a></small></h2>
+<h2>Dashboard <small class="text-muted"><a href="index.php?n=dashboard&month=<?php echo $previousMonth;?>"><svg width="16" height="16"><use xlink:href="img/icons.svg#chevron-left"/></svg></a> <?php echo date('F, Y', strtotime($dateReference)); ?> <a href="index.php?n=dashboard&month=<?php echo $nextMonth;?>"><svg width="16" height="16"><use xlink:href="img/icons.svg#chevron-right"/></svg></a></small></h2>
 
 <canvas id="canvas" width="400" height="100"></canvas>
 <br />
@@ -171,7 +167,7 @@ foreach ($cost_centres AS $costCentre) {
 			$cost_centre = $cost_centre_class->getOne($ordersTotal);
 
 			$output  = "<tr>";
-			$output .= "<td scope=\"row\" style=\"width: 50px;\"><div style=\"width: 15px; height: 15px; border-radius: 2px; background: " . $cost_centre['colour'] . ";\"></div></td>";
+			$output .= "<td scope=\"row\" style=\"width: 50px;\"><svg width=\"16\" height=\"16\" style=\"color: " . $cost_centre['colour'] . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg></td>";
 			$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</td>";
 			$output .= "<td>" . $cost_centre['name'] . "</td>";
 			if ($value < 0) {
