@@ -21,19 +21,21 @@ if (isset($_GET['cloneUID'])) {
 
 <h2>Create New Order</h2>
 <div id="andrew"></div>
-<form method="POST" action="index.php?n=orders_all">
+<form method="POST" id="create_order_form" action="index.php?n=orders_all" class="needs-validation" novalidate>
 	<div class="row">
 		<div class="col-sm">
 			<div class="form-group">
 				<label for="date">Date</label>
-				<input type="text" class="form-control" id="date" name="date" placeholder="<?php echo date('Y-m-d H:i'); ?>" value="<?php echo date('Y-m-d H:i'); ?>">
+				<input type="date" class="form-control" id="date" name="date" placeholder="<?php echo date('Y-m-d H:i'); ?>" value="<?php echo date('Y-m-d H:i'); ?>" required>
+				<div class="invalid-feedback">Please provide a valid date.</div>
 			</div>
 		</div>
 		<div class="col-sm">
 			<div class="form-group">
 				<label for="po">Purchase Order #</label>
-				<input type="text" class="form-control" id="po" name="po" placeholder="Purchase Order #" value="<?php echo $orders_class->nextOrderNumber(); ?>">
+				<input type="text" class="form-control" id="po" name="po" placeholder="Purchase Order #" value="<?php echo $orders_class->nextOrderNumber(); ?>" required>
 				<small id="emailHelp" class="form-text text-muted">This is an auto-generated number based on the last order.</small>
+				<div class="invalid-feedback">Please provide a valid PO.</div>
 			</div>
 		</div>
 	</div>
@@ -41,11 +43,9 @@ if (isset($_GET['cloneUID'])) {
 		<div class="col-sm">
 			<div class="form-group">
 				<label for="supplier">Supplier</label>
-				<input class="form-control" list="datalistOptions" id="supplier" name="supplier" placeholder="Supplier" <?php if (isset($orderToClone['supplier'])) { echo "value=\"" . $orderToClone['supplier'] . "\"";}?>>
+				<input class="form-control" list="datalistOptions" id="supplier" name="supplier" <?php if (isset($orderToClone['supplier'])) { echo "value=\"" . $orderToClone['supplier'] . "\"";}?>>
 				<datalist id="datalistOptions">
 					<?php
-
-
 					foreach ($suppliersArray AS $supplier) {
 						$output = "<option value=\"" . $supplier . "\">";
 
@@ -64,11 +64,12 @@ if (isset($_GET['cloneUID'])) {
 	</div>
 	<div class="form-group">
 		<label for="name">Name</label>
-		<input type="text" class="form-control" id="name" name="name" <?php if (isset($orderToClone['name'])) { echo "value=\"" . $orderToClone['name'] . "\"";}?>placeholder="Name">
+		<input type="text" class="form-control" id="name" name="name" <?php if (isset($orderToClone['name'])) { echo "value=\"" . $orderToClone['name'] . "\"";}?> placeholder="Name" required>
+		<div class="invalid-feedback">Please provide a valid order name.</div>
 	</div>
 	<div class="form-group">
 		<label for="cost_centre">Cost Centre</label>
-		<select class="form-control" readonly id="cost_centre" name="cost_centre">
+		<select class="form-select" id="cost_centre" name="cost_centre" required>
 			<option></option>
 			<?php
 			foreach ($groups AS $group) {
@@ -90,14 +91,16 @@ if (isset($_GET['cloneUID'])) {
 			}
 			?>
 		</select>
+		<div class="invalid-feedback">Please provide a Cost Center.</div>
 	</div>
 	<div class="form-group">
 		<label for="value">Value (£)</label>
-		<input type="number" step=".01" class="form-control" id="value" name="value" <?php if (isset($orderToClone['value'])) { echo "value=\"" . $orderToClone['value'] . "\"";}?>placeholder="Value (without £ or commas)">
+		<input type="number" step=".01" class="form-control" id="value" name="value" <?php if (isset($orderToClone['value'])) { echo "value=\"" . $orderToClone['value'] . "\"";}?> placeholder="Value (without £ or commas)" required>
+		<div class="invalid-feedback">Please provide a order value.</div>
 	</div>
 	<div class="form-group">
 		<label for="description">Description</label>
 		<textarea class="form-control" id="description" name="description" rows="3"><?php if (isset($orderToClone['description'])) { echo $orderToClone['description'];}?></textarea>
 	</div>
-	<button type="submit" class="btn btn-primary orderCreateButton">Submit</button>
+	<a href="#" id="test" class="btn btn-primary" onclick="createOrder(this.id)">Submit</a>
 </form>

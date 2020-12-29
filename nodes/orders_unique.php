@@ -157,8 +157,6 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 	var uploadButton = document.getElementById('upload-button');
 	var orderUID = document.getElementById('orderUID').value;
 
-
-
   form.onsubmit = function(event) {
     event.preventDefault();
 
@@ -183,6 +181,7 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
       if (xhr.status === 200) {
         uploadButton.innerHTML = 'Upload';
         progressdiv.innerHTML = "<h3>Sucess</h3>";
+				location.reload();
       } else {
         alert('An error occurred!');
       }

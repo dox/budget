@@ -24,7 +24,7 @@ if (isset($_POST['po'])) {
 	} else {
 		$message = "ERROR";
 	}
-	
+
   echo $message;
 }
 ?>
