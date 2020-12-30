@@ -30,29 +30,30 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 
 <form method="POST" action="index.php?n=costcentres_edit&uid=<?php echo $cost_centre['uid'];?>">
 	<div class="row">
-		<div class="col">
-			<div class="form-group">
-				<label for="name">Name</label>
-				<input type="text" class="form-control" id="name" name="name" placeholder="Name" value="<?php echo $cost_centre['name'];?>">
-			</div>
-		</div>
-		<div class="col-3">
-			<div class="form-group">
+		<div class="col-1">
+			<div class="mb-3">
 				<label for="colour">Colour</label>
 				<input type="color" class="form-control form-control-color" name="colour" value="<?php echo $cost_centre['colour'];?>" title="Colour">
 			</div>
 		</div>
+		<div class="col">
+			<div class="mb-3">
+				<label for="name">Name</label>
+				<input type="text" class="form-control" id="name" name="name" placeholder="Name" value="<?php echo $cost_centre['name'];?>">
+			</div>
+		</div>
+
 	</div>
 
 	<div class="row">
 		<div class="col">
-			<div class="form-group">
+			<div class="mb-3">
 				<label for="code">Code</label>
 				<input type="text" class="form-control" id="code" name="code" placeholder="Code" value="<?php echo $cost_centre['code'];?>">
 			</div>
 		</div>
 		<div class="col">
-			<div class="form-group">
+			<div class="mb-3">
 				<label for="budget">Budget (£)</label>
 				<input type="text" class="form-control" id="budget" name="budget" placeholder="Budget (without £ or commas)" value="<?php echo $cost_centre['value'];?>">
 			</div>
@@ -60,9 +61,9 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 	</div>
 	<div class="row">
 		<div class="col-sm">
-			<div class="form-group">
+			<div class="mb-3">
 				<label for="department">Department</label>
-				<select class="form-control" name="department">
+				<select class="form-select" name="department">
 					<?php
 					foreach ($departments AS $department) {
 						if ($department['uid'] == $cost_centre['department']) {
@@ -79,13 +80,13 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 			</div>
 		</div>
 		<div class="col-sm">
-			<div class="form-group">
+			<div class="mb-3">
 				<label for="grouping">Grouping</label>
 				<input type="text" class="form-control" id="grouping" name="grouping" placeholder="Grouping" value="<?php echo $cost_centre['grouping'];?>">
 			</div>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="mb-3">
 		<label for="description">Description</label>
 		<textarea class="form-control" id="description" name="description" rows="3"><?php echo $cost_centre['description'];?></textarea>
 	</div>

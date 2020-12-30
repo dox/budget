@@ -96,11 +96,11 @@ foreach ($cost_centres AS $costCentre) {
 		}
 
 		if ($percentageDifference > 0) {
-			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-up color-red\"></i></div>";
+			$arrow = $percentageDifference . "% <svg width=\"16\" height=\"16\" class=\"float-end colour-red\"><use xlink:href=\"img/icons.svg#graph-up\"/></svg>";
 		} elseif ($percentageDifference < 0) {
-			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-down color-green\"></i></div>";
+			$arrow = $percentageDifference . "% <svg width=\"16\" height=\"16\" class=\"float-end colour-green\"><use xlink:href=\"img/icons.svg#graph-down\"/></svg>";
 		} else {
-			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-right\"></i></div>";
+			$arrow = $percentageDifference . "% <svg width=\"16\" height=\"16\" class=\"float-end\"><use xlink:href=\"img/icons.svg#arrow-right-short\"/></svg>";
 		}
 		?>
 		<div class="card card--blue">
@@ -123,13 +123,12 @@ foreach ($cost_centres AS $costCentre) {
 			$percentageDifference = 0;
 		}
 
-
 		if ($percentageDifference > 0) {
-			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-up color-red\"></i></div>";
+			$arrow = $percentageDifference . "% <svg width=\"16\" height=\"16\" class=\"float-end colour-red\"><use xlink:href=\"img/icons.svg#graph-up\"/></svg>";
 		} elseif ($percentageDifference < 0) {
-			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-down color-green\"></i></div>";
+			$arrow = $percentageDifference . "% <svg width=\"16\" height=\"16\" class=\"float-end colour-green\"><use xlink:href=\"img/icons.svg#graph-down\"/></svg>";
 		} else {
-			$arrow = "<div class=\"float-right\">" . $percentageDifference . "% <i class=\"fas fa-long-arrow-alt-right\"></i></div>";
+			$arrow = $percentageDifference . "% <svg width=\"16\" height=\"16\" class=\"float-end\"><use xlink:href=\"img/icons.svg#arrow-right-short\"/></svg>";
 		}
 		?>
 		<div class="card card--red">
@@ -143,6 +142,7 @@ foreach ($cost_centres AS $costCentre) {
 	<div class="col-sm">
 		<div class="card card--green">
 			<div class=\"clearfix\">
+				<?php echo $arrow; ?>
 			<h2 style="font-size: 20px;">&pound; <?php echo number_format($outstandingPayments);?></h2>
 			<div class="mt-1" style="color: #A7AEBB;">Unpaid Orders</div>
 		</div>

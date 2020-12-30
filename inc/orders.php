@@ -207,6 +207,35 @@ public function all_previous_years($search = null) {
 	return $orders;
 }
 
+public function all_previous_years_by_supplier($supplier = null) {
+	global $db;
+
+	$sql  = "SELECT
+				orders.uid,
+				orders.date,
+				orders.cost_centre,
+				orders.po,
+				orders.order_num,
+				orders.name,
+				orders.username,
+				orders.value,
+				orders.supplier,
+				orders.description,
+				orders.paid,
+				cost_centres.code,
+				cost_centres.department
+			FROM orders, cost_centres
+			WHERE orders.cost_centre = cost_centres.uid
+			AND orders.date < '" . budgetStartDate() . "'
+			AND orders.supplier = '" . $supplier . "'
+			AND cost_centres.department = '" . $_SESSION['department'] . "'
+			ORDER BY orders.date DESC, orders.po DESC;";
+			
+	$orders = $db->rawQuery($sql);
+
+	return $orders;
+}
+
 public function insert($data = null) {
 	global $db;
 
@@ -284,7 +313,7 @@ public function table($orders = null) {
 				$output .= "<div class=\"col-auto\"><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\"><svg width=\"16\" height=\"16\" style=\"color: " . $cost_centre['colour'] . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg></a></div>";//$cost_centre['code']
 				$output .= "<div class=\"col-auto\">" . $uploadsOutput . "</div>";
 				$output .= "<div class=\"col\">";
-					$output .= "<strong>" . $order['po'] . ":</strong> " . $order['name'];
+					$output .= "<strong><a href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "\">" . $order['po'] . "</strong></a> / <a href=\"index.php?n=suppliers_unique&name=" . urlencode($order['supplier']) . "\">" . $order['supplier'] . "</a> " . $order['name'];
 					$output .= "<div class=\"text-muted\">";
 						$output .= $order['description'];
 					$output .= "</div>";
@@ -297,7 +326,7 @@ public function table($orders = null) {
 					}
 				$output .= "</div>";
 				$output .= "<div class=\"col-auto\">";
-					$output .= "<a href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "\" class=\"link-secondary\">";
+					$output .= "<a href=\"index.php?n=orders_edit&uid=" . $order['uid'] . "\" class=\"link-secondary\">";
 					//$output .= "<button class=\"switch-icon\" data-bs-toggle=\"switch-icon\">";
 					$output .= "<span class=\"switch-icon-a text-muted\">";
 					$output .= "<svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#pencil-square\"/></svg>";

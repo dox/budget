@@ -93,10 +93,10 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 		?>
 	</div>
 	<div class="col-md">
-		<h2>Date: <?php echo date('Y-m-d H:i', strtotime($order['date'])); ?></h2>
-		<h2>Supplier Order #: <?php echo $order['order_num']; ?></h2>
-		<h2>Cost Centre: <?php echo $cost_centre['code'] . " - " . $cost_centre['name']; ?></h2>
-		<h2>Order Created By: <?php echo $user['firstname'] . " " . $user['lastname']; ?></h2>
+		<h4>Date: <?php echo date('Y-m-d H:i', strtotime($order['date'])); ?></h4>
+		<h4>Supplier Order #: <?php echo $order['order_num']; ?></h4>
+		<h4>Cost Centre: <?php echo $cost_centre['code'] . " - " . $cost_centre['name']; ?></h4>
+		<h4>Order Created By: <?php echo $user['firstname'] . " " . $user['lastname']; ?></h4>
 
 		<?php
 		if (!isset($order['paid']) || empty($order['paid'])) {

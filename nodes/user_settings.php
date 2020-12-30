@@ -8,26 +8,26 @@ $departments = $departments_class->all();
 
 <h2><i class="fas fa-lock fa-sm"></i> User Settings <small class="text-muted"><?php echo $_SESSION['username'];?></small></h2>
 <form>
-	<div class="form-group">
+	<div class="mb-3">
 		<label for="firstname">First Name</label>
 		<input type="text" class="form-control" id="firstname" value="<?php echo $user['firstname']; ?>">
 	</div>
-	<div class="form-group">
+	<div class="mb-3">
 		<label for="lastname">Last Name</label>
 		<input type="text" class="form-control" id="lastname" value="<?php echo $user['lastname']; ?>">
 	</div>
-	<div class="form-group">
+	<div class="mb-3">
 		<label for="type">User Type</label>
-		<select class="form-control" id="type">
+		<select class="form-select" id="type">
 			<option <?php if ($user['type'] == "administrator") { echo " selected "; } ?>value="administrator">Administrator</option>
 			<option <?php if ($user['type'] == "accountant") { echo " selected "; } ?>value="accountant">Accountant</option>
 			<option <?php if ($user['type'] == "purchaser") { echo " selected "; } ?>value="purchaser">Purchaser</option>
 			<option <?php if ($user['type'] == "viewer") { echo " selected "; } ?>value="viewer">Viewer</option>
 		</select>
 	</div>
-	<div class="form-group">
+	<div class="mb-3">
 		<label for="department">Department</label>
-		<select class="form-control" id="department">
+		<select class="form-select" id="department">
 			<?php
 			foreach ($departments AS $department) {
 				if ($department['uid'] == $user['department']) {

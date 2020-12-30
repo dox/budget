@@ -56,11 +56,11 @@ function generateRandomString($length = 10) {
 			}
 
 			$output  = "<tr class=\"" . $class . "\">";
-			$output .= "<th scope=\"row\">" . $date . "</th>";
-			$output .= "<th>" . $type . "</th>";
-			$output .= "<th>" . $description . "</th>";
-			$output .= "<th>" . $ip . "</th>";
-			$output .= "<th>" . $username . "</th>";
+			$output .= "<td scope=\"row\">" . $date . "</td>";
+			$output .= "<td>" . $type . "</td>";
+			$output .= "<td>" . $description . "</td>";
+			$output .= "<td>" . $ip . "</td>";
+			$output .= "<td>" . $username . "</td>";
 			$output .= "</tr>";
 
 			echo $output;
