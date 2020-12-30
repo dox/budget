@@ -1,6 +1,7 @@
 <?php
 $orders_class = new class_orders;
 $orders = $orders_class->all(null, null, $_GET['name'], null);
+$ordersPrevious = $orders_class->all_previous_years_by_supplier($_GET['name']);
 
 $suppliers_class = new class_suppliers;
 
@@ -30,4 +31,10 @@ $supplierURL = "index.php?n=suppliers_edit&name=" . urlencode($_GET['name']);
 
 <?php
 echo $orders_class->table($orders);
+?>
+
+<h2>Orders from Supplier: <a href="<?php echo $supplierURL;?>"><?php echo $_GET['name'];?></a> in previous years</h2>
+
+<?php
+echo $orders_class->table($ordersPrevious);
 ?>
