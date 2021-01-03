@@ -230,7 +230,7 @@ public function all_previous_years_by_supplier($supplier = null) {
 			AND orders.supplier = '" . $supplier . "'
 			AND cost_centres.department = '" . $_SESSION['department'] . "'
 			ORDER BY orders.date DESC, orders.po DESC;";
-			
+
 	$orders = $db->rawQuery($sql);
 
 	return $orders;
@@ -276,10 +276,10 @@ public function table($orders = null) {
 		$uploads = $uploads_class->all($order['uid']);
 
 		if ($orderDateAge > -10) {
-			$class = "table-success";
+			$class = "list-group-item-success";
 		} else {
 			if (isset($order['paid'])) {
-				$class = "table-secondary";
+				$class = "list-group-item-secondary";
 			} else {
 				$class = "";
 			}
@@ -307,7 +307,7 @@ public function table($orders = null) {
 				</div>
 			</div>
 		*/
-		$output .= "<div class=\"list-group-item\">";
+		$output .= "<div class=\"list-group-item " . $class . "\">";
 			$output .= "<div class=\"row g-2 align-items-center\">";
 				$output .= "<div class=\"col-auto text-h3\">" . date('Y-m-d', strtotime($order['date'])) . "</div>";
 				$output .= "<div class=\"col-auto\"><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\"><svg width=\"16\" height=\"16\" style=\"color: " . $cost_centre['colour'] . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg></a></div>";//$cost_centre['code']
