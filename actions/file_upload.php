@@ -41,8 +41,12 @@ try {
         $finfo->file($_FILES['upfile']['tmp_name']),
         array(
             'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
             'png' => 'image/png',
             'gif' => 'image/gif',
+            'pdf' => 'application/pdf',
+            'doc' => 'application/msword',
+            'docx' => 'vnd.openxmlformats-officedocument.wordprocessingml.document',
         ),
         true
     )) {
