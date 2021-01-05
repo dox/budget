@@ -79,7 +79,15 @@ if (isset($_GET['cloneUID'])) {
 
 						foreach ($cost_centres AS $cost_centre) {
 							if ($cost_centre['grouping'] == $group) {
-								$output .= "<option value=\"" .  $cost_centre['uid'] . "\">" . $cost_centre['code'] . " - " .$cost_centre['name'] . "</option>";
+
+								// if cloning, make sure the right cost centre is pre-selected
+								if ($cost_centre['uid'] == $orderToClone['cost_centre']) {
+									$selected = " selected";
+								} else {
+									$selected = "";
+								}
+								
+								$output .= "<option value=\"" .  $cost_centre['uid'] . "\" " . $selected . ">" . $cost_centre['code'] . " - " .$cost_centre['name'] . "</option>";
 							}
 						}
 						$output .= "</optgroup>";
