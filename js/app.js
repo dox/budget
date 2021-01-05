@@ -108,7 +108,7 @@ function createOrder(this_id) {
             alert("Something went wrong.  Please refresh this page and try again.");
             alert(`Error ${request.status}: ${request.statusText}`); // e.g. 404: Not Found
           } else { // show the result
-            alert("Order added!");
+            location.href = 'index.php?n=orders_all';
           }
         };
 
