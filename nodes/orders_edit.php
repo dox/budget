@@ -3,8 +3,8 @@ $orders_class = new class_orders;
 $orders = $orders_class->all();
 $order = $orders_class->getOne($_GET['uid']);
 
-foreach ($orders AS $orderTemp) {
-	$suppliersArray[] = "\"" . $orderTemp['supplier'] . "\"";
+foreach ($orders_class->recentSuppliers() AS $supplier) {
+	$suppliersArray[] = $supplier['supplier'];
 }
 $suppliersArray = array_unique($suppliersArray);
 
@@ -39,7 +39,16 @@ $department = $departments_class->getOne($_SESSION['department']);
 		<div class="col-sm">
 			<div class="mb-3">
 				<label for="supplier">Supplier</label>
-				<input type="text" class="form-control" data-provide="typeahead" id="supplier" name="supplier" placeholder="Supplier" value="<?php echo $order['supplier']; ?>" autocomplete="off">
+				<input class="form-control" list="datalistOptions" id="supplier" name="supplier" value="<?php echo $order['supplier']; ?>">
+				<datalist id="datalistOptions">
+					<?php
+					foreach ($suppliersArray AS $supplier) {
+						$output = "<option value=\"" . $supplier . "\">";
+
+						echo $output;
+					}
+					?>
+				</datalist>
 			</div>
 		</div>
 		<div class="col-sm">

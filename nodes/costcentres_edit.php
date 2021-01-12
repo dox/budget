@@ -4,9 +4,6 @@ $departments = $departments_class->all();
 
 $cost_centre_class = new class_cost_centres;
 $groups = $cost_centre_class->groups();
-foreach ($groups AS $group) {
-	$groupsArray[] = "\"" . $group . "\"";
-}
 
 if (isset($_POST['code'])) {
 	$data = Array (
@@ -82,7 +79,16 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 		<div class="col-sm">
 			<div class="mb-3">
 				<label for="grouping">Grouping</label>
-				<input type="text" class="form-control" id="grouping" name="grouping" placeholder="Grouping" value="<?php echo $cost_centre['grouping'];?>">
+				<input class="form-control" list="datalistOptions" id="grouping" name="grouping" placeholder="Grouping" value="<?php echo $cost_centre['grouping'];?>">
+				<datalist id="datalistOptions">
+					<?php
+					foreach ($groups AS $group) {
+						$output = "<option value=\"" . $group . "\">";
+
+						echo $output;
+					}
+					?>
+				</datalist>
 			</div>
 		</div>
 	</div>
