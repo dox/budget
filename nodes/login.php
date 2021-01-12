@@ -53,9 +53,3 @@
   ?>
 	<input type="hidden" name="loginformsubmit">
 </form>
-
-<script>
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-</script>
