@@ -42,41 +42,57 @@
         </form>
 
         <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-primary" onclick="window.location.href = 'index.php?n=orders_create';">Create Order</button>
-          <button type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="visually-hidden">Toggle Dropdown</span></button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="index.php?n=search">
-              <svg width="16" height="16">
-                <use xlink:href="img/icons.svg#search"/>
-              </svg> Search
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="index.php?n=costcentres_create">
-              <svg width="16" height="16">
-                <use xlink:href="img/icons.svg#archive-fill"/>
-              </svg> Create Cost Centre
-            </a>
-            <a class="dropdown-item" href="./export.php" target="_blank">
-              <svg width="16" height="16">
-                <use xlink:href="img/icons.svg#box-arrow-down"/>
-              </svg> Create Export
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="index.php?n=user_settings">
-              <svg width="16" height="16">
-                <use xlink:href="img/icons.svg#person-circle"/>
-              </svg> User Settings
-            </a>
-            <a class="dropdown-item" href="index.php?n=logs_all">
-              <svg width="16" height="16">
-                <use xlink:href="img/icons.svg#list-ol"/>
-              </svg> Logs</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="index.php?n=index&logout">
-              <svg width="16" height="16">
-                <use xlink:href="img/icons.svg#door-closed-fill"/>
-              </svg> Sign Out</a>
-          </div>
+          <a href="index.php?n=orders_create" class="btn btn-sm btn-primary">Create Order</a>
+          <button type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="index.php?n=search">
+                <svg width="16" height="16">
+                  <use xlink:href="img/icons.svg#search"/>
+                </svg> Search
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item" href="index.php?n=costcentres_create">
+                <svg width="16" height="16">
+                  <use xlink:href="img/icons.svg#archive-fill"/>
+                </svg> Create Cost Centre
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="./export.php" target="_blank">
+                <svg width="16" height="16">
+                  <use xlink:href="img/icons.svg#box-arrow-down"/>
+                </svg> Create Export
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item" href="index.php?n=user_settings">
+                <svg width="16" height="16">
+                  <use xlink:href="img/icons.svg#person-circle"/>
+                </svg> User Settings
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="index.php?n=logs_all">
+                <svg width="16" height="16">
+                  <use xlink:href="img/icons.svg#list-ol"/>
+                </svg> Logs
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item" href="index.php?n=index&logout">
+                <svg width="16" height="16">
+                  <use xlink:href="img/icons.svg#door-closed-fill"/>
+                </svg> Sign Out
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
