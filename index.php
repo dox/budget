@@ -118,7 +118,7 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 					$node = "nodes/404.php";
 				}
 			} else {
-				$node = "nodes/404.php";
+				$node = "nodes/login.php";
 			}
 		} else {
 			$node = "nodes/login.php";
