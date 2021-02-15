@@ -9,6 +9,7 @@ $department = $departments_class->getOne($_SESSION['department']);
 $orders_class = new class_orders;
 $orders = $orders_class->all();
 
+$suppliersArray = array();
 foreach ($orders_class->recentSuppliers() AS $supplier) {
 	$suppliersArray[] = $supplier['supplier'];
 }
@@ -86,7 +87,7 @@ if (isset($_GET['cloneUID'])) {
 								} else {
 									$selected = "";
 								}
-								
+
 								$output .= "<option value=\"" .  $cost_centre['uid'] . "\" " . $selected . ">" . $cost_centre['code'] . " - " .$cost_centre['name'] . "</option>";
 							}
 						}
