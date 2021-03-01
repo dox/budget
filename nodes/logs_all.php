@@ -22,11 +22,11 @@ function generateRandomString($length = 10) {
 <canvas id="canvas" width="400" height="100"></canvas>
 <form class="form-inline">
   <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Quick Filter</label>
-  <input type="text" class="form-control mb-2 mr-sm-2 flex-fill" id="logSearchInput" placeholder="Filter Logs...">
+  <input type="text" class="form-control mb-2 mr-sm-2 flex-fill" id="logs_fiter_input" onkeyup="tableFilter()" placeholder="Filter Logs...">
 </form>
-<table class="table bg-white">
+<table class="table bg-white" id="logsTable">
 	<thead>
-		<tr>
+		<tr class="header">
 			<th scope="col" style="width: 190px;">Date</th>
 			<th scope="col">Type</th>
 			<th scope="col">Description</th>
@@ -151,12 +151,15 @@ foreach ($logsTotal AS $log) {
 		window.myLine = new Chart(ctx, config);
 	};
 
-$(document).ready(function(){
-  $("#logSearchInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#logsTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
+
+function tableFilter() {
+  const input = document.getElementById("logs_fiter_input");
+  const inputStr = input.value.toUpperCase();
+  document.querySelectorAll('#logsTable tr:not(.header)').forEach((tr) => {
+    const anyMatch = [...tr.children]
+      .some(td => td.textContent.toUpperCase().includes(inputStr));
+    if (anyMatch) tr.style.removeProperty('display');
+    else tr.style.display = 'none';
   });
-});
+}
 </script>
