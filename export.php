@@ -14,9 +14,10 @@ function exportToCsv($type) {
   global $db;
 
   if ($type == "orders") {
-    $sql  = "SELECT * FROM ((orders INNER JOIN users ON orders.username = users.uid INNER JOIN cost_centres ON orders.cost_centre = cost_centres.uid) INNER JOIN departments ON cost_centres.department = departments.uid)";
-    $sql .= " WHERE cost_centres.department = '" . $_SESSION['department'] . "'";
-  	$sql .= " ORDER BY orders.date DESC, orders.po DESC;";
+    $sql  = "SELECT * FROM orders ";
+    $sql .= "WHERE cost_centre in (SELECT uid FROM cost_centres WHERE department = '" . $_SESSION['department'] . "') ";
+    $sql .= "ORDER BY orders.date DESC, orders.po DESC;";
+
     $dbRows = $db->rawQuery($sql);
 
     $arrayKeys = array_keys($dbRows[0]);
