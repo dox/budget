@@ -37,6 +37,7 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 			$user = $users_class->getOne($username);
 
 			if ($user) {
+				$_SESSION['logged_on'] = true;
 				$_SESSION['username'] = $username;
 				$_SESSION['department'] = $user['department'];
 				$_SESSION['localUID'] = $user['uid'];
@@ -55,9 +56,10 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 				$message = "You do not have access to this resource (although your username/password was correct";
 				echo toast($title, $message);
 
+				session_destroy();
+
 				$redir = "Location: http://budget.seh.ox.ac.uk/index.php?n=login";
 				header($redir);
-
 			}
 
 			exit;
@@ -67,6 +69,8 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 			$title = "Access Denied";
 			$message = "Incorrect username/password supplied";
 			echo toast($title, $message);
+
+			session_destroy();
 		}
 	}
 
@@ -112,7 +116,7 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 <body>
 	<header>
 	<?php
-	if (isset($_SESSION['username'])) {
+	if (isset($_SESSION['logged_on']) && $_SESSION['logged_on'] == true) {
 		include('views/nav_top.php');
 	}
 	?>
