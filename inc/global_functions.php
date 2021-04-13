@@ -34,17 +34,15 @@ function toast($title = null, $message = null) {
 
 	$output  = "<div class=\"toast\" role=\"alert\" aria-live=\"assertive\" aria-atomic=\"true\" data-delay=\"5000\">";
 		$output .= "<div class=\"toast-header\">";
-			$output .= "<i class=\"far fa-bell\"></i>";
-			$output .= "<strong class=\"mr-auto\">" . $title . "</strong>";
+			$output .= "<strong class=\"me-auto\">" . $title . "</strong>";
 			$output .= "<small>Just now</small>";
-			$output .= "<button type=\"button\" class=\"ml-2 mb-1 close\" data-dismiss=\"toast\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>";
+			$output .= "<button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"toast\" aria-label=\"Close\"></button>";
 		$output .= "</div>";
 		$output .= "<div class=\"toast-body\">";
 			$output .= $message;
 		$output .= "</div>";
 	$output .= "</div>";
 
-	//$output = "TEST";
 	return $output;
 }
 

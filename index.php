@@ -13,70 +13,51 @@ if (isset($_GET['logout']) && isset($_SESSION['username'])) {
 	echo toast($title, $message);
 }
 
-//you should look into using PECL filter or some form of filtering here for POST variables
-if (isset($_POST['username'])) {
-	$username = strtoupper($_POST['username']); //remove case sensitivity on the username
-	$password = $_POST['password'];
-}
-
 if (isset($_POST['loginformsubmit'])) { //prevent null bind
-	if ($username != NULL && $password != NULL){
-        try {
-		    $adldap = new adLDAP();
-        }
-        catch (adLDAPException $e) {
-            echo $e;
-            exit();
-        }
+	if ($ldap_connection->auth()->attempt($_POST['username'] . LDAP_ACCOUNT_SUFFIX, $_POST['password'], $stayAuthenticated = true)) {
+    // Successfully authenticated user.
 
-		//authenticate the user
-		if ($adldap->authenticate($username, $password)){
-			//establish your session and redirect
+		$users_class = new class_users;
+		$user = $users_class->getOne($_POST['username']);
 
-			$users_class = new class_users;
-			$user = $users_class->getOne($username);
+		if ($user) {
+			$_SESSION['logged_on'] = true;
+			$_SESSION['username'] = $_POST['username'];
+			$_SESSION['department'] = $user['department'];
+			$_SESSION['localUID'] = $user['uid'];
+			//$_SESSION['userinfo'] = $adldap->user()->info($username);
 
-			if ($user) {
-				$_SESSION['logged_on'] = true;
-				$_SESSION['username'] = $username;
-				$_SESSION['department'] = $user['department'];
-				$_SESSION['localUID'] = $user['uid'];
-				$_SESSION['userinfo'] = $adldap->user()->info($username);
-
-				if ($_POST['remember-me'] == "remember-me") {
-					setcookie("seh_budget_username", $_SESSION['username'], time()+3600);
-				}
-				setcookie("SEHbudget", $_SESSION['username'], time()+3600);
-				$log->insert("logon", "Logon successful for " . $username);
-				$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php?n=dashboard";
-				header($redir);
-			} else {
-				$log->insert("logon", "LDAP Logon successful for " . $_SESSION['username'] . " but resource access denied");
-				$title = "Access Denied";
-				$message = "You do not have access to this resource (although your username/password was correct";
-				echo toast($title, $message);
-
-				session_destroy();
-
-				$redir = "Location: http://budget.seh.ox.ac.uk/index.php?n=login";
-				header($redir);
+			if ($_POST['remember-me'] == "remember-me") {
+				setcookie("seh_budget_username", $_POST['username'], time()+3600);
 			}
-
-			exit;
+			setcookie("SEHbudget", $_POST['username'], time()+3600);
+			$log->insert("logon", "Logon successful for " . $_POST['username']);
+			$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php?n=dashboard";
+			header($redir);
 		} else {
-			$log->insert("logon", "Logon failed for " . $_POST['username']);
-
+			$log->insert("logon", "LDAP Logon successful for " . $_POST['username'] . " but resource access denied");
 			$title = "Access Denied";
-			$message = "Incorrect username/password supplied";
+			$message = "You do not have access to this resource (although your username/password was correct";
 			echo toast($title, $message);
 
 			session_destroy();
+
+			$redir = "Location: http://budget.seh.ox.ac.uk/index.php?n=login";
+			header($redir);
 		}
+	} else {
+    // Username or password is incorrect.
+		$log->insert("logon", "Logon failed for " . $_POST['username']);
+
+		$title = "Access Denied";
+		$message = "Incorrect username/password supplied";
+		echo toast($title, $message);
+
+		session_destroy();
+
+		$message = "<div class=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><strong>Warning!</strong> Login attempt failed.</div>";
 	}
-
-	$message = "<div class=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><strong>Warning!</strong> Login attempt failed.</div>";
 }
-
 ?>
 
 <!DOCTYPE html>
