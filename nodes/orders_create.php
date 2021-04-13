@@ -27,7 +27,7 @@ if (isset($_GET['cloneUID'])) {
 		<div class="col-sm">
 			<div class="form-group">
 				<label for="date">Date</label>
-				<input type="text" class="form-control" id="date" name="date" placeholder="<?php echo date('Y-m-d H:i'); ?>" value="<?php echo date('Y-m-d H:i'); ?>" required>
+				<input type="text" class="form-control" id="date" name="date" value="<?php echo date('Y-m-d H:i'); ?>" required>
 				<div class="invalid-feedback">Please provide a valid date.</div>
 			</div>
 		</div>
@@ -115,3 +115,10 @@ if (isset($_GET['cloneUID'])) {
 		<a href="#" id="test" class="btn btn-primary" onclick="createOrder(this.id)">Submit</a>
 	</div>
 </form>
+
+<script>
+var fp = flatpickr("#date", {
+  enableTime: true,
+  time_24hr: true
+})
+</script>

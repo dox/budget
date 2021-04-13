@@ -24,7 +24,7 @@ $department = $departments_class->getOne($_SESSION['department']);
 		<div class="col-sm">
 			<div class="mb-3">
 				<label for="date">Date</label>
-				<input type="text" class="form-control" id="date" name="date" placeholder="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d', strtotime($order['date'])); ?>">
+				<input type="text" class="form-control" id="date" name="date" value="<?php echo date('Y-m-d H:i', strtotime($order['date'])); ?>">
 			</div>
 		</div>
 		<div class="col-sm">
@@ -102,3 +102,10 @@ $department = $departments_class->getOne($_SESSION['department']);
 	</div>
 	<button type="submit" class="btn btn-primary">Update</button>
 </form>
+
+<script>
+var fp = flatpickr("#date", {
+  enableTime: true,
+  time_24hr: true
+})
+</script>
