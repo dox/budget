@@ -264,9 +264,23 @@ public function update($uid = null, $data = null) {
 }
 
 public function table($orders = null) {
-	$output = "<div class=\"list-group card-list-group\">";
+	$output  = "<table class=\"table bg-white\">";
+	$output .= "<thead>";
+	$output .= "<tr>";
+	$output .= "<th scope=\"col\" style=\"width: 140px;\">Code</th>";
+	$output .= "<th scope=\"col\" style=\"width: 120px;\">Date</th>";
+	$output .= "<th scope=\"col\" style=\"width: 100px;\">Supplier</th>";
+	$output .= "<th scope=\"col\">PO</th>";
+	$output .= "<th scope=\"col\" class=\"text-end\" style=\"width: 120px;\">Value</th>";
+	$output .= "</tr>";
+	$output .= "</thead>";
 
 	foreach ($orders AS $order) {
+		if (isset($order['paid'])) {
+			$trClass = "table-secondary";
+		} else {
+			$trClass = "";
+		}
 		$orderDateAge = date('U', strtotime($order['date'])) - date('U', strtotime('60 seconds ago'));
 
 		$cost_centre_class = new class_cost_centres;
@@ -285,72 +299,31 @@ public function table($orders = null) {
 			}
 		}
 
-		if (!empty($uploads)) {
-			$uploadsOutput = " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#paperclip\"/></svg>";
-		} else {
-			$uploadsOutput = " <svg width=\"16\" height=\"16\" class=\"invisible\"><use xlink:href=\"img/icons.svg#paperclip\"/></svg>";
+		$orderName = "<strong>" . $order['po'] . "</strong>: " . $order['name'];
+		$orderURL = "index.php?n=orders_unique&uid=" . $order['uid'];
+		if (!empty($order['description'])) {
+			$orderName = $orderName . "<br /><span class=\"text-muted\">" . $order['description'] . "</span>";
 		}
-		/*
-				<div class="col-auto lh-1">
-					<div class="dropdown">
-						<a href="#" class="link-secondary" data-bs-toggle="dropdown"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle></svg>
-						</a>
-						<div class="dropdown-menu dropdown-menu-end">
-							<a class="dropdown-item" href="#">
-								Action
-							</a>
-							<a class="dropdown-item" href="#">
-								Another action
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		*/
-		$output .= "<div class=\"list-group-item " . $class . "\">";
-			$output .= "<div class=\"row g-2 align-items-center\">";
-				$output .= "<div class=\"col-auto text-h3\">" . date('Y-m-d', strtotime($order['date'])) . "</div>";
-				$output .= "<div class=\"col-auto\"><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\"><svg width=\"16\" height=\"16\" style=\"color: " . $cost_centre['colour'] . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg></a></div>";//$cost_centre['code']
-				$output .= "<div class=\"col-auto\">" . $uploadsOutput . "</div>";
-				$output .= "<div class=\"col\">";
-					$output .= "<strong><a href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "\">" . $order['po'] . "</strong></a> / <a href=\"index.php?n=suppliers_unique&name=" . urlencode($order['supplier']) . "\">" . $order['supplier'] . "</a> " . $order['name'];
-					$output .= "<div class=\"text-muted\">";
-						$output .= $order['description'];
-					$output .= "</div>";
-				$output .= "</div>";
-				$output .= "<div class=\"col-auto text-muted\">";
-					if ($order['value'] < 0) {
-						$output .= "<span class=\"text-right colour-green\">£" . number_format($order['value'], 2) . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#arrow-left-short\"/></svg></span>";
-					} else {
-						$output .= "<span class=\"text-right colour-red\">£" . number_format($order['value'], 2) . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#arrow-right-short\"/></svg></span>";
-					}
-				$output .= "</div>";
-				$output .= "<div class=\"col-auto\">";
-					$output .= "<a href=\"index.php?n=orders_edit&uid=" . $order['uid'] . "\" class=\"link-secondary\">";
-					//$output .= "<button class=\"switch-icon\" data-bs-toggle=\"switch-icon\">";
-					$output .= "<span class=\"switch-icon-a text-muted\">";
-					$output .= "<svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#pencil-square\"/></svg>";
-					$output .= "</span>";
-					$output .= "<span class=\"switch-icon-b text-red\">";
-					//$output .= "<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M19.5 13.572l-7.5 7.428l-7.5 -7.428m0 0a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path></svg>";
-					$output .= "</span>";
-					//$output .= "</button>";
-					$output .= "</a>";
-				$output .= "</div>";
+		if (!empty($uploads)) {
+			$orderName = $orderName . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#paperclip\"/></svg>";
+		}
 
-			$output .= "</div>";
-		$output .= "</div>";
+		$output .= "<tr class=\"" . $trClass . "\" onclick=\"window.location='" . $orderURL . "';\">";
+		$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\"><svg class=\"me-2\" width=\"16\" height=\"16\" style=\"color: " . $cost_centre['colour'] . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg> ". $cost_centre['code'] . "</a></td>";
+		$output .= "<td>" . date('Y-m-d', strtotime($order['date'])) . "</td>";
+		$output .= "<td><a href=\"index.php?n=suppliers_unique&name=" . urlencode($order['supplier']) . "\">" . $order['supplier'] . "</a></td>";
+		$output .= "<td>" . $orderName . "</td>";
+		if ($order['value'] < 0) {
+			$output .= "<td class=\"text-end colour-green\">£" . number_format($order['value']) . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#arrow-left-short\"/></svg></td>";
+		} else {
+			$output .= "<td class=\"text-end colour-red\">£" . number_format($order['value'], 2) . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#arrow-right-short\"/></svg></td>";
+		}
 
-		/*
-		$output .= "<tr class=\"" . $class . "\">";
-
-
-		$supplierURL = "index.php?n=suppliers_unique&name=" . urlencode($order['supplier']);
-		$output .= "<td><a href=\"" . $supplierURL . "\">" . $order['supplier'] . "</a></td>";
-		*/
+		$output .= "</tr>";
 	}
 
-	$output .=	"</div>";
+	$output .=	"</table>";
+
 
 	return $output;
 }
