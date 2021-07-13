@@ -1,114 +1,154 @@
 <?php
 class class_orders {
+	protected static $table_name = "orders";
+	public $uid;
+	public $username;
+	public $date;
+	public $cost_centre;
+	public $po;
+	public $order_num;
+	public $name;
+	public $value;
+	public $supplier;
+	public $description;
+	public $paid;
 
-	public function getOne($uid = null) {
-		global $db;
-
-		$order = $db->where("uid", $uid);
-		$order = $db->getOne("orders");
-
-		return $order;
-	}
-
-	public function recentSuppliers() {
+	public function all($date = null, $costCentre = null, $supplier = null, $search = null) {
 		global $db;
 
 		$sql  = "SELECT
+					orders.uid,
 					orders.date,
 					orders.cost_centre,
+					orders.po,
+					orders.order_num,
+					orders.name,
+					orders.username,
+					orders.value,
 					orders.supplier,
+					orders.description,
+					orders.paid,
 					cost_centres.code,
 					cost_centres.department
 				FROM orders, cost_centres
 				WHERE orders.cost_centre = cost_centres.uid
-				AND orders.date BETWEEN CURDATE() - INTERVAL 1 YEAR AND CURDATE()";
+				AND (orders.date BETWEEN '" . budgetStartDate() . "' AND '" . budgetEndDate() . "')";
 
+				if (isset($date)) {
+					$sql .= " AND YEAR(orders.date) = '" . date('Y',strtotime($date)) . "'
+					AND MONTH(orders.date) = '" . date('m',strtotime($date)) . "' ";
+				}
+
+				if (isset($costCentre)) {
+					$sql .= " AND orders.cost_centre = '" . $costCentre . "' ";
+				}
+
+				if (isset($supplier)) {
+					$sql .= " AND orders.supplier = '" . $supplier . "' ";
+				}
+
+				if (isset($search)) {
+					$sql .= " AND (
+						orders.name LIKE '%" . $search . "%' OR
+						orders.supplier LIKE '%" . $search . "%' OR
+						orders.order_num LIKE '%" . $search . "%' OR
+						orders.po LIKE '%" . $search . "%' OR
+						orders.description LIKE '%" . $search . "%') ";
+				}
 		$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
 				ORDER BY orders.date DESC, orders.po DESC;";
 
-		$orders = $db->rawQuery($sql);
+		$orders = $db->query($sql)->fetchAll();
 
 		return $orders;
 	}
 
-public function nextOrderNumber() {
-	global $db;
-	$departments_class = new class_departments;
-	$department = $departments_class->getOne($_SESSION['department']);
+	public function all_previous_years($search = null) {
+		global $db;
 
-	$strLen = strlen($department['po_code']);
+		$sql  = "SELECT
+					orders.uid,
+					orders.date,
+					orders.cost_centre,
+					orders.po,
+					orders.order_num,
+					orders.name,
+					orders.username,
+					orders.value,
+					orders.supplier,
+					orders.description,
+					orders.paid,
+					cost_centres.code,
+					cost_centres.department
+				FROM orders, cost_centres
+				WHERE orders.cost_centre = cost_centres.uid
+				AND orders.date < '" . budgetStartDate() . "' ";
 
-	$order = $db->where("LEFT(po," . $strLen . ")", $department['po_code']);
-	$order = $db->orderBy("po", "DESC");
-	$order = $db->getOne("orders");
+				if (isset($search)) {
+					$sql .= " AND (
+						orders.name LIKE '%" . $search . "%' OR
+						orders.supplier LIKE '%" . $search . "%' OR
+						orders.order_num LIKE '%" . $search . "%' OR
+						orders.po LIKE '%" . $search . "%' OR
+						orders.description LIKE '%" . $search . "%') ";
+				}
+		$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
+				ORDER BY orders.date DESC, orders.po DESC;";
+		$orders = $db->query($sql)->fetchAll();
 
-    if ( ! $order )
-        // We get here if there is no order at all
-        // If there is no number set it to 0, which will be 1 at the end.
+		return $orders;
+	}
 
-        $number = 0;
-    else
-        $number = substr($order['po'], 3);
+	public function nextOrderNumber() {
+		global $db;
 
-    // If we have ORD000001 in the database then we only want the number
-    // So the substr returns this 000001
+		$sql  = "SELECT orders.po FROM orders ";
+		$sql .= "INNER JOIN cost_centres ";
+		$sql .= "ON orders.cost_centre = cost_centres.uid ";
+		$sql .= "WHERE cost_centres.department = '" . $_SESSION['department'] . "' ";
+		$sql .= "ORDER BY orders.uid DESC ";
+		$sql .= "LIMIT 1";
 
-    // Add the string in front and higher up the number.
-    // the %05d part makes sure that there are always 5 numbers in the string.
-    // so it adds the missing zero's when needed.
+		$lastOrder = $db->query($sql)->fetchArray();
 
-    return $department['po_code'] . sprintf('%05d', intval($number) + 1);
-}
+		$departmentObject = new department($_SESSION['department']);
 
-public function all($date = null, $costCentre = null, $supplier = null, $search = null) {
-	global $db;
+		$strLen = strlen($department['po_code']);
 
-	$sql  = "SELECT
-				orders.uid,
-				orders.date,
-				orders.cost_centre,
-				orders.po,
-				orders.order_num,
-				orders.name,
-				orders.username,
-				orders.value,
-				orders.supplier,
-				orders.description,
-				orders.paid,
-				cost_centres.code,
-				cost_centres.department
-			FROM orders, cost_centres
-			WHERE orders.cost_centre = cost_centres.uid
-			AND (orders.date BETWEEN '" . budgetStartDate() . "' AND '" . budgetEndDate() . "')";
+		if (!$lastOrder) {
+			// We get here if there is no order at all
+			// If there is no number set it to 0, which will be 1 at the end.
 
-			if (isset($date)) {
-				$sql .= " AND YEAR(orders.date) = '" . date('Y',strtotime($date)) . "'
-				AND MONTH(orders.date) = '" . date('m',strtotime($date)) . "' ";
-			}
+			$number = 0;
+		} else {
+			$number = substr($lastOrder['po'], 3);
 
-			if (isset($costCentre)) {
-				$sql .= " AND orders.cost_centre = '" . $costCentre . "' ";
-			}
+	    // If we have ORD000001 in the database then we only want the number
+	    // So the substr returns this 000001
 
-			if (isset($supplier)) {
-				$sql .= " AND orders.supplier = '" . $supplier . "' ";
-			}
+	    // Add the string in front and higher up the number.
+	    // the %05d part makes sure that there are always 5 numbers in the string.
+	    // so it adds the missing zero's when needed.
+		}
+	    return $departmentObject->po_code . sprintf('%05d', intval($number) + 1);
+	}
 
-			if (isset($search)) {
-				$sql .= " AND (
-					orders.name LIKE '%" . $search . "%' OR
-					orders.supplier LIKE '%" . $search . "%' OR
-					orders.order_num LIKE '%" . $search . "%' OR
-					orders.po LIKE '%" . $search . "%' OR
-					orders.description LIKE '%" . $search . "%') ";
-			}
-	$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
-			ORDER BY orders.date DESC, orders.po DESC;";
 
-	$orders = $db->rawQuery($sql);
 
-	return $orders;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 public function ordersTotalValueByMonth($date = null) {
 	global $db;
@@ -161,7 +201,7 @@ public function ordersTotalValueByYear($date = null) {
 			AND cost_centres.department = '" . $_SESSION['department'] . "'
 			ORDER BY orders.date DESC, orders.po DESC;";
 
-	$orders = $db->rawQuery($sql);
+	$orders = $db->query($sql)->fetchArray();
 
 	$totalValue = 0;
 	foreach ($orders AS $order) {
@@ -171,41 +211,7 @@ public function ordersTotalValueByYear($date = null) {
 	return $totalValue;
 }
 
-public function all_previous_years($search = null) {
-	global $db;
 
-	$sql  = "SELECT
-				orders.uid,
-				orders.date,
-				orders.cost_centre,
-				orders.po,
-				orders.order_num,
-				orders.name,
-				orders.username,
-				orders.value,
-				orders.supplier,
-				orders.description,
-				orders.paid,
-				cost_centres.code,
-				cost_centres.department
-			FROM orders, cost_centres
-			WHERE orders.cost_centre = cost_centres.uid
-			AND orders.date < '" . budgetStartDate() . "' ";
-
-			if (isset($search)) {
-				$sql .= " AND (
-					orders.name LIKE '%" . $search . "%' OR
-					orders.supplier LIKE '%" . $search . "%' OR
-					orders.order_num LIKE '%" . $search . "%' OR
-					orders.po LIKE '%" . $search . "%' OR
-					orders.description LIKE '%" . $search . "%') ";
-			}
-	$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
-			ORDER BY orders.date DESC, orders.po DESC;";
-	$orders = $db->rawQuery($sql);
-
-	return $orders;
-}
 
 public function all_previous_years_by_supplier($supplier = null) {
 	global $db;
@@ -231,37 +237,14 @@ public function all_previous_years_by_supplier($supplier = null) {
 			AND cost_centres.department = '" . $_SESSION['department'] . "'
 			ORDER BY orders.date DESC, orders.po DESC;";
 
-	$orders = $db->rawQuery($sql);
+	$orders = $db->query($sql)->fetchArray();
 
 	return $orders;
 }
 
-public function insert($data = null) {
-	global $db;
 
-	$id = $db->escape($db->insert('orders', $data));
 
-	$log = new class_logs;
-	$log->insert("create", $db->getLastQuery());
 
-	if (!$id) {
-		echo 'Log failed: ' . $db->getLastError();
-	}
-}
-
-public function update($uid = null, $data = null) {
-	global $db;
-
-	$db->where ('uid', $uid);
-	$id = $db->escape($db->update('orders', $data));
-
-	$log = new class_logs;
-	$log->insert("update", $db->getLastQuery());
-
-	if (!$id) {
-		echo 'Log failed: ' . $db->getLastError();
-	}
-}
 
 public function table($orders = null) {
 	$output  = "<table class=\"table bg-white\">";
@@ -283,11 +266,10 @@ public function table($orders = null) {
 		}
 		$orderDateAge = date('U', strtotime($order['date'])) - date('U', strtotime('60 seconds ago'));
 
-		$cost_centre_class = new class_cost_centres;
-		$cost_centre = $cost_centre_class->getOne($order['cost_centre']);
+		$cost_centre = new cost_centre($order['cost_centre']);
 
 		$uploads_class = new class_uploads;
-		$uploads = $uploads_class->all($order['uid']);
+		$uploads = $uploads_class->allByOrder($order['uid']);
 
 		if ($orderDateAge > -10) {
 			$class = "list-group-item-success";
@@ -309,7 +291,7 @@ public function table($orders = null) {
 		}
 
 		$output .= "<tr class=\"" . $trClass . "\" onclick=\"window.location='" . $orderURL . "';\">";
-		$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\"><svg class=\"me-2\" width=\"16\" height=\"16\" style=\"color: " . $cost_centre['colour'] . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg> ". $cost_centre['code'] . "</a></td>";
+		$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre->uid . "\"><svg class=\"me-2\" width=\"16\" height=\"16\" style=\"color: " . $cost_centre->colour . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg> ". $cost_centre->code . "</a></td>";
 		$output .= "<td>" . date('Y-m-d', strtotime($order['date'])) . "</td>";
 		$output .= "<td><a href=\"index.php?n=suppliers_unique&name=" . urlencode($order['supplier']) . "\">" . $order['supplier'] . "</a></td>";
 		$output .= "<td>" . $orderName . "</td>";
@@ -358,5 +340,6 @@ function budgetEndDate($date = null) {
 
 	return $dateTo;
 }
+
 
 ?>

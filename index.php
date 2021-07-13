@@ -18,13 +18,13 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
     // Successfully authenticated user.
 
 		$users_class = new class_users;
-		$user = $users_class->getOne($_POST['username']);
+		$user = new user($_POST['username']);
 
 		if ($user) {
 			$_SESSION['logged_on'] = true;
 			$_SESSION['username'] = $_POST['username'];
-			$_SESSION['department'] = $user['department'];
-			$_SESSION['localUID'] = $user['uid'];
+			$_SESSION['department'] = $user->department;
+			$_SESSION['localUID'] = $user->uid;
 			//$_SESSION['userinfo'] = $adldap->user()->info($username);
 
 			if ($_POST['remember-me'] == "remember-me") {

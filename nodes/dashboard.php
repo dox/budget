@@ -163,13 +163,12 @@ foreach ($cost_centres AS $costCentre) {
 	<tbody>
 		<?php
 		foreach ($monthlyOrdersTotalArray AS $ordersTotal => $value) {
-			$cost_centre_class = new class_cost_centres;
-			$cost_centre = $cost_centre_class->getOne($ordersTotal);
+			$cost_centre = new cost_centre($ordersTotal);
 
 			$output  = "<tr>";
-			$output .= "<td scope=\"row\" style=\"width: 50px;\"><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\"><svg width=\"16\" height=\"16\" style=\"color: " . $cost_centre['colour'] . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg></a></td>";
-			$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre['uid'] . "\">" . $cost_centre['code'] . "</td>";
-			$output .= "<td>" . $cost_centre['name'] . "</td>";
+			$output .= "<td scope=\"row\" style=\"width: 50px;\"><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre->uid . "\"><svg width=\"16\" height=\"16\" style=\"color: " . $cost_centre->colour . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg></a></td>";
+			$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre->uid . "\">" . $cost_centre->code . "</td>";
+			$output .= "<td>" . $cost_centre->name . "</td>";
 			if ($value < 0) {
 				$output .= "<td class=\"text-right color-green\">£" . number_format($value) . " <i class=\"fas fa-long-arrow-alt-left fa-sm\"></i></td>";
 			} else {

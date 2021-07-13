@@ -3,8 +3,7 @@ $logs_class = new class_logs;
 $logs_class->purge();
 $logs = $logs_class->all();
 
-$user_class = new class_users;
-$user = $user_class->getOne($_SESSION['username']);
+$user = new user($_SESSION['username']);
 
 function generateRandomString($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -37,7 +36,7 @@ function generateRandomString($length = 10) {
 	<tbody id="logsTable">
 		<?php
 		foreach ($logs AS $log) {
-			if ($user['type'] == "administrator") {
+			if ($user->type == "administrator") {
 				$date = date('Y-m-d H:i:s', strtotime($log['date']));
 				$type = $log['type'];
 				$description = $log['description'];
@@ -90,7 +89,8 @@ $sql = "SELECT DATE(date) AS date, count(*) AS logsTotal
 		FROM logs
 		GROUP BY DATE(date)
 		ORDER BY DATE(date) DESC;";
-$logsTotal = $db->rawQuery($sql);
+
+$logsTotal = $db->query($sql)->fetchAll();
 
 foreach ($logsTotal AS $log) {
 	$logsArray["'" . $log['date'] . "'"] = "'" . $log['logsTotal'] . "'";

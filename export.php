@@ -5,22 +5,20 @@ $sql  = "SELECT * FROM orders ";
 $sql .= "WHERE cost_centre in (SELECT uid FROM cost_centres WHERE department = '" . $_SESSION['department'] . "') ";
 $sql .= "ORDER BY orders.date DESC, orders.po DESC;";
 
-$orders = $db->rawQuery($sql);
+//$orders = $db->rawQuery($sql);
+$orders = $db->query($sql)->fetchAll();
 
 $i = 0;
 foreach ($orders AS $order) {
-  $cost_centre_class = new class_cost_centres;
-  $cost_centre = $cost_centre_class->getOne($order['cost_centre']);
-
-  $users_class = new class_users;
-  $user = $users_class->getOne($order['username']);
+  $cost_centre = new cost_centre($order['cost_centre']);
+  $user = new user($order['username']);
 
   $row['uid']         = $order['uid'];
-  $row['username']    = $user['username'];
+  $row['username']    = $user->username;
   $row['date']        = $order['date'];
 
-  $row['cost_centre_code'] = $cost_centre['code'];
-  $row['cost_centre_name'] = $cost_centre['name'];
+  $row['cost_centre_code'] = $cost_centre->code;
+  $row['cost_centre_name'] = $cost_centre->name;
 
   $row['po']          = $order['po'];
   $row['order_num']   = $order['order_num'];

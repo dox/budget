@@ -5,10 +5,9 @@ $orders = $orders_class->all();
 $YTDTotalSpend = 0;
 
 foreach ($orders AS $order) {
-	$users_class = new class_users;
-	$userLookup = $users_class->getOne($order['username']);
+	$userObject = new user($order['username']);
 
-	$username = "'" . $userLookup['firstname'] . " " . $userLookup['lastname'] . "'";
+	$username = "'" . $userObject->firstname . " " . $userObject->lastname . "'";
 
 	if (isset($usersArray[$username])) {
 		$usersArray[$username] = $usersArray[$username] + $order['value'];
@@ -18,8 +17,6 @@ foreach ($orders AS $order) {
 
 	$YTDTotalSpend = $YTDTotalSpend + $order['value'];
 }
-
-
 
 arsort($usersArray);
 ?>
@@ -49,6 +46,8 @@ var myChart = new Chart(ctx, {
 });
 </script>
 
+<hr />
+
 <table class="table bg-white">
 	<thead>
 		<tr>
@@ -60,10 +59,6 @@ var myChart = new Chart(ctx, {
 	<tbody>
 		<?php
 		foreach ($usersArray AS $user => $value) {
-			$users_class = new class_users;
-			$userLookup = $users_class->getOne(str_replace("'", "", $user));
-
-
 			$output  = "<tr>";
 			$output .= "<td scope=\"row\">" . str_replace("'", "", $user)  . "</td>";
 			$output .= "<td>£" . number_format($value,2) . "</td>";

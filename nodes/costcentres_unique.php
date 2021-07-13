@@ -1,39 +1,28 @@
 <?php
-$cost_centre_class = new class_cost_centres;
-$cost_centre = $cost_centre_class->getOne($_GET['uid']);
+$cost_centre = new cost_centre($_GET['uid']);
+
+
 
 $orders_class = new class_orders;
-$orders = $orders_class->all(null, $cost_centre['uid']);
 
-if (!$cost_centre['department'] == $_SESSION['department']) {
+if (!$cost_centre->department == $_SESSION['department']) {
 	echo "You have tried to access a cost centre that you are not authorised to view";
 	exit;
 }
 ?>
 
-<h2><?php echo $cost_centre['name'];?> <small class="text-muted"><?php echo $cost_centre['grouping'];?></small></h2>
+<h2><?php echo $cost_centre->name;?> <small class="text-muted"><?php echo $cost_centre->grouping;?></small></h2>
 
 <?php
-	$sql = "SELECT
-				orders.uid,
-				orders.date,
-				orders.cost_centre,
-				orders.value,
-				cost_centres.department
-			FROM orders, cost_centres
-			WHERE orders.cost_centre = cost_centres.uid
-			AND (orders.date BETWEEN '" . budgetStartDate() . "' AND '" . budgetEndDate() . "')
-			AND orders.cost_centre = '" . $cost_centre['uid'] . "'
-			ORDER BY orders.date ASC;";
-	$ordersRunningTotal = $db->rawQuery($sql);
-	$budgetTotal = $cost_centre['value'];
-	$runningBudget["'" . budgetStartDate() . "'"] = "'" . ($budgetTotal) . "'";
-	foreach ($ordersRunningTotal AS $order) {;
+$budgetTotal = $cost_centre->yearlyBudget();
 
-		$runningBudget["'" . $order['date'] . "'"] = "'" . ($budgetTotal - $order['value']) . "'";
-		$budgetTotal = $budgetTotal - $order['value'];
-	}
-	$runningBudget["'" . budgetEndDate() . "'"] = "'" . ($budgetTotal) . "'";
+$ordersArray["'" . budgetEndDate() . "'"] = $budgetTotal;
+
+foreach ($cost_centre->yearlyOrders() as $order) {
+	$budgetTotal = $budgetTotal - $order['value'];
+
+	$ordersArray["'" . $order['date'] . "'"] = $budgetTotal;
+}
 ?>
 
 <canvas id="canvas" width="400" height="100"></canvas>
@@ -43,13 +32,13 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 	var config = {
 		type: 'line',
 		data: {
-			labels: [<?php echo implode(", ", array_keys($runningBudget));?>],
+			labels: [<?php echo implode(", ", array_keys($ordersArray));?>],
 			datasets: [{
 				label: '£',
-				borderColor: "<?php echo $cost_centre['colour'];?>",
-				backgroundColor: "<?php echo $cost_centre['colour'];?>30",
+				borderColor: "<?php echo $cost_centre->colour;?>",
+				backgroundColor: "<?php echo $cost_centre->colour;?>30",
 				fill: true,
-				data: [<?php echo implode(",", $runningBudget); ?>]
+				data: [<?php echo implode(",", $ordersArray); ?>]
 			}]
 		},
 		options: {
@@ -95,6 +84,53 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 	};
 </script>
 
+<div class="row row-deck row-cards mb-3">
+  <div class="col-12 col-sm-12 col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="subheader">
+          Breakdown by supplier
+        </div>
+        <div class="h1 mb-3">
+          <?php
+
+          ?>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-12 col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="subheader">
+          Other
+        </div>
+        <div class="h1 mb-3">
+          <?php
+
+          ?>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-12 col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-body">
+				<h1 class="card-title pricing-card-title"><?php echo "£" . number_format($cost_centre->yearlyBudget()); ?></h1>
+        <div class="subheader">
+          <h5 class="text-muted fw-light">£<?php echo number_format($cost_centre->yearlySpend()); ?> spent / £<?php echo number_format($cost_centre->yearlyRemaining()); ?> remaining</h5>
+        </div>
+        <div class="h1 mb-3">
+          <?php
+
+          ?>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr />
+
 <?php
-echo $orders_class->table($orders);
+echo $orders_class->table($cost_centre->yearlyOrders());
 ?>

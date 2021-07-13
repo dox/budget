@@ -1,9 +1,10 @@
 <?php
+$supplierObject = new supplier($_GET['name']);
+
 $orders_class = new class_orders;
 $orders = $orders_class->all(null, null, $_GET['name'], null);
 $ordersPrevious = $orders_class->all_previous_years_by_supplier($_GET['name']);
 
-$suppliers_class = new class_suppliers;
 
 if (isset($_POST['name'])) {
 	$data = Array (
@@ -23,7 +24,6 @@ if (isset($_POST['name'])) {
 	echo toast($title, $message);
 }
 
-$supplier = $suppliers_class->getOne($_GET['name']);
 $supplierURL = "index.php?n=suppliers_edit&name=" . urlencode($_GET['name']);
 ?>
 

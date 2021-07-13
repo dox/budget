@@ -3,10 +3,12 @@ $departments_class = new class_departments;
 $departments = $departments_class->all();
 
 $cost_centre_class = new class_cost_centres;
+$costCentreObject = new cost_centre($_GET['uid']);
 $groups = $cost_centre_class->groups();
 
 if (isset($_POST['code'])) {
 	$data = Array (
+		"uid" => $_POST['uid'],
 		"code" => $_POST['code'],
 		"name" => $_POST['name'],
 		"department" => $_POST['department'],
@@ -16,27 +18,27 @@ if (isset($_POST['code'])) {
 		"value" => $_POST['budget']
 	);
 
-	$cost_centre_class->update($_POST['uid'], $data);
+	$costCentreObject->update($data);
 }
 
-$cost_centre = $cost_centre_class->getOne($_GET['uid']);
+$costCentreObject = new cost_centre($_GET['uid']);
 
 ?>
 
-<h2>Edit Cost Centre '<?php echo $cost_centre['name'];?>'</h2>
+<h2>Edit Cost Centre '<?php echo $costCentreObject->name;?>'</h2>
 
-<form method="POST" action="index.php?n=costcentres_edit&uid=<?php echo $cost_centre['uid'];?>">
+<form method="POST" action="index.php?n=costcentres_edit&uid=<?php echo $costCentreObject->uid;?>">
 	<div class="row">
 		<div class="col-1">
 			<div class="mb-3">
 				<label for="colour">Colour</label>
-				<input type="color" class="form-control form-control-color" name="colour" value="<?php echo $cost_centre['colour'];?>" title="Colour">
+				<input type="color" class="form-control form-control-color" name="colour" value="<?php echo $costCentreObject->colour;?>" title="Colour">
 			</div>
 		</div>
 		<div class="col">
 			<div class="mb-3">
 				<label for="name">Name</label>
-				<input type="text" class="form-control" id="name" name="name" placeholder="Name" value="<?php echo $cost_centre['name'];?>">
+				<input type="text" class="form-control" id="name" name="name" placeholder="Name" value="<?php echo $costCentreObject->name;?>">
 			</div>
 		</div>
 
@@ -46,13 +48,13 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 		<div class="col">
 			<div class="mb-3">
 				<label for="code">Code</label>
-				<input type="text" class="form-control" id="code" name="code" placeholder="Code" value="<?php echo $cost_centre['code'];?>">
+				<input type="text" class="form-control" id="code" name="code" placeholder="Code" value="<?php echo $costCentreObject->code;?>">
 			</div>
 		</div>
 		<div class="col">
 			<div class="mb-3">
 				<label for="budget">Budget (£)</label>
-				<input type="text" class="form-control" id="budget" name="budget" placeholder="Budget (without £ or commas)" value="<?php echo $cost_centre['value'];?>">
+				<input type="text" class="form-control" id="budget" name="budget" placeholder="Budget (without £ or commas)" value="<?php echo $costCentreObject->value;?>">
 			</div>
 		</div>
 	</div>
@@ -63,7 +65,7 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 				<select class="form-select" name="department">
 					<?php
 					foreach ($departments AS $department) {
-						if ($department['uid'] == $cost_centre['department']) {
+						if ($department['uid'] == $costCentreObject->department) {
 							$selected = " selected";
 						} else {
 							$selected = " ";
@@ -79,11 +81,11 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 		<div class="col-sm">
 			<div class="mb-3">
 				<label for="grouping">Grouping</label>
-				<input class="form-control" list="datalistOptions" id="grouping" name="grouping" placeholder="Grouping" value="<?php echo $cost_centre['grouping'];?>">
+				<input class="form-control" list="datalistOptions" id="grouping" name="grouping" placeholder="Grouping" value="<?php echo $costCentreObject->grouping;?>">
 				<datalist id="datalistOptions">
 					<?php
 					foreach ($groups AS $group) {
-						$output = "<option value=\"" . $group . "\">";
+						$output = "<option value=\"" . $group['grouping'] . "\">";
 
 						echo $output;
 					}
@@ -94,10 +96,10 @@ $cost_centre = $cost_centre_class->getOne($_GET['uid']);
 	</div>
 	<div class="mb-3">
 		<label for="description">Description</label>
-		<textarea class="form-control" id="description" name="description" rows="3"><?php echo $cost_centre['description'];?></textarea>
+		<textarea class="form-control" id="description" name="description" rows="3"><?php echo $costCentreObject->description;?></textarea>
 	</div>
 
-	<input type="hidden" name="uid" value="<?php echo $cost_centre['uid'];?>">
+	<input type="hidden" name="uid" value="<?php echo $costCentreObject->uid;?>">
 	<button type="submit" class="btn btn-primary">Submit</button>
 </form>
 

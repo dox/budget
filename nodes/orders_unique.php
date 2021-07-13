@@ -1,25 +1,14 @@
 <?php
-$orders_class = new class_orders;
+$orderObject = new order($_GET['uid']);
 
 if (isset($_GET['paid'])) {
 	if ($_GET['paid'] == "false") {
-		$logMessage = "Marked invoice '" . $_GET['uid'] . "' as unpaid";
-		$data = Array (
-			'paid' => null
-		);
+		$orderObject->markAsUnpaid();
 	} elseif ($_GET['paid'] == "true") {
-		$logMessage = "Marked invoice '" . $_GET['uid'] . "' as paid";
-		$data = Array (
-			'paid' => date('Y-m-d H:i:s')
-		);
+		$orderObject->markAsPaid();
 	}
-
-$db->where ('uid', $_GET['uid']);
-$db->update ('orders', $data);
-
-
-$log = new class_logs;
-$log->insert("update", $logMessage);
+	
+	$orderObject = new order($_GET['uid']);
 }
 
 if (isset($_POST['po'])) {
@@ -34,33 +23,28 @@ if (isset($_POST['po'])) {
 		"description" => $_POST['description']
 	);
 
-	$orders_class->update($_GET['uid'], $data);
+	$orderObject->update($data);
+
+	$orderObject = new order($_GET['uid']);
 
 	$title = "Order Updated";
 	$message = "Order '" . $_GET['uid'] . "' updated";
 	echo toast($title, $message);
 }
 
-$order = $orders_class->getOne($_GET['uid']);
-
-$suppliers_class = new class_suppliers;
-$supplier = $suppliers_class->getOne($order['supplier']);
-
-$users_class = new class_users;
-$user = $users_class->getOne($order['username']);
-
-$cost_centre_class = new class_cost_centres;
-$cost_centre = $cost_centre_class->getOne($order['cost_centre']);
+$supplierObject = new supplier($order->supplier);
+$userObject = new user($order->username);
+$costCentreObject = new cost_centre($orderObject->cost_centre);
 
 $uploads_class = new class_uploads;
-$uploads = $uploads_class->all($order['uid']);
+$uploads = $uploads_class->allByOrder($orderObject->uid);
 
-if (!$cost_centre['department'] == $_SESSION['department']) {
+if (!$costCentreObject->department == $_SESSION['department']) {
 	echo "You have tried to access an order that you are not authorised to view";
 	exit;
 }
 ?>
-<h1 class="text-right">Purchase Order <?php echo $order['po']; ?></h1>
+<h1 class="text-right">Purchase Order <?php echo $orderObject->po; ?></h1>
 
 <div class="row">
 	<div class="col-md">
@@ -71,7 +55,7 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 					<button type="submit" class="btn btn-primary" id="upload-button">Upload</button>
 				</div>
 		  </div>
-			<input type="hidden" id="orderUID" value="<?php echo $order['uid']; ?>" />
+			<input type="hidden" id="orderUID" value="<?php echo $orderObject->uid; ?>" />
 		</form>
 		<div class="progress">
 			<div id="progressdiv" class="progress-bar" role="progressbar" style="width: 0%"></div>
@@ -93,17 +77,17 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 		?>
 	</div>
 	<div class="col-md">
-		<h4>Date: <?php echo date('Y-m-d H:i', strtotime($order['date'])); ?></h4>
-		<h4>Supplier Order #: <?php echo $order['order_num']; ?></h4>
-		<h4>Cost Centre: <?php echo $cost_centre['code'] . " - " . $cost_centre['name']; ?></h4>
-		<h4>Order Created By: <?php echo $user['firstname'] . " " . $user['lastname']; ?></h4>
+		<h4>Date: <?php echo date('Y-m-d H:i', strtotime($orderObject->date)); ?></h4>
+		<h4>Supplier Order #: <?php echo $orderObject->order_num; ?></h4>
+		<h4>Cost Centre: <?php echo $costCentreObject->code . " - " . $costCentreObject->name; ?></h4>
+		<h4>Order Created By: <?php echo $userObject->firstname . " " . $userObject->lastname; ?></h4>
 
 		<?php
-		if (!isset($order['paid']) || empty($order['paid'])) {
-			$button  = "<button type=\"button\" class=\"btn btn-sm btn-success\" onclick=\"location.href='index.php?n=orders_unique&uid=" . $order['uid'] . "&paid=true'\">Mark As Paid</button>";
+		if (!isset($orderObject->paid) || empty($orderObject->paid)) {
+			$button  = "<button type=\"button\" class=\"btn btn-sm btn-success\" onclick=\"location.href='index.php?n=orders_unique&uid=" . $orderObject->uid . "&paid=true'\">Mark As Paid</button>";
 			$button .= "<button type=\"button\" class=\"btn btn-sm btn-success dropdown-toggle dropdown-toggle-split\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">";
 		} else {
-			$datePaid = date('Y-m-d', strtotime($order['paid']));
+			$datePaid = date('Y-m-d', strtotime($orderObject->paid));
 
 			$button  = "<button type=\"button\" class=\"btn btn-sm btn-secondary\">Paid on " . $datePaid . "</button>";
 			$button .= "<button type=\"button\" class=\"btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">";
@@ -115,12 +99,12 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 				<span class="visually-hidden">Toggle Dropdown</span>
 			</button>
 		  <div class="dropdown-menu">
-				<a class="dropdown-item" href="index.php?n=orders_edit&uid=<?php echo $order['uid']; ?>"><i class="far fa-edit"></i> Edit Order</a>
-				<a class="dropdown-item" href="index.php?n=orders_create&cloneUID=<?php echo $order['uid']; ?>"><i class="far fa-clone"></i> Clone Order</a>
+				<a class="dropdown-item" href="index.php?n=orders_edit&uid=<?php echo $orderObject->uid; ?>"><i class="far fa-edit"></i> Edit Order</a>
+				<a class="dropdown-item" href="index.php?n=orders_create&cloneUID=<?php echo $orderObject->uid; ?>"><i class="far fa-clone"></i> Clone Order</a>
 				<?php
-				if (isset($order['paid']) || !empty($order['paid'])) {
+				if (isset($orderObject->paid) || !empty($orderObject->paid)) {
 					echo "<div class=\"dropdown-divider\"></div>";
-					echo "<a class=\"dropdown-item\" href=\"index.php?n=orders_unique&uid=" . $order['uid'] . "&paid=false\"><i class=\"far fa-undo-alt\"></i> Mark as Unpaid</a>";
+					echo "<a class=\"dropdown-item\" href=\"index.php?n=orders_unique&uid=" . $orderObject->uid . "&paid=false\"><i class=\"far fa-undo-alt\"></i> Mark as Unpaid</a>";
 				}
 				?>
 		  </div>
@@ -128,7 +112,7 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 	</div>
 </div>
 <i class="bi bi-alarm-fill"></i>
-<h2>Supplier: <a href="index.php?n=suppliers_edit&name=<?php echo $order['supplier']; ?>"><?php echo $order['supplier']; ?></a></h2>
+<h2>Supplier: <a href="index.php?n=suppliers_edit&name=<?php echo $orderObject->supplier; ?>"><?php echo $orderObject->supplier; ?></a></h2>
 
 <table class="table bg-white">
 	<thead>
@@ -140,14 +124,14 @@ if (!$cost_centre['department'] == $_SESSION['department']) {
 	</thead>
 	<tbody>
 		<tr>
-			<td><?php echo date('Y-m-d', strtotime($order['date']));?></td>
-			<td><?php echo $order['name'];
-				if (isset($order['description'])) {
-					echo "<br /><span class=\"text-muted\">" . $order['description'] . "</span>";
+			<td><?php echo date('Y-m-d', strtotime($orderObject->date));?></td>
+			<td><?php echo $orderObject->name;
+				if (isset($orderObject->description)) {
+					echo "<br /><span class=\"text-muted\">" . $orderObject->description . "</span>";
 				}
 				?>
 			</td>
-			<td>£<?php echo number_format($order['value'],2);?></td>
+			<td>£<?php echo number_format($orderObject->value,2);?></td>
 		</tr>
 	</tbody>
 </table>

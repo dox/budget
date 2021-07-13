@@ -1,22 +1,19 @@
 <?php
 $cost_centre_class = new class_cost_centres;
 $cost_centres = $cost_centre_class->all();
-$groups = $cost_centre_class->groups();
 
-$departments_class = new class_departments;
-$department = $departments_class->getOne($_SESSION['department']);
+$department = new department($_SESSION['department']);
 
 $orders_class = new class_orders;
 $orders = $orders_class->all();
 
-$suppliersArray = array();
-foreach ($orders_class->recentSuppliers() AS $supplier) {
+foreach (class_suppliers::recentSuppliers() AS $supplier) {
 	$suppliersArray[] = $supplier['supplier'];
 }
 $suppliersArray = array_unique($suppliersArray);
 
 if (isset($_GET['cloneUID'])) {
-	$orderToClone = $orders_class->getOne($_GET['cloneUID']);
+	$orderToClone = new order($_GET['cloneUID']);
 }
 ?>
 
@@ -44,7 +41,7 @@ if (isset($_GET['cloneUID'])) {
 		<div class="col-sm">
 			<div class="mb-3">
 				<label for="supplier">Supplier</label>
-				<input class="form-control" list="datalistOptions" id="supplier" name="supplier" <?php if (isset($orderToClone['supplier'])) { echo "value=\"" . $orderToClone['supplier'] . "\"";}?>>
+				<input class="form-control" list="datalistOptions" id="supplier" name="supplier" <?php if (isset($orderToClone->supplier)) { echo "value=\"" . $orderToClone->supplier . "\"";}?>>
 				<datalist id="datalistOptions">
 					<?php
 					foreach ($suppliersArray AS $supplier) {
@@ -59,13 +56,13 @@ if (isset($_GET['cloneUID'])) {
 		<div class="col-sm">
 			<div class="mb-3">
 				<label for="order_num">Supplier Order #</label>
-				<input type="text" class="form-control" id="order_num" name="order_num" <?php if (isset($orderToClone['order_num'])) { echo "value=\"" . $orderToClone['order_num'] . "\"";}?>placeholder="Supplier Order #">
+				<input type="text" class="form-control" id="order_num" name="order_num" <?php if (isset($orderToClone->order_num)) { echo "value=\"" . $orderToClone->order_num . "\"";}?>placeholder="Supplier Order #">
 			</div>
 		</div>
 	</div>
 	<div class="mb-3">
 		<label for="name">Name</label>
-		<input type="text" class="form-control" id="name" name="name" <?php if (isset($orderToClone['name'])) { echo "value=\"" . $orderToClone['name'] . "\"";}?> placeholder="Name" required>
+		<input type="text" class="form-control" id="name" name="name" <?php if (isset($orderToClone->name)) { echo "value=\"" . $orderToClone->name . "\"";}?> placeholder="Name" required>
 		<div class="invalid-feedback">Please provide a valid order name.</div>
 	</div>
 	<div class="row">
@@ -75,14 +72,14 @@ if (isset($_GET['cloneUID'])) {
 				<select class="form-select" id="cost_centre" name="cost_centre" required>
 					<option></option>
 					<?php
-					foreach ($groups AS $group) {
-						$output  = "<optgroup label=\"" . $group . "\">";
+					foreach ($cost_centre_class->groups() AS $group) {
+						$output  = "<optgroup label=\"" . $group['grouping'] . "\">";
 
 						foreach ($cost_centres AS $cost_centre) {
-							if ($cost_centre['grouping'] == $group) {
+							if ($cost_centre['grouping'] == $group['grouping']) {
 
 								// if cloning, make sure the right cost centre is pre-selected
-								if ($cost_centre['uid'] == $orderToClone['cost_centre']) {
+								if ($cost_centre['uid'] == $orderToClone->cost_centre) {
 									$selected = " selected";
 								} else {
 									$selected = "";
@@ -102,14 +99,14 @@ if (isset($_GET['cloneUID'])) {
 		<div class="col-sm">
 			<div class="mb-3">
 				<label for="value">Value (£)</label>
-				<input type="number" step=".01" class="form-control" id="value" name="value" <?php if (isset($orderToClone['value'])) { echo "value=\"" . $orderToClone['value'] . "\"";}?> placeholder="Value (without £ or commas)" required>
+				<input type="number" step=".01" class="form-control" id="value" name="value" <?php if (isset($orderToClone->value)) { echo "value=\"" . $orderToClone->value . "\"";}?> placeholder="Value (without £ or commas)" required>
 				<div class="invalid-feedback">Please provide a order value.</div>
 			</div>
 		</div>
 	</div>
 	<div class="mb-3">
 		<label for="description">Description</label>
-		<textarea class="form-control" id="description" name="description" rows="3"><?php if (isset($orderToClone['description'])) { echo $orderToClone['description'];}?></textarea>
+		<textarea class="form-control" id="description" name="description" rows="3"><?php if (isset($orderToClone->description)) { echo $orderToClone->description;}?></textarea>
 	</div>
 	<div class="form-group">
 		<a href="#" id="test" class="btn btn-primary" onclick="createOrder(this.id)">Submit</a>

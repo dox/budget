@@ -1,23 +1,39 @@
 <?php
 class class_users {
+	protected static $table_name = "users";
+	public $uid;
+	public $username;
+	public $type;
+	public $department;
+	public $firstname;
+	public $lastname;
+	public $email;
 
-public function getOne($usernameOrUID = null) {
-	global $db;
+	public function all() {
+		global $db;
 
-	$user = $db->where("username", $usernameOrUID);
-	$user = $db->orWhere ("uid", $usernameOrUID);
-	$user = $db->getOne("users");
-	
-	return $user;
-}
+		$sql  = "SELECT * FROM " . self::$table_name;
+		$sql .= " ORDER BY username";
 
-public function all() {
-	global $db;
+		$users = $db->query($sql)->fetchAll();
 
-	$users = $db->orderBy('username', "DESC");
-	$users = $db->get("users");
+		return $users;
+	}
+} //end CLASS
 
-	return $meters;
-}
+class user extends class_users {
+	function __construct($userUIDorUsername = null) {
+    global $db;
+
+		$sql  = "SELECT * FROM " . self::$table_name;
+		$sql .= " WHERE uid = '" . $userUIDorUsername . "'";
+		$sql .= " OR USERNAME = '" . $userUIDorUsername . "'";
+
+		$user = $db->query($sql)->fetchArray();
+
+		foreach ($user AS $key => $value) {
+			$this->$key = $value;
+		}
+  }
 } //end CLASS
 ?>

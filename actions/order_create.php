@@ -1,7 +1,7 @@
 <?php
 require_once('../inc/autoload.php');
 
-$ordersClass = new class_orders;
+$ordersClass = new order;
 
 if (isset($_POST['po'])) {
 	if ($_POST['name'] == $_POST['description']) {
@@ -19,7 +19,7 @@ if (isset($_POST['po'])) {
 		"description" => $_POST['description']
 	);
 
-	if ($ordersClass->insert($data)) {
+	if ($ordersClass->create($data)) {
 		$message = "New order '" . $_POST['name'] . "' created";
 	} else {
 		$message = "ERROR";

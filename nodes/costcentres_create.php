@@ -8,9 +8,6 @@ function random_color() {
 
 $cost_centre_class = new class_cost_centres;
 $departments_class = new class_departments;
-$departments = $departments_class->all();
-
-$groups = $cost_centre_class->groups();
 ?>
 
 <h2>Create New Cost Centre</h2>
@@ -51,7 +48,7 @@ $groups = $cost_centre_class->groups();
 				<label for="department">Department</label>
 				<select class="form-select" name="department">
 					<?php
-					foreach ($departments AS $department) {
+					foreach ($departments_class->all() AS $department) {
 						if ($department['uid'] == $_SESSION['department']) {
 							$selected = " selected";
 						} else {
@@ -71,8 +68,8 @@ $groups = $cost_centre_class->groups();
 				<input class="form-control" list="datalistOptions" id="grouping" name="grouping" placeholder="Grouping">
 				<datalist id="datalistOptions">
 					<?php
-					foreach ($groups AS $group) {
-						$output = "<option value=\"" . $group . "\">";
+					foreach ($cost_centre_class->groups() AS $group) {
+						$output = "<option value=\"" . $group['grouping'] . "\">";
 
 						echo $output;
 					}

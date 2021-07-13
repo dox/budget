@@ -56,8 +56,7 @@ var myChart = new Chart(ctx, {
 	<tbody>
 		<?php
 		foreach ($suppliersArray AS $supplier => $value) {
-			$cost_centre_class = new class_cost_centres;
-			$cost_centre = $cost_centre_class->getOne($order['cost_centre']);
+			$cost_centre = new cost_centre($order['cost_centre']);
 			$supplierURL = "index.php?n=suppliers_unique&name=" . urlencode(str_replace("'", "", $supplier));
 
 			$output  = "<tr>";
