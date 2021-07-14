@@ -1,4 +1,32 @@
 <?php
+function budgetStartDate($date = null) {
+	if ($date == null) {
+		$date = date('Y-m-d');
+	}
+
+	if (date('m-d', strtotime($date)) >= '01-01' && date('m-d', strtotime($date)) < BUDGET_STARTDATE) {
+		$dateFrom = date('Y', strtotime($date))-1 . "-" . BUDGET_STARTDATE;
+	} else {
+		$dateFrom = date('Y', strtotime($date)) . "-" . BUDGET_STARTDATE;
+	}
+
+	return $dateFrom;
+}
+
+function budgetEndDate($date = null) {
+	if ($date == null) {
+		$date = date('Y-m-d');
+	}
+
+	if (date('m-d', strtotime($date)) >= '01-01' && date('m-d', strtotime($date)) <= BUDGET_ENDDATE) {
+		$dateTo = date('Y', strtotime($date)) . "-" . BUDGET_ENDDATE;
+	} else {
+		$dateTo = date('Y', strtotime($date))+1 . "-" . BUDGET_ENDDATE;
+	}
+
+	return $dateTo;
+}
+
 function daysIntoBudget() {
 	$timediff = time() - strtotime(budgetStartDate());
 	$datediff = round($timediff / (60 * 60 * 24));

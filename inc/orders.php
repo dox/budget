@@ -227,118 +227,52 @@ class class_orders {
 	}
 
 
+	public function totalOrdersByMonth($date = null) {
+		$orders = $this->all($date);
 
+		$totalValue = 0;
+		foreach ($orders AS $order) {
+			$totalValue = $totalValue + $order['value'];
+		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-public function ordersTotalValueByMonth($date = null) {
-	global $db;
-
-	$orders = $this->all($date);
-
-	$totalValue = 0;
-	foreach ($orders AS $order) {
-		$totalValue = $totalValue + $order['value'];
+		return $totalValue;
 	}
 
-	return $totalValue;
-}
+	public function totalOrdersByYear() {
+		$orders = $this->all();
 
-public function ordersTotalValueByCostCentreAndMonth($date = null, $costCentre = null) {
-	global $db;
+		$totalValue = 0;
+		foreach ($orders AS $order) {
+			$totalValue = $totalValue + $order['value'];
+		}
 
-	$orders = $this->all($date, $costCentre);
-
-	$totalValue = 0;
-	foreach ($orders AS $order) {
-		$totalValue = $totalValue + $order['value'];
+		return $totalValue;
 	}
 
-	return $totalValue;
-}
+	public function totalUnpaidOrders() {
+		$orders = $this->all();
 
+		$totalValue = 0;
+		foreach ($orders AS $order) {
+			if (!isset($order['paid'])) {
+				$totalValue = $totalValue + $order['value'];
+			}
+		}
 
-
-public function ordersTotalValueByYear($date = null) {
-	global $db;
-
-	$sql  = "SELECT
-				orders.uid,
-				orders.date,
-				orders.cost_centre,
-				orders.po,
-				orders.order_num,
-				orders.name,
-				orders.username,
-				orders.value,
-				orders.supplier,
-				orders.description,
-				orders.paid,
-				cost_centres.code,
-				cost_centres.department
-			FROM orders, cost_centres
-			WHERE orders.cost_centre = cost_centres.uid
-			AND (orders.date BETWEEN '" . budgetStartDate($date) . "' AND '" . budgetEndDate($date) . "')
-			AND cost_centres.department = '" . $_SESSION['department'] . "'
-			ORDER BY orders.date DESC, orders.po DESC;";
-
-	$orders = $db->query($sql)->fetchArray();
-
-	$totalValue = 0;
-	foreach ($orders AS $order) {
-		$totalValue = $totalValue + $order['value'];
+		return $totalValue;
 	}
 
-	return $totalValue;
-}
+	public function totalOrdersByCostCentreAndMonth($date = null, $costCentre = null) {
+		global $db;
 
+		$orders = $this->all($date, $costCentre);
 
+		$totalValue = 0;
+		foreach ($orders AS $order) {
+			$totalValue = $totalValue + $order['value'];
+		}
 
-
-
+		return $totalValue;
+	}
 } //end CLASS
-
-function budgetStartDate($date = null) {
-	if ($date == null) {
-		$date = date('Y-m-d');
-	}
-
-	if (date('m-d', strtotime($date)) >= '01-01' && date('m-d', strtotime($date)) < BUDGET_STARTDATE) {
-		$dateFrom = date('Y', strtotime($date))-1 . "-" . BUDGET_STARTDATE;
-	} else {
-		$dateFrom = date('Y', strtotime($date)) . "-" . BUDGET_STARTDATE;
-	}
-
-	return $dateFrom;
-}
-
-
-
-function budgetEndDate($date = null) {
-	if ($date == null) {
-		$date = date('Y-m-d');
-	}
-
-	if (date('m-d', strtotime($date)) >= '01-01' && date('m-d', strtotime($date)) <= BUDGET_ENDDATE) {
-		$dateTo = date('Y', strtotime($date)) . "-" . BUDGET_ENDDATE;
-	} else {
-		$dateTo = date('Y', strtotime($date))+1 . "-" . BUDGET_ENDDATE;
-	}
-
-	return $dateTo;
-}
-
-
 ?>
