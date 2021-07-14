@@ -133,6 +133,99 @@ class class_orders {
 	    return $departmentObject->po_code . sprintf('%05d', intval($number) + 1);
 	}
 
+	public function all_previous_years_by_supplier($supplier = null) {
+		global $db;
+
+		$sql  = "SELECT
+					orders.uid,
+					orders.date,
+					orders.cost_centre,
+					orders.po,
+					orders.order_num,
+					orders.name,
+					orders.username,
+					orders.value,
+					orders.supplier,
+					orders.description,
+					orders.paid,
+					cost_centres.code,
+					cost_centres.department
+				FROM orders, cost_centres
+				WHERE orders.cost_centre = cost_centres.uid
+				AND orders.date < '" . budgetStartDate() . "'
+				AND orders.supplier = '" . $supplier . "'
+				AND cost_centres.department = '" . $_SESSION['department'] . "'
+				ORDER BY orders.date DESC, orders.po DESC;";
+
+		$orders = $db->query($sql)->fetchAll();
+
+		return $orders;
+	}
+
+	public function table($orders = null) {
+		$output  = "<table class=\"table bg-white\">";
+		$output .= "<thead>";
+		$output .= "<tr>";
+		$output .= "<th scope=\"col\" style=\"width: 140px;\">Code</th>";
+		$output .= "<th scope=\"col\" style=\"width: 120px;\">Date</th>";
+		$output .= "<th scope=\"col\" style=\"width: 100px;\">Supplier</th>";
+		$output .= "<th scope=\"col\">PO</th>";
+		$output .= "<th scope=\"col\" class=\"text-end\" style=\"width: 120px;\">Value</th>";
+		$output .= "</tr>";
+		$output .= "</thead>";
+
+		foreach ($orders AS $order) {
+			if (isset($order['paid'])) {
+				$trClass = "table-secondary";
+			} else {
+				$trClass = "";
+			}
+			$orderDateAge = date('U', strtotime($order['date'])) - date('U', strtotime('60 seconds ago'));
+
+			$cost_centre = new cost_centre($order['cost_centre']);
+
+			$uploads_class = new class_uploads;
+			$uploads = $uploads_class->allByOrder($order['uid']);
+
+			if ($orderDateAge > -10) {
+				$class = "list-group-item-success";
+			} else {
+				if (isset($order['paid'])) {
+					$class = "list-group-item-secondary";
+				} else {
+					$class = "";
+				}
+			}
+
+			$orderName = "<strong>" . $order['po'] . "</strong>: " . $order['name'];
+			$orderURL = "index.php?n=orders_unique&uid=" . $order['uid'];
+			if (!empty($order['description'])) {
+				$orderName = $orderName . "<br /><span class=\"text-muted\">" . $order['description'] . "</span>";
+			}
+			if (!empty($uploads)) {
+				$orderName = $orderName . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#paperclip\"/></svg>";
+			}
+
+			$output .= "<tr class=\"" . $trClass . "\" onclick=\"window.location='" . $orderURL . "';\">";
+			$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre->uid . "\"><svg class=\"me-2\" width=\"16\" height=\"16\" style=\"color: " . $cost_centre->colour . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg> ". $cost_centre->code . "</a></td>";
+			$output .= "<td>" . date('Y-m-d', strtotime($order['date'])) . "</td>";
+			$output .= "<td><a href=\"index.php?n=suppliers_unique&name=" . urlencode($order['supplier']) . "\">" . $order['supplier'] . "</a></td>";
+			$output .= "<td>" . $orderName . "</td>";
+			if ($order['value'] < 0) {
+				$output .= "<td class=\"text-end colour-green\">£" . number_format($order['value']) . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#arrow-left-short\"/></svg></td>";
+			} else {
+				$output .= "<td class=\"text-end colour-red\">£" . number_format($order['value'], 2) . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#arrow-right-short\"/></svg></td>";
+			}
+
+			$output .= "</tr>";
+		}
+
+		$output .=	"</table>";
+
+
+		return $output;
+	}
+
 
 
 
@@ -213,102 +306,8 @@ public function ordersTotalValueByYear($date = null) {
 
 
 
-public function all_previous_years_by_supplier($supplier = null) {
-	global $db;
-
-	$sql  = "SELECT
-				orders.uid,
-				orders.date,
-				orders.cost_centre,
-				orders.po,
-				orders.order_num,
-				orders.name,
-				orders.username,
-				orders.value,
-				orders.supplier,
-				orders.description,
-				orders.paid,
-				cost_centres.code,
-				cost_centres.department
-			FROM orders, cost_centres
-			WHERE orders.cost_centre = cost_centres.uid
-			AND orders.date < '" . budgetStartDate() . "'
-			AND orders.supplier = '" . $supplier . "'
-			AND cost_centres.department = '" . $_SESSION['department'] . "'
-			ORDER BY orders.date DESC, orders.po DESC;";
-
-	$orders = $db->query($sql)->fetchArray();
-
-	return $orders;
-}
 
 
-
-
-
-public function table($orders = null) {
-	$output  = "<table class=\"table bg-white\">";
-	$output .= "<thead>";
-	$output .= "<tr>";
-	$output .= "<th scope=\"col\" style=\"width: 140px;\">Code</th>";
-	$output .= "<th scope=\"col\" style=\"width: 120px;\">Date</th>";
-	$output .= "<th scope=\"col\" style=\"width: 100px;\">Supplier</th>";
-	$output .= "<th scope=\"col\">PO</th>";
-	$output .= "<th scope=\"col\" class=\"text-end\" style=\"width: 120px;\">Value</th>";
-	$output .= "</tr>";
-	$output .= "</thead>";
-
-	foreach ($orders AS $order) {
-		if (isset($order['paid'])) {
-			$trClass = "table-secondary";
-		} else {
-			$trClass = "";
-		}
-		$orderDateAge = date('U', strtotime($order['date'])) - date('U', strtotime('60 seconds ago'));
-
-		$cost_centre = new cost_centre($order['cost_centre']);
-
-		$uploads_class = new class_uploads;
-		$uploads = $uploads_class->allByOrder($order['uid']);
-
-		if ($orderDateAge > -10) {
-			$class = "list-group-item-success";
-		} else {
-			if (isset($order['paid'])) {
-				$class = "list-group-item-secondary";
-			} else {
-				$class = "";
-			}
-		}
-
-		$orderName = "<strong>" . $order['po'] . "</strong>: " . $order['name'];
-		$orderURL = "index.php?n=orders_unique&uid=" . $order['uid'];
-		if (!empty($order['description'])) {
-			$orderName = $orderName . "<br /><span class=\"text-muted\">" . $order['description'] . "</span>";
-		}
-		if (!empty($uploads)) {
-			$orderName = $orderName . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#paperclip\"/></svg>";
-		}
-
-		$output .= "<tr class=\"" . $trClass . "\" onclick=\"window.location='" . $orderURL . "';\">";
-		$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre->uid . "\"><svg class=\"me-2\" width=\"16\" height=\"16\" style=\"color: " . $cost_centre->colour . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg> ". $cost_centre->code . "</a></td>";
-		$output .= "<td>" . date('Y-m-d', strtotime($order['date'])) . "</td>";
-		$output .= "<td><a href=\"index.php?n=suppliers_unique&name=" . urlencode($order['supplier']) . "\">" . $order['supplier'] . "</a></td>";
-		$output .= "<td>" . $orderName . "</td>";
-		if ($order['value'] < 0) {
-			$output .= "<td class=\"text-end colour-green\">£" . number_format($order['value']) . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#arrow-left-short\"/></svg></td>";
-		} else {
-			$output .= "<td class=\"text-end colour-red\">£" . number_format($order['value'], 2) . " <svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#arrow-right-short\"/></svg></td>";
-		}
-
-		$output .= "</tr>";
-	}
-
-	$output .=	"</table>";
-
-
-	return $output;
-}
 } //end CLASS
 
 function budgetStartDate($date = null) {

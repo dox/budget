@@ -36,9 +36,6 @@ $supplierObject = new supplier($order->supplier);
 $userObject = new user($order->username);
 $costCentreObject = new cost_centre($orderObject->cost_centre);
 
-$uploads_class = new class_uploads;
-$uploads = $uploads_class->allByOrder($orderObject->uid);
-
 if (!$costCentreObject->department == $_SESSION['department']) {
 	echo "You have tried to access an order that you are not authorised to view";
 	exit;
@@ -64,7 +61,7 @@ if (!$costCentreObject->department == $_SESSION['department']) {
 		<br />
 
 		<?php
-		foreach ($uploads AS $upload) {
+		foreach ($orderObject->uploads() AS $upload) {
 			$output  = "<div id=\"uploadLine_" . $upload['uid'] . "\" class=\"d-flex justify-content-between\">";
 			$output .= "<a href=\"uploads/" . $upload['path'] . "\">";
 			$output .="<svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#paperclip\"/></svg> " . $upload['name'] . "</i>";
@@ -136,16 +133,11 @@ if (!$costCentreObject->department == $_SESSION['department']) {
 	</tbody>
 </table>
 
-
-
-
 <script type="text/javascript">
   var form = document.getElementById('file-form');
   var fileSelect = document.getElementById('file-select');
 	var uploadButton = document.getElementById('upload-button');
 	var orderUID = document.getElementById('orderUID').value;
-
-
 
   form.onsubmit = function(event) {
     event.preventDefault();

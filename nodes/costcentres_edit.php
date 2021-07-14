@@ -1,10 +1,5 @@
 <?php
-$departments_class = new class_departments;
-$departments = $departments_class->all();
-
-$cost_centre_class = new class_cost_centres;
 $costCentreObject = new cost_centre($_GET['uid']);
-$groups = $cost_centre_class->groups();
 
 if (isset($_POST['code'])) {
 	$data = Array (
@@ -20,9 +15,6 @@ if (isset($_POST['code'])) {
 
 	$costCentreObject->update($data);
 }
-
-$costCentreObject = new cost_centre($_GET['uid']);
-
 ?>
 
 <h2>Edit Cost Centre '<?php echo $costCentreObject->name;?>'</h2>
@@ -64,7 +56,7 @@ $costCentreObject = new cost_centre($_GET['uid']);
 				<label for="department">Department</label>
 				<select class="form-select" name="department">
 					<?php
-					foreach ($departments AS $department) {
+					foreach (class_departments::all() AS $department) {
 						if ($department['uid'] == $costCentreObject->department) {
 							$selected = " selected";
 						} else {
@@ -84,7 +76,7 @@ $costCentreObject = new cost_centre($_GET['uid']);
 				<input class="form-control" list="datalistOptions" id="grouping" name="grouping" placeholder="Grouping" value="<?php echo $costCentreObject->grouping;?>">
 				<datalist id="datalistOptions">
 					<?php
-					foreach ($groups AS $group) {
+					foreach (class_cost_centres::groups() AS $group) {
 						$output = "<option value=\"" . $group['grouping'] . "\">";
 
 						echo $output;
@@ -102,9 +94,3 @@ $costCentreObject = new cost_centre($_GET['uid']);
 	<input type="hidden" name="uid" value="<?php echo $costCentreObject->uid;?>">
 	<button type="submit" class="btn btn-primary">Submit</button>
 </form>
-
-<script>
-$(function () {
-	$('#simple-color-picker').colorpicker();
-});
-</script>

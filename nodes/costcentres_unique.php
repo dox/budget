@@ -1,31 +1,13 @@
 <?php
-$cost_centre = new cost_centre($_GET['uid']);
+$costCentreObject = new cost_centre($_GET['uid']);
 
-
-
-$orders_class = new class_orders;
-
-if (!$cost_centre->department == $_SESSION['department']) {
+if (!$costCentreObject->department == $_SESSION['department']) {
 	echo "You have tried to access a cost centre that you are not authorised to view";
 	exit;
 }
 ?>
 
-<h2><?php echo $cost_centre->name;?> <small class="text-muted"><?php echo $cost_centre->grouping;?></small></h2>
-
-<?php
-$budgetTotal = $cost_centre->yearlyBudget();
-
-$ordersArray["'" . budgetStartDate() . "'"] = $budgetTotal;
-
-$ordersToItterate = array_reverse($cost_centre->yearlyOrders());
-foreach ($ordersToItterate as $order) {
-	$budgetTotal = $budgetTotal - $order['value'];
-
-	$ordersArray["'" . $order['date'] . "'"] = $budgetTotal;
-}
-$ordersArray["'" . budgetEndDate() . "'"] = $budgetTotal;
-?>
+<h2><?php echo $costCentreObject->name;?> <small class="text-muted"><?php echo $costCentreObject->grouping;?></small></h2>
 
 <canvas id="canvas" width="400" height="100"></canvas>
 <script>
@@ -34,13 +16,13 @@ $ordersArray["'" . budgetEndDate() . "'"] = $budgetTotal;
 	var config = {
 		type: 'line',
 		data: {
-			labels: [<?php echo implode(", ", array_keys($ordersArray));?>],
+			labels: [<?php echo implode(", ", array_keys($costCentreObject->yearlySpendSummary()));?>],
 			datasets: [{
 				label: '£',
-				borderColor: "<?php echo $cost_centre->colour;?>",
-				backgroundColor: "<?php echo $cost_centre->colour;?>30",
+				borderColor: "<?php echo $costCentreObject->colour;?>",
+				backgroundColor: "<?php echo $costCentreObject->colour;?>30",
 				fill: true,
-				data: [<?php echo implode(",", $ordersArray); ?>]
+				data: [<?php echo implode(",", $costCentreObject->yearlySpendSummary()); ?>]
 			}]
 		},
 		options: {
@@ -118,14 +100,9 @@ $ordersArray["'" . budgetEndDate() . "'"] = $budgetTotal;
   <div class="col-12 col-sm-12 col-lg-4 mb-3">
     <div class="card">
       <div class="card-body">
-				<h1 class="card-title pricing-card-title"><?php echo "£" . number_format($cost_centre->yearlyBudget()); ?></h1>
+				<h1 class="card-title pricing-card-title"><?php echo "£" . number_format($costCentreObject->yearlyBudget()); ?></h1>
         <div class="subheader">
-          <h5 class="text-muted fw-light">£<?php echo number_format($cost_centre->yearlySpend()); ?> spent / £<?php echo number_format($cost_centre->yearlyRemaining()); ?> remaining</h5>
-        </div>
-        <div class="h1 mb-3">
-          <?php
-
-          ?>
+          <h5 class="text-muted fw-light">£<?php echo number_format($costCentreObject->yearlySpend()); ?> spent / £<?php echo number_format($costCentreObject->yearlyRemaining()); ?> remaining</h5>
         </div>
       </div>
     </div>
@@ -134,5 +111,5 @@ $ordersArray["'" . budgetEndDate() . "'"] = $budgetTotal;
 <hr />
 
 <?php
-echo $orders_class->table($cost_centre->yearlyOrders());
+echo class_orders::table($costCentreObject->yearlyOrders());
 ?>

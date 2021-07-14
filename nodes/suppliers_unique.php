@@ -5,7 +5,6 @@ $orders_class = new class_orders;
 $orders = $orders_class->all(null, null, $_GET['name'], null);
 $ordersPrevious = $orders_class->all_previous_years_by_supplier($_GET['name']);
 
-
 if (isset($_POST['name'])) {
 	$data = Array (
 		"name" => $_POST['name'],
@@ -17,7 +16,7 @@ if (isset($_POST['name'])) {
 		"website" => $_POST['website']
 	);
 
-	$suppliers_class->update($_POST['name'], $data);
+	$supplierObject->updateOrInsert($data);
 
 	$title = "Supplier Updated";
 	$message = "Supplier '" . $_POST['name'] . "' updated";

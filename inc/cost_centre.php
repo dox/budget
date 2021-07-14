@@ -92,6 +92,21 @@ class cost_centre extends class_cost_centres {
     return $update;
   }
 
+	public function yearlySpendSummary() {
+		$budgetTotal = $this->yearlyBudget();
+
+		$ordersArray["'" . budgetStartDate() . "'"] = $budgetTotal;
+
+		foreach (array_reverse($this->yearlyOrders()) as $order) {
+			$budgetTotal = $budgetTotal - $order['value'];
+
+			$ordersArray["'" . $order['date'] . "'"] = $budgetTotal;
+		}
+		$ordersArray["'" . budgetEndDate() . "'"] = $budgetTotal;
+
+		return $ordersArray;
+	}
+
 
 
 

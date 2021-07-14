@@ -55,7 +55,7 @@ class order extends class_orders {
     $sql .= " SET " . implode(", ", $sqlUpdate);
     $sql .= " WHERE uid = '" . $this->uid . "' ";
     $sql .= " LIMIT 1";
-		
+
     $update = $db->query($sql);
 
 		$log = new class_logs;
@@ -82,6 +82,12 @@ class order extends class_orders {
 		);
 
 		$this->update($data);
+	}
+
+	public function uploads() {
+		$uploads = class_uploads::allByOrder($this->uid);
+
+		return $uploads;
 	}
 }
 

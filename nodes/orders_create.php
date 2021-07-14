@@ -1,11 +1,5 @@
 <?php
-$cost_centre_class = new class_cost_centres;
-$cost_centres = $cost_centre_class->all();
-
-$department = new department($_SESSION['department']);
-
 $orders_class = new class_orders;
-$orders = $orders_class->all();
 
 if (isset($_GET['cloneUID'])) {
 	$orderToClone = new order($_GET['cloneUID']);
@@ -13,7 +7,6 @@ if (isset($_GET['cloneUID'])) {
 ?>
 
 <h2>Create New Order</h2>
-<div id="andrew"></div>
 <form method="POST" id="create_order_form" action="index.php?n=orders_all" class="needs-validation" novalidate>
 	<div class="row">
 		<div class="col-sm">
@@ -27,7 +20,7 @@ if (isset($_GET['cloneUID'])) {
 			<div class="form-group">
 				<label for="po">Purchase Order #</label>
 				<input type="text" class="form-control" id="po" name="po" placeholder="Purchase Order #" value="<?php echo $orders_class->nextOrderNumber(); ?>" required>
-				<small id="emailHelp" class="form-text text-muted">This is an auto-generated number based on the last order.</small>
+				<small id="emailHelp" class="form-text text-muted">This is an auto-generated number based on the last order</small>
 				<div class="invalid-feedback">Please provide a valid PO.</div>
 			</div>
 		</div>
@@ -67,10 +60,10 @@ if (isset($_GET['cloneUID'])) {
 				<select class="form-select" id="cost_centre" name="cost_centre" required>
 					<option></option>
 					<?php
-					foreach ($cost_centre_class->groups() AS $group) {
+					foreach (class_cost_centres::groups() AS $group) {
 						$output  = "<optgroup label=\"" . $group['grouping'] . "\">";
 
-						foreach ($cost_centres AS $cost_centre) {
+						foreach (class_cost_centres::all() AS $cost_centre) {
 							if ($cost_centre['grouping'] == $group['grouping']) {
 
 								// if cloning, make sure the right cost centre is pre-selected
@@ -88,7 +81,7 @@ if (isset($_GET['cloneUID'])) {
 					}
 					?>
 				</select>
-				<div class="invalid-feedback">Please provide a Cost Center.</div>
+				<div class="invalid-feedback">Please provide a Cost Centre.</div>
 			</div>
 		</div>
 		<div class="col-sm">

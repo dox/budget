@@ -1,9 +1,7 @@
 <?php
 $cost_centre_class = new class_cost_centres;
 
-
 if (isset($_POST['code'])) {
-	$costCentre = new cost_centre();
 	$data = Array (
 		"code" => $_POST['code'],
 		"name" => $_POST['name'],
@@ -14,6 +12,7 @@ if (isset($_POST['code'])) {
 		"value" => $_POST['budget']
 	);
 
+	$costCentre = new cost_centre();
 	$costCentre->create($data);
 
 	$title = "Cost Centre Created";
@@ -78,11 +77,9 @@ if (isset($_POST['code'])) {
 					$output .= "<a href=\"index.php?n=costcentres_delete&uid=" . $cost_centre->uid . "\"><svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#trash\"/></svg></a>" . "</td>";
 					$output .= "</tr>";
 				}
-
 			}
 			echo $output;
 		}
 		?>
-
 	</tbody>
 </table>

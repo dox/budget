@@ -8,11 +8,12 @@ class class_logs {
 	public $ip;
 	public $username;
 
-	public function all() {
+	public function all($limit = 10000) {
 		global $db;
 
 		$sql  = "SELECT * FROM " . self::$table_name;
 		$sql .= " ORDER BY date DESC";
+		$sql .= " LIMIT " . $limit;
 
 		$logs = $db->query($sql)->fetchAll();
 
@@ -26,7 +27,7 @@ class class_logs {
 		$array['date'] = date('Y-m-d H:i:s');
 		$array['ip'] = $_SERVER['REMOTE_ADDR'];
 		$array['type'] = $type;
-		$array['description'] = $description;
+		$array['description'] = str_replace("'" , "\'", $description);
 
     $sql  = "INSERT INTO " . self::$table_name;
 
@@ -64,6 +65,23 @@ class class_logs {
 			$log = new class_logs;
 			$log->insert("purge", $sql);
 		}
+	}
+
+	public function summary() {
+		global $db;
+
+		$sql  = "SELECT DATE(date) AS date, count(*) AS logsTotal ";
+		$sql .= "FROM logs ";
+		$sql .= "GROUP BY DATE(date) ";
+		$sql .= "ORDER BY DATE(date) DESC";
+
+		$logsSummary = $db->query($sql)->fetchAll();
+
+		foreach ($logsSummary AS $log) {
+			$logsArray["'" . $log['date'] . "'"] = "'" . $log['logsTotal'] . "'";
+		}
+
+		return $logsArray;
 	}
 } //end CLASS
 

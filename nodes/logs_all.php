@@ -1,7 +1,5 @@
 <?php
-$logs_class = new class_logs;
-$logs_class->purge();
-$logs = $logs_class->all();
+$log->purge();
 
 $user = new user($_SESSION['username']);
 
@@ -35,13 +33,13 @@ function generateRandomString($length = 10) {
 	</thead>
 	<tbody id="logsTable">
 		<?php
-		foreach ($logs AS $log) {
+		foreach ($log->all($limit = 1000) AS $logEntry) {
 			if ($user->type == "administrator") {
-				$date = date('Y-m-d H:i:s', strtotime($log['date']));
-				$type = $log['type'];
-				$description = $log['description'];
-				$ip = $log['ip'];
-				$username = $log['username'];
+				$date = date('Y-m-d H:i:s', strtotime($logEntry['date']));
+				$type = $logEntry['type'];
+				$description = $logEntry['description'];
+				$ip = $logEntry['ip'];
+				$username = $logEntry['username'];
 
 				$class = "";
 			} else {
@@ -63,11 +61,8 @@ function generateRandomString($length = 10) {
 			$output .= "</tr>";
 
 			echo $output;
-
-
 		}
 		?>
-
 	</tbody>
 </table>
 
@@ -84,18 +79,6 @@ function generateRandomString($length = 10) {
 }
 </style>
 
-<?php
-$sql = "SELECT DATE(date) AS date, count(*) AS logsTotal
-		FROM logs
-		GROUP BY DATE(date)
-		ORDER BY DATE(date) DESC;";
-
-$logsTotal = $db->query($sql)->fetchAll();
-
-foreach ($logsTotal AS $log) {
-	$logsArray["'" . $log['date'] . "'"] = "'" . $log['logsTotal'] . "'";
-}
-?>
 
 <script>
 	var timeFormat = 'YYYY/MM/DD';
@@ -103,10 +86,10 @@ foreach ($logsTotal AS $log) {
 	var config = {
 		type: 'line',
 		data: {
-			labels: [<?php echo implode(", ", array_keys($logsArray));?>],
+			labels: [<?php echo implode(", ", array_keys($log->summary()));?>],
 			datasets: [{
 				label: 'Logs',
-				data: [<?php echo implode(",", $logsArray); ?>],
+				data: [<?php echo implode(",", $log->summary()); ?>],
 			}]
 		},
 		options: {
