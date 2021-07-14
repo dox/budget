@@ -7,11 +7,6 @@ $department = new department($_SESSION['department']);
 $orders_class = new class_orders;
 $orders = $orders_class->all();
 
-foreach (class_suppliers::recentSuppliers() AS $supplier) {
-	$suppliersArray[] = $supplier['supplier'];
-}
-$suppliersArray = array_unique($suppliersArray);
-
 if (isset($_GET['cloneUID'])) {
 	$orderToClone = new order($_GET['cloneUID']);
 }
@@ -44,7 +39,7 @@ if (isset($_GET['cloneUID'])) {
 				<input class="form-control" list="datalistOptions" id="supplier" name="supplier" <?php if (isset($orderToClone->supplier)) { echo "value=\"" . $orderToClone->supplier . "\"";}?>>
 				<datalist id="datalistOptions">
 					<?php
-					foreach ($suppliersArray AS $supplier) {
+					foreach (class_suppliers::recentSuppliers() AS $supplier) {
 						$output = "<option value=\"" . $supplier . "\">";
 
 						echo $output;

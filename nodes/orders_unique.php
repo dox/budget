@@ -7,7 +7,7 @@ if (isset($_GET['paid'])) {
 	} elseif ($_GET['paid'] == "true") {
 		$orderObject->markAsPaid();
 	}
-	
+
 	$orderObject = new order($_GET['uid']);
 }
 
@@ -144,6 +144,8 @@ if (!$costCentreObject->department == $_SESSION['department']) {
   var fileSelect = document.getElementById('file-select');
 	var uploadButton = document.getElementById('upload-button');
 	var orderUID = document.getElementById('orderUID').value;
+
+
 
   form.onsubmit = function(event) {
     event.preventDefault();

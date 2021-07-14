@@ -61,8 +61,7 @@ try {
         throw new RuntimeException('Failed to move uploaded file.');
     }
 
-    //
-    $logMessage = "File '" . $_FILES['upfile']['name'] . "' uploaded as " . "'" . $target_file . "'";
+    $logMessage = "File " . $target_file;
     $log->insert("file", $logMessage);
 
     $data = Array (

@@ -33,7 +33,7 @@ function uploadDelete(this_id) {
 
   if (window.confirm("Are you sure you want to delete this file?  This action cannot be undone.")) {
     var uploadLine = document.getElementById("uploadLine_" + this_id);
-
+    
     var formData = new FormData();
 
     formData.append("uploadUID", this_id);

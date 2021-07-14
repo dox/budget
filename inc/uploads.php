@@ -18,7 +18,7 @@ class class_uploads {
 		return $upload;
 	}
 
-	public function allByOrder($orderUID) {
+	public function allByOrder($orderUID = null) {
 		global $db;
 
 		$sql  = "SELECT * FROM " . self::$table_name;
@@ -30,33 +30,43 @@ class class_uploads {
 		return $uploads;
 	}
 
+	public function insert($array = null) {
+    global $db;
 
+    $sql  = "INSERT INTO " . self::$table_name;
 
+    foreach ($array AS $updateItem => $value) {
+      $sqlColumns[] = $updateItem;
+      $sqlValues[] = "'" . $value . "' ";
+    }
 
+    $sql .= " (" . implode(",", $sqlColumns) . ") ";
+    $sql .= " VALUES (" . implode(",", $sqlValues) . ")";
 
+    $create = $db->query($sql);
 
-	
+    return $create;
+  }
 
-public function insert($data = null) {
-	global $db;
+	public function delete($uploadUID = null) {
+		global $db;
 
-	$id = $db->insert('uploads', $data);
-}
+		// delete the file
+		$existingUpload = self::getOne($uid);
+		$target_file = UPLOAD_DIR . $existingUpload['path'];
+		unlink($target_file);
 
-public function delete($uid = null) {
-	global $db;
+		// delete record from database
+		$sql  = "DELETE FROM " . self::$table_name . " ";
+		$sql .= "WHERE uid = '" . $uploadUID . "' ";
+		$sql .= "LIMIT 1";
 
-	$upload = self::getOne($uid);
+		$delete = $db->query($sql);
 
-	$target_file = UPLOAD_DIR . $upload['path'];
-	unlink($target_file);
-
-	$db->where ('uid', $uid);
-	$id = $db->delete('uploads');
-
-	$log = new class_logs;
-	$log->insert("file", "Deleted file '" . $upload['name'] . "' for order " . $upload['order_uid']);
-}
+		// log this!
+		$log = new class_logs;
+		$log->insert("file", "Deleted file '" . $existingUpload['name'] . "' for order " . $existingUpload['order_uid']);
+	}
 } //end CLASS
 
 ?>
