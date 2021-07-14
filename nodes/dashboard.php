@@ -28,7 +28,7 @@ foreach ($cost_centres AS $costCentre) {
   $outputByCostCentre  = "{";
   $outputByCostCentre .= "label: '" . str_replace("'", "\'", $costCentre['name']) . "', ";
   $outputByCostCentre .= "backgroundColor: '" . $costCentre['colour'] . "99', ";
-
+  
   $i = 11;
   $data = array();
   do {
@@ -47,7 +47,8 @@ foreach ($cost_centres AS $costCentre) {
 
 <h2>Dashboard</h2>
 
-<canvas id="canvas" width="400" height="100"></canvas>
+<canvas id="canvas" width="400" height="100" class="mb-3"></canvas>
+
 <br />
 <div class="row">
 	<div class="col-sm mb-3">
@@ -78,36 +79,34 @@ echo $cost_centre_class->summaryTable(date('Y-m-d'));
 ?>
 
 <script>
-var ctx = document.getElementById('canvas').getContext('2d');
+const labels = [<?php echo implode(",", $monthNames); ?>];
+const data = {
+  labels: labels,
+  datasets: [<?php echo implode(",", $outputArray); ?>],
+};
 
-var chart = new Chart(ctx, {
-  // The type of chart we want to create
-  type: 'bar',
-
-  // The data for our dataset
-  data: {
-    labels: [<?php echo implode(",", $monthNames); ?>],
-    datasets:[
-      <?php echo implode(",", $outputArray); ?>
-    ]
-  },
-
-  // Configuration options go here
-  options: {
-    legend: {
-      display: false
-    },
+const config = {
+	type: 'bar',
+	data: data,
+	options: {
+		plugins: {
+			legend: {
+				display: false
+			}
+		},
     scales: {
-      xAxes: [{
+      x: {
         stacked: true
-      }],
-      yAxes: [{
-        ticks: {
-          min: 0
-        },
+      },
+      y: {
         stacked: true
-      }]
+      }
     }
-  }
-});
+	}
+};
+
+var costCentreChart = new Chart(
+	document.getElementById('canvas'),
+	config
+);
 </script>

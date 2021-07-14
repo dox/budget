@@ -13,6 +13,21 @@ function budgetStartDate($date = null) {
 	return $dateFrom;
 }
 
+function textToRGB($string = null, $len = 3) {
+	$hex_color = dechex(crc32($string));
+  $hex_color = substr($hex_color, 0, 6);
+
+	$split_hex_color = str_split( $hex_color, 2 );
+
+	$rgb1 = hexdec( $split_hex_color[0] );
+	$rgb2 = hexdec( $split_hex_color[1] );
+	$rgb3 = hexdec( $split_hex_color[2] );
+	
+	$output = "rgb(" . $rgb1 . ", " . $rgb2 . ", " . $rgb3 . ")";
+
+	return $output;
+}
+
 function budgetEndDate($date = null) {
 	if ($date == null) {
 		$date = date('Y-m-d');

@@ -9,91 +9,55 @@ if (!$costCentreObject->department == $_SESSION['department']) {
 
 <h2><?php echo $costCentreObject->name;?> <small class="text-muted"><?php echo $costCentreObject->grouping;?></small></h2>
 
-<canvas id="canvas" width="400" height="100"></canvas>
-<script>
-	var timeFormat = 'YYYY/MM/DD';
+<canvas id="canvas" width="400" height="100" class="mb-3"></canvas>
 
-	var config = {
-		type: 'line',
-		data: {
-			labels: [<?php echo implode(", ", array_keys($costCentreObject->yearlySpendSummary()));?>],
-			datasets: [{
-				label: '£',
-				borderColor: "<?php echo $costCentreObject->colour;?>",
-				backgroundColor: "<?php echo $costCentreObject->colour;?>30",
-				fill: true,
-				data: [<?php echo implode(",", $costCentreObject->yearlySpendSummary()); ?>]
-			}]
-		},
-		options: {
-			title: {
-				text: 'Running Budget'
-			},
-			elements: {
-				line: {
-					tension: 0
-				}
-			},
+<script>
+const labels = [<?php echo implode(", ", array_keys($costCentreObject->yearlySpendSummary()));?>];
+const data = {
+  labels: labels,
+  datasets: [{
+    label: 'Budget Remaining',
+    backgroundColor: '<?php echo $costCentreObject->colour;?>30',
+    borderColor: '<?php echo $costCentreObject->colour;?>',
+		fill: 'origin',
+    data: [<?php echo implode(",", $costCentreObject->yearlySpendSummary()); ?>],
+  }],
+};
+
+const config = {
+	type: 'line',
+	data: data,
+	options: {
+		plugins: {
 			legend: {
 				display: false
-			},
-			scales: {
-				xAxes: [{
-					type: 'time',
-					time: {
-						parser: timeFormat,
-						// round: 'day'
-						tooltipFormat: 'll'
-					},
-					scaleLabel: {
-						display: false
-					}
-				}],
-				yAxes: [{
-					ticks: {
-						suggestedMin: 0
-					},
-					scaleLabel: {
-						display: false,
-						labelString: '£'
-					}
-				}]
-			},
-		}
-	};
+			}
+		},
+    scales: {
+      x: {
+        type: 'time',
+        time: {
+          unit: 'month'
+        }
+      }
+    }
+	}
+};
 
-	window.onload = function() {
-		var ctx = document.getElementById('canvas').getContext('2d');
-		window.myLine = new Chart(ctx, config);
-	};
+var costCentreChart = new Chart(
+	document.getElementById('canvas'),
+	config
+);
 </script>
 
 <div class="row row-deck row-cards mb-3">
-  <div class="col-12 col-sm-12 col-lg-4 mb-3">
+  <div class="col-12 col-sm-12 col-lg-8 mb-3">
     <div class="card">
       <div class="card-body">
         <div class="subheader">
           Breakdown by supplier
         </div>
-        <div class="h1 mb-3">
-          <?php
-
-          ?>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-12 col-sm-12 col-lg-4 mb-3">
-    <div class="card">
-      <div class="card-body">
-        <div class="subheader">
-          Other
-        </div>
-        <div class="h1 mb-3">
-          <?php
-
-          ?>
-        </div>
+				<canvas id="canvasSupplier" width="400" height="100"></canvas>
       </div>
     </div>
   </div>
@@ -113,3 +77,52 @@ if (!$costCentreObject->department == $_SESSION['department']) {
 <?php
 echo class_orders::table($costCentreObject->yearlyOrders());
 ?>
+
+<script>
+<?php
+foreach ($costCentreObject->spendBySupplier() AS $supplier => $value) {
+	$supplier = str_replace("'" , "", $supplier);
+	$output  = "{";
+	$output .= "label: '" . $supplier . "',";
+	$output .= "data: [" . $value . "],";
+	$output .= "backgroundColor: '" . textToRGB($supplier) . "'";
+	$output .= "}";
+
+	$datasets["'" . $supplier . "'"] = $output;
+}
+?>
+const supplierLabels = ['Spend'];
+const supplierData = {
+  labels: supplierLabels,
+  datasets: [<?php echo implode(", ", $datasets);?>],
+};
+
+const supplierConfig = {
+	type: 'bar',
+	data: supplierData,
+	options: {
+		indexAxis: 'y',
+		plugins: {
+			legend: {
+				display: true
+			}
+		},
+		scales: {
+			x: {
+				display: false,
+				stacked: true,
+			},
+			y: {
+				display: false,
+				stacked: true,
+
+			}
+		}
+	}
+};
+
+var supplierChart = new Chart(
+	document.getElementById('canvasSupplier'),
+	supplierConfig
+);
+</script>

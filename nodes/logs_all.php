@@ -16,7 +16,8 @@ function generateRandomString($length = 10) {
 
 <h2>Logs</h2>
 
-<canvas id="canvas" width="400" height="100"></canvas>
+<canvas id="canvas" width="400" height="100" class="mb-3"></canvas>
+
 <form class="form-inline">
   <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Quick Filter</label>
   <input type="text" class="form-control mb-2 mr-sm-2 flex-fill" id="logs_fiter_input" onkeyup="tableFilter()" placeholder="Filter Logs...">
@@ -79,60 +80,49 @@ function generateRandomString($length = 10) {
 }
 </style>
 
-
 <script>
-	var timeFormat = 'YYYY/MM/DD';
+const labels = [<?php echo implode(", ", array_keys($log->summary()));?>];
+const data = {
+  labels: labels,
+  datasets: [{
+    label: 'Logs',
+    borderColor: 'rgb(75, 192, 192)',
+    data: [<?php echo implode(",", $log->summary()); ?>],
+    tension: 0.1
+  }],
+};
 
-	var config = {
-		type: 'line',
-		data: {
-			labels: [<?php echo implode(", ", array_keys($log->summary()));?>],
-			datasets: [{
-				label: 'Logs',
-				data: [<?php echo implode(",", $log->summary()); ?>],
-			}]
-		},
-		options: {
-			title: {
-				text: 'Logs'
-			},
-			elements: {
-				line: {
-					tension: 0
-				}
-			},
+const config = {
+	type: 'line',
+	data: data,
+	options: {
+		plugins: {
 			legend: {
 				display: false
-			},
-			scales: {
-				xAxes: [{
-					type: 'time',
-					time: {
-						parser: timeFormat,
-						// round: 'day'
-						tooltipFormat: 'll'
-					},
-					scaleLabel: {
-						display: false
-					}
-				}],
-				yAxes: [{
-					ticks: {
-						suggestedMin: 0
-					},
-					scaleLabel: {
-						display: false,
-						labelString: 'Total Logs'
-					}
-				}]
-			},
-		}
-	};
+			}
+		},
+    elements: {
+      point: {
+        radius: 1
+      }
+    },
+    scales: {
+      x: {
+        type: 'time',
+        time: {
+          unit: 'month'
+        }
+      }
+    }
+	}
+};
 
-	window.onload = function() {
-		var ctx = document.getElementById('canvas').getContext('2d');
-		window.myLine = new Chart(ctx, config);
-	};
+var costCentreChart = new Chart(
+	document.getElementById('canvas'),
+	config
+);
+
+
 
 
 function tableFilter() {

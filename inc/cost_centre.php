@@ -107,6 +107,14 @@ class cost_centre extends class_cost_centres {
 		return $ordersArray;
 	}
 
+	public function spendBySupplier() {
+		foreach ($this->yearlyOrders() AS $order) {
+			$supplierArray[$order['supplier']] = $supplierArray[$order['supplier']] + $order['value'];
+		}
+
+		return $supplierArray;
+	}
+
 
 
 
