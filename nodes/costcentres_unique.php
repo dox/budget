@@ -16,13 +16,15 @@ if (!$cost_centre->department == $_SESSION['department']) {
 <?php
 $budgetTotal = $cost_centre->yearlyBudget();
 
-$ordersArray["'" . budgetEndDate() . "'"] = $budgetTotal;
+$ordersArray["'" . budgetStartDate() . "'"] = $budgetTotal;
 
-foreach ($cost_centre->yearlyOrders() as $order) {
+$ordersToItterate = array_reverse($cost_centre->yearlyOrders());
+foreach ($ordersToItterate as $order) {
 	$budgetTotal = $budgetTotal - $order['value'];
 
 	$ordersArray["'" . $order['date'] . "'"] = $budgetTotal;
 }
+$ordersArray["'" . budgetEndDate() . "'"] = $budgetTotal;
 ?>
 
 <canvas id="canvas" width="400" height="100"></canvas>
