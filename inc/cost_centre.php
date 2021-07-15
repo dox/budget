@@ -42,7 +42,7 @@ class cost_centre extends class_cost_centres {
 	}
 
 	public function create($array = null) {
-    global $db;
+    global $db, $log;
 
     $sql  = "INSERT INTO " . self::$table_name;
 
@@ -56,16 +56,13 @@ class cost_centre extends class_cost_centres {
 
     $create = $db->query($sql);
 
-    //$logArray['category'] = "booking";
-    //$logArray['result'] = "success";
-    //$logArray['description'] = "[bookingUID:" . $create->lastInsertID() . "] made for " . $_SESSION['username'] . " for [mealUID:" . $array['meal_uid'] . "]";
-    //$logsClass->create($logArray);
+		$log->insert("cost_centre", "Cost centre created with values [" . implode(",", $sqlUpdate) . "]");
 
     return $create;
   }
 
 	public function update($array = null) {
-    global $db;
+    global $db, $log;
 
     $sql  = "UPDATE " . self::$table_name;
 
@@ -86,8 +83,7 @@ class cost_centre extends class_cost_centres {
 
     $update = $db->query($sql);
 
-		$log = new class_logs;
-		$log->insert("update", "Cost centre updated with values");
+		$log->insert("cost_centre", "Cost centre " . $this->uid . " updated with values [" . implode(",", $sqlUpdate) . "]");
 
     return $update;
   }

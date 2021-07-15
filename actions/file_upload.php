@@ -60,10 +60,7 @@ try {
     if (!move_uploaded_file($_FILES['upfile']['tmp_name'], $target_file)) {
         throw new RuntimeException('Failed to move uploaded file.');
     }
-
-    $logMessage = "File " . $target_file;
-    $log->insert("file", $logMessage);
-
+    
     $data = Array (
 			"name" => $_FILES['upfile']['name'],
 			"date_upload" => date('Y-m-d H:i:s'),

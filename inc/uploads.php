@@ -31,28 +31,28 @@ class class_uploads {
 	}
 
 	public function insert($array = null) {
-    global $db;
+    global $db, $log;
 
-    $sql  = "INSERT INTO " . self::$table_name;
+		foreach ($array AS $updateItem => $value) {
+			$value = str_replace("'", "\'", $value);
+			$sqlUpdate[] = $updateItem ." = '" . $value . "' ";
+		}
 
-    foreach ($array AS $updateItem => $value) {
-      $sqlColumns[] = $updateItem;
-      $sqlValues[] = "'" . $value . "' ";
-    }
-
-    $sql .= " (" . implode(",", $sqlColumns) . ") ";
-    $sql .= " VALUES (" . implode(",", $sqlValues) . ")";
+		$sql  = "INSERT INTO " . self::$table_name;
+		$sql .= " SET " . implode(", ", $sqlUpdate);
 
     $create = $db->query($sql);
+
+		$log->insert("uploads", "Upload created with values [" . implode(",", $sqlUpdate) . "]");
 
     return $create;
   }
 
 	public function delete($uploadUID = null) {
-		global $db;
+		global $db, $log;
 
 		// delete the file
-		$existingUpload = self::getOne($uid);
+		$existingUpload = $this->getOne($uploadUID);
 		$target_file = UPLOAD_DIR . $existingUpload['path'];
 		unlink($target_file);
 
@@ -64,8 +64,7 @@ class class_uploads {
 		$delete = $db->query($sql);
 
 		// log this!
-		$log = new class_logs;
-		$log->insert("file", "Deleted file '" . $existingUpload['name'] . "' for order " . $existingUpload['order_uid']);
+		$log->insert("uploads", "Upload for order " . $existingUpload['order_uid'] . " deleted. [" . $existingUpload['name'] . "]");
 	}
 } //end CLASS
 

@@ -14,30 +14,25 @@ class order extends class_orders {
   }
 
 	public function create($array = null) {
-    global $db;
+    global $db, $log;
 
-    $sql  = "INSERT INTO " . self::$table_name;
+		foreach ($array AS $updateItem => $value) {
+			$value = str_replace("'", "\'", $value);
+			$sqlUpdate[] = $updateItem ." = '" . $value . "' ";
+		}
 
-    foreach ($array AS $updateItem => $value) {
-      $sqlColumns[] = $updateItem;
-      $sqlValues[] = "'" . $value . "' ";
-    }
-
-    $sql .= " (" . implode(",", $sqlColumns) . ") ";
-    $sql .= " VALUES (" . implode(",", $sqlValues) . ")";
+		$sql  = "INSERT INTO " . self::$table_name;
+		$sql .= " SET " . implode(", ", $sqlUpdate);
 
     $create = $db->query($sql);
 
-    //$logArray['category'] = "booking";
-    //$logArray['result'] = "success";
-    //$logArray['description'] = "[bookingUID:" . $create->lastInsertID() . "] made for " . $_SESSION['username'] . " for [mealUID:" . $array['meal_uid'] . "]";
-    //$logsClass->create($logArray);
+		$log->insert("order", "Order created with values [" . implode(",", $sqlUpdate) . "]");
 
     return $create;
   }
 
 	public function update($array = null) {
-    global $db;
+    global $db, $log;
 
     $sql  = "UPDATE " . self::$table_name;
 
@@ -58,30 +53,33 @@ class order extends class_orders {
 
     $update = $db->query($sql);
 
-		$log = new class_logs;
-		$log->insert("update", "Order updated with values");
+		$log->insert("order", "Order " . $this->uid . " updated with values [" . implode(",", $sqlUpdate) . "]");
 
     return $update;
   }
 
 	public function markAsPaid() {
-		global $db;
+		global $db, $log;
 
 		$data = Array (
 			"paid" => date('Y-m-d H:i:s')
 		);
 
 		$this->update($data);
+
+		$log->insert("order", "Order " . $this->uid . " marked as paid");
 	}
 
 	public function markAsUnpaid() {
-		global $db;
+		global $db, $log;
 
 		$data = Array (
 			"paid" => ''
 		);
 
 		$this->update($data);
+
+		$log->insert("order", "Order " . $this->uid . " marked as unpaid");
 	}
 
 	public function uploads() {
