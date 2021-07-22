@@ -86,9 +86,9 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 	<link rel="icon" type="image/png" sizes="96x96" href="/ico/favicon-96x96.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
 	<link rel="manifest" href="/ico/manifest.json">
-	<meta name="msapplication-TileColor" content="#f8f9fb">
+	<meta name="msapplication-TileColor" content="#f77b7c">
 	<meta name="msapplication-TileImage" content="/ico/ms-icon-144x144.png">
-	<meta name="theme-color" content="#f8f9fb">
+	<meta name="theme-color" content="#f77b7c">
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
