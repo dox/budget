@@ -63,6 +63,55 @@ class class_orders {
 		return $orders;
 	}
 
+	public function allForAllTime($date = null, $costCentre = null, $supplier = null, $search = null) {
+		global $db;
+
+		$sql  = "SELECT
+					orders.uid,
+					orders.date,
+					orders.cost_centre,
+					orders.po,
+					orders.order_num,
+					orders.name,
+					orders.username,
+					orders.value,
+					orders.supplier,
+					orders.description,
+					orders.paid,
+					cost_centres.code,
+					cost_centres.department
+				FROM orders, cost_centres
+				WHERE orders.cost_centre = cost_centres.uid";
+
+				if (isset($date)) {
+					$sql .= " AND YEAR(orders.date) = '" . date('Y',strtotime($date)) . "'
+					AND MONTH(orders.date) = '" . date('m',strtotime($date)) . "' ";
+				}
+
+				if (isset($costCentre)) {
+					$sql .= " AND orders.cost_centre = '" . $costCentre . "' ";
+				}
+
+				if (isset($supplier)) {
+					$sql .= " AND orders.supplier = '" . $supplier . "' ";
+				}
+
+				if (isset($search)) {
+					$sql .= " AND (
+						orders.name LIKE '%" . $search . "%' OR
+						orders.supplier LIKE '%" . $search . "%' OR
+						orders.order_num LIKE '%" . $search . "%' OR
+						orders.po LIKE '%" . $search . "%' OR
+						orders.description LIKE '%" . $search . "%') ";
+				}
+		$sql .=" AND cost_centres.department = '" . $_SESSION['department'] . "'
+				ORDER BY orders.date DESC, orders.po DESC;";
+
+		$orders = $db->query($sql)->fetchAll();
+
+		return $orders;
+	}
+
 	public function all_previous_years($search = null) {
 		global $db;
 
@@ -265,7 +314,7 @@ class class_orders {
 	public function totalOrdersByCostCentreAndMonth($date = null, $costCentre = null) {
 		global $db;
 
-		$orders = $this->all($date, $costCentre);
+		$orders = $this->allForAllTime($date, $costCentre);
 
 		$totalValue = 0;
 		foreach ($orders AS $order) {
