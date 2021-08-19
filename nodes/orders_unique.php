@@ -33,7 +33,8 @@ if (isset($_POST['po'])) {
 }
 
 $supplierObject = new supplier($order->supplier);
-$userObject = new user($order->username);
+$userObject = new user($orderObject->username);
+
 $costCentreObject = new cost_centre($orderObject->cost_centre);
 
 if (!$costCentreObject->department == $_SESSION['department']) {
