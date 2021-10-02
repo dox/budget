@@ -7,7 +7,7 @@ if (isset($_POST['code'])) {
 		"code" => $_POST['code'],
 		"name" => $_POST['name'],
 		"department" => $_POST['department'],
-		"grouping" => $_POST['grouping'],
+		"group_name" => $_POST['group_name'],
 		"description" => $_POST['description'],
 		"colour" => $_POST['colour'],
 		"value" => $_POST['budget']
@@ -72,12 +72,12 @@ if (isset($_POST['code'])) {
 		</div>
 		<div class="col-sm">
 			<div class="mb-3">
-				<label for="grouping">Grouping</label>
-				<input class="form-control" list="datalistOptions" id="grouping" name="grouping" placeholder="Grouping" value="<?php echo $costCentreObject->grouping;?>">
+				<label for="group_name">Group Name</label>
+				<input class="form-control" list="datalistOptions" id="group_name" name="group_name" placeholder="Group Name" value="<?php echo $costCentreObject->group_name;?>">
 				<datalist id="datalistOptions">
 					<?php
 					foreach (class_cost_centres::groups() AS $group) {
-						$output = "<option value=\"" . $group['grouping'] . "\">";
+						$output = "<option value=\"" . $group['group_name'] . "\">";
 
 						echo $output;
 					}

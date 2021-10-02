@@ -61,12 +61,12 @@ function random_color() {
 		</div>
 		<div class="col-sm">
 			<div class="mb-3">
-				<label for="grouping">Grouping</label>
-				<input class="form-control" list="datalistOptions" id="grouping" name="grouping" placeholder="Grouping">
+				<label for="group_name">Group Name</label>
+				<input class="form-control" list="datalistOptions" id="group_name" name="group_name" placeholder="Group Name">
 				<datalist id="datalistOptions">
 					<?php
 					foreach (class_cost_centres::groups() AS $group) {
-						$output = "<option value=\"" . $group['grouping'] . "\">";
+						$output = "<option value=\"" . $group['group_name'] . "\">";
 
 						echo $output;
 					}

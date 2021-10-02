@@ -7,7 +7,7 @@ if (isset($_POST['code'])) {
 		"name" => $_POST['name'],
 		"department" => $_POST['department'],
 		"description" => $_POST['description'],
-		"grouping" => $_POST['grouping'],
+		"group_name" => $_POST['group_name'],
 		"colour" => $_POST['colour'],
 		"value" => $_POST['budget']
 	);
@@ -38,13 +38,13 @@ if (isset($_POST['code'])) {
 	<tbody>
 		<?php
 		foreach($cost_centre_class->groups() AS $group) {
-			$output  = "<tr><td colspan='6'>" . ($group['grouping']) ."</td></tr>";
+			$output  = "<tr><td colspan='6'>" . ($group['group_name']) ."</td></tr>";
 
 			foreach ($cost_centre_class->all() AS $cost_centre) {
 				$cost_centre = new cost_centre($cost_centre['uid']);
 
 				$output .= "";
-				if ($cost_centre->grouping == $group['grouping']) {
+				if ($cost_centre->group_name == $group['group_name']) {
 					if ($cost_centre->yearlyBudget() <= 0) {
 						$remainingValuePercentage = 0;
 					} else {

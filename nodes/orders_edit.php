@@ -54,10 +54,10 @@ $orderObject = new order($_GET['uid']);
 				<select class="form-select" id="cost_centre" name="cost_centre" required>
 					<?php
 					foreach (class_cost_centres::groups() AS $group) {
-						$output  = "<optgroup label=\"" . $group['grouping'] . "\">";
+						$output  = "<optgroup label=\"" . $group['group_name'] . "\">";
 
 						foreach (class_cost_centres::all() AS $cost_centre) {
-							if ($cost_centre['grouping'] == $group['grouping']) {
+							if ($cost_centre['group_name'] == $group['group_name']) {
 								if ($cost_centre['uid'] == $orderObject->cost_centre) {
 									$selected = " selected";
 								} else {

@@ -4,7 +4,7 @@ class class_cost_centres {
 	public $uid;
 	public $code;
 	public $department;
-	public $grouping;
+	public $group_name;
 	public $name;
 	public $description;
 	public $colour;
@@ -13,9 +13,11 @@ class class_cost_centres {
 	public function groups() {
 		global $db;
 
-		$sql  = "SELECT grouping FROM " . self::$table_name;
+		$sql  = "SELECT group_name FROM " . self::$table_name;
 		$sql .= " WHERE department = '" . $_SESSION['department'] . "'";
-		$sql .= " GROUP BY grouping";
+		$sql .= " GROUP BY group_name";
+		
+		echo $sql;
 
 		$groups = $db->query($sql)->fetchAll();
 

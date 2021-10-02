@@ -61,10 +61,10 @@ if (isset($_GET['cloneUID'])) {
 					<option></option>
 					<?php
 					foreach (class_cost_centres::groups() AS $group) {
-						$output  = "<optgroup label=\"" . $group['grouping'] . "\">";
+						$output  = "<optgroup label=\"" . $group['group_name'] . "\">";
 
 						foreach (class_cost_centres::all() AS $cost_centre) {
-							if ($cost_centre['grouping'] == $group['grouping']) {
+							if ($cost_centre['group_name'] == $group['group_name']) {
 
 								// if cloning, make sure the right cost centre is pre-selected
 								if ($cost_centre['uid'] == $orderToClone->cost_centre) {
