@@ -67,7 +67,7 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<meta name="csrf-token" content="ZZxLKKzw7Jk0G1KVLSUXm7tNcF9eMLxH9nqH5LxW"/>
 
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/app.css"/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -89,7 +89,7 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 	<meta name="msapplication-TileImage" content="/ico/ms-icon-144x144.png">
 	<meta name="theme-color" content="#f77b7c">
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.4.1/chart.min.js" integrity="sha512-5vwN8yor2fFT9pgPS9p9R7AszYaNn0LkQElTXIsZFCL7ucT8zDCAqlQXDdaqgA1mZP47hdvztBMsIoFxq/FyyQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="https://cdn.jsdelivr.net/npm/moment@2.27.0"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.1"></script>
@@ -133,3 +133,14 @@ if (isset($_POST['loginformsubmit'])) { //prevent null bind
 </body>
 
 </html>
+<script src="https://help.seh.ox.ac.uk/assets/chat/chat.min.js"></script>
+<script>
+$(function() {
+  new ZammadChat({
+	title: 'Need IT Support?',
+	background: '#010000',
+	fontSize: '12px',
+	chatId: 1
+  });
+});
+</script>
