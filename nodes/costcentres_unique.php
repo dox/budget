@@ -8,6 +8,11 @@ if (!$costCentreObject->department == $_SESSION['department']) {
 ?>
 
 <h2><?php echo $costCentreObject->name;?> <small class="text-muted"><?php echo $costCentreObject->grouping;?></small></h2>
+<?php
+if (isset($costCentreObject->description)) {
+	echo "<p class=\"text-muted\">" . $costCentreObject->description . "</p>";
+}
+?>
 
 <canvas id="canvas" width="400" height="100" class="mb-3"></canvas>
 

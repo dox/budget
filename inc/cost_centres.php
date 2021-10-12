@@ -16,8 +16,6 @@ class class_cost_centres {
 		$sql  = "SELECT group_name FROM " . self::$table_name;
 		$sql .= " WHERE department = '" . $_SESSION['department'] . "'";
 		$sql .= " GROUP BY group_name";
-		
-		echo $sql;
 
 		$groups = $db->query($sql)->fetchAll();
 

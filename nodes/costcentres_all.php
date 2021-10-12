@@ -67,10 +67,16 @@ if (isset($_POST['code'])) {
 					} else {
 						$progressBarClass = "bg-info";
 					}
+					
+					if (isset($cost_centre->description)) {
+						$codeName = $cost_centre->name . "<br /><small class=\"text-muted\">" . $cost_centre->description . "</small>";
+					} else {
+						$codeName = $cost_centre->name;
+					}
 
 					$output .= "<td scope=\"row\"><svg width=\"16\" height=\"16\" style=\"color: " . $cost_centre->colour . ";\"><use xlink:href=\"img/icons.svg#archive-fill\"/></svg></td>";
 					$output .= "<td><a href=\"index.php?n=costcentres_unique&uid=" . $cost_centre->uid . "\">" . $cost_centre->code . "</td>";
-					$output .= "<td>" . $cost_centre->name . "</td>";
+					$output .= "<td>" . $codeName . "</td>";
 					$output .= "<td>£" . number_format($cost_centre->yearlyBudget()) . "</td>";
 					$output .= "<td><div class=\"progress\" ><div class=\"progress-bar " . $progressBarClass . "\" role=\"progressbar\" style=\"width: " . $remainingValuePercentage . "%;\" aria-valuenow=\"" . $remainingValuePercentage . "\" aria-valuemin=\"0\" aria-valuemax=\"100\">£" . number_format($cost_centre->yearlyRemaining()) . " </div></div>" . "</td>";
 					$output .= "<td>" . "<a href=\"index.php?n=costcentres_edit&uid=" . $cost_centre->uid . "\"><svg width=\"16\" height=\"16\"><use xlink:href=\"img/icons.svg#pencil-square\"/></svg></a> ";
