@@ -31,7 +31,7 @@
 </style>
 
 
-<form class="form-signin text-center" method="POST" action="index.php?n=dashbosard">
+<form class="form-signin text-center" method="POST" action="index.php?n=dashboard">
   <svg width="200px" height="200px" style="color: #f77b7c">
     <use xlink:href="img/icons.svg#piggy-bank-regular"/>
   </svg>
