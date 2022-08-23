@@ -2,6 +2,7 @@
 class class_cost_centres {
 	protected static $table_name = "cost_centres";
 	public $uid;
+	public $enabled;
 	public $code;
 	public $department;
 	public $group_name;
@@ -15,7 +16,9 @@ class class_cost_centres {
 
 		$sql  = "SELECT group_name FROM " . self::$table_name;
 		$sql .= " WHERE department = '" . $_SESSION['department'] . "'";
+		$sql .= " AND enabled ='1'";
 		$sql .= " GROUP BY group_name";
+		$sql .= " ORDER BY group_name";
 
 		$groups = $db->query($sql)->fetchAll();
 
@@ -27,6 +30,7 @@ class class_cost_centres {
 
 		$sql  = "SELECT * FROM " . self::$table_name;
 		$sql .= " WHERE department = '" . $_SESSION['department'] . "'";
+		$sql .= " AND enabled = '1'";
 		$sql .= " ORDER BY name";
 
 		$costCentres = $db->query($sql)->fetchAll();
