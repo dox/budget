@@ -1,5 +1,7 @@
 <?php
 $orderObject = new order($_GET['uid']);
+$class_suppliers = new class_suppliers;
+$class_cost_centers = new class_cost_centres;
 ?>
 
 <h2>Edit Order '<?php echo $orderObject->name;?>'</h2>
@@ -27,7 +29,7 @@ $orderObject = new order($_GET['uid']);
 				<input class="form-control" list="datalistOptions" id="supplier" name="supplier" value="<?php echo $orderObject->supplier; ?>">
 				<datalist id="datalistOptions">
 					<?php
-					foreach (class_suppliers::recentSuppliers() AS $supplier) {
+					foreach ($class_suppliers->recentSuppliers() AS $supplier) {
 						$output = "<option value=\"" . $supplier . "\">";
 
 						echo $output;
@@ -53,10 +55,10 @@ $orderObject = new order($_GET['uid']);
 				<label for="cost_centre">Cost Centre</label>
 				<select class="form-select" id="cost_centre" name="cost_centre" required>
 					<?php
-					foreach (class_cost_centres::groups() AS $group) {
+					foreach ($class_cost_centers->groups() AS $group) {
 						$output  = "<optgroup label=\"" . $group['group_name'] . "\">";
 
-						foreach (class_cost_centres::all() AS $cost_centre) {
+						foreach ($class_cost_centers->all() AS $cost_centre) {
 							if ($cost_centre['group_name'] == $group['group_name']) {
 								if ($cost_centre['uid'] == $orderObject->cost_centre) {
 									$selected = " selected";

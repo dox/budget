@@ -1,5 +1,7 @@
 <?php
 $orderObject = new order($_GET['uid']);
+$class_suppliers = new class_suppliers;
+$class_cost_centers = new class_cost_centres;
 
 if (isset($_GET['paid'])) {
 	if ($_GET['paid'] == "false") {

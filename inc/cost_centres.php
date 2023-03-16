@@ -42,8 +42,9 @@ class class_cost_centres {
 		if ($date == null) {
 			$date = date('Y-m-d');
 		}
-
-		$ordersThisMonth = class_orders::all($date);
+		
+		$ordersThisMonth = new class_orders;
+		$ordersThisMonth = $ordersThisMonth->all($date);
 
 		foreach ($ordersThisMonth AS $order) {
 			$costCentreSpendByMonth[$order['cost_centre']] = $costCentreSpendByMonth[$order['cost_centre']] + $order['value'];

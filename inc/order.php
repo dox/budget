@@ -83,7 +83,8 @@ class order extends class_orders {
 	}
 
 	public function uploads() {
-		$uploads = class_uploads::allByOrder($this->uid);
+		$uploads = new class_uploads;
+		$uploads = $uploads->allByOrder($this->uid);
 
 		return $uploads;
 	}

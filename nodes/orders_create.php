@@ -4,6 +4,8 @@ $orders_class = new class_orders;
 if (isset($_GET['cloneUID'])) {
 	$orderToClone = new order($_GET['cloneUID']);
 }
+$class_suppliers = new class_suppliers;
+$class_cost_centers = new class_cost_centres;
 ?>
 
 <h2>Create New Order</h2>
@@ -32,7 +34,7 @@ if (isset($_GET['cloneUID'])) {
 				<input class="form-control" list="datalistOptions" id="supplier" name="supplier" <?php if (isset($orderToClone->supplier)) { echo "value=\"" . $orderToClone->supplier . "\"";}?>>
 				<datalist id="datalistOptions">
 					<?php
-					foreach (class_suppliers::recentSuppliers() AS $supplier) {
+					foreach ($class_suppliers->recentSuppliers() AS $supplier) {
 						$output = "<option value=\"" . $supplier . "\">";
 
 						echo $output;
@@ -60,10 +62,10 @@ if (isset($_GET['cloneUID'])) {
 				<select class="form-select" id="cost_centre" name="cost_centre" required>
 					<option></option>
 					<?php
-					foreach (class_cost_centres::groups() AS $group) {
+					foreach ($class_cost_centers->groups() AS $group) {
 						$output  = "<optgroup label=\"" . $group['group_name'] . "\">";
 
-						foreach (class_cost_centres::all() AS $cost_centre) {
+						foreach ($class_cost_centers->all() AS $cost_centre) {
 							if ($cost_centre['group_name'] == $group['group_name']) {
 
 								// if cloning, make sure the right cost centre is pre-selected
