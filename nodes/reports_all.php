@@ -45,4 +45,15 @@
       </div>
     </div>
   </div>
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Previous Year Spend</h5>
+        <!--<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
+        <p class="card-text">All cost-centres and their spend for the previous budget year</p>
+        <a href="index.php?n=reports_previous_year_spend" class="card-link">Run Report</a>
+        <a href="#" class="card-link"><strike>Edit</strike></a>
+      </div>
+    </div>
+  </div>
 </div>
