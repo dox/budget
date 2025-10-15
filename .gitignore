@@ -2,4 +2,5 @@
 inc/config.php
 .DS_Store
 .remote-sync.json
-.nova/Publishing/HYDROGEN.json
+.nova/
+inc/new/config/config.php
