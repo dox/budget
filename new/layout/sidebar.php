@@ -25,9 +25,9 @@
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=products">
 						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#cart"></use>
+							<use xlink:href="assets/icons/icons.svg#receipt"></use>
 						</svg>
-						Products
+						Cost Centres
 					</a>
 				</li>
 				<li class="nav-item">
@@ -35,7 +35,7 @@
 						<svg class="bi" aria-hidden="true">
 							<use xlink:href="assets/icons/icons.svg#people"></use>
 						</svg>
-						Customers
+						Suppliers
 					</a>
 				</li>
 				<li class="nav-item">
@@ -77,7 +77,7 @@
 						<svg class="bi" aria-hidden="true">
 							<use xlink:href="assets/icons/icons.svg#file-earmark-text"></use>
 						</svg>
-						Last quarter
+						Last month
 					</a>
 				</li>
 				<li class="nav-item">
@@ -85,15 +85,7 @@
 						<svg class="bi" aria-hidden="true">
 							<use xlink:href="assets/icons/icons.svg#file-earmark-text"></use>
 						</svg>
-						Social engagement
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=report1">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#file-earmark-text"></use>
-						</svg>
-						Year-end sale
+						Year-to-date
 					</a>
 				</li>
 			</ul>
@@ -105,6 +97,14 @@
 							<use xlink:href="assets/icons/icons.svg#gear-wide-connected"></use>
 						</svg>
 						Settings
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=user">
+						<svg class="bi" aria-hidden="true">
+							<use xlink:href="assets/icons/icons.svg#gear-wide-connected"></use>
+						</svg>
+						Your Account
 					</a>
 				</li>
 				<li class="nav-item">

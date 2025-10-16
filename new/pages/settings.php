@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row row-cols-4 row-cols-md-6 ">
 	<?php
 	$doc = new DOMDocument();
 	$doc->load('assets/icons/icons.svg');
@@ -16,12 +16,10 @@
 	
 		$svg = "<svg viewBox=\"$viewBox\">$inner</svg>";
 		
-		$output  = "<div class=\"col-sm-6 mb-3 mb-sm-0\">";
-		$output .= "<div class=\"card\">";
+		$output  = "<div class=\"card\">";
 		$output .= "<div class=\"card-body\">";
-		$output .= $id;
 		$output .= $svg;
-		$output .= "</div>";
+		$output .= $id;
 		$output .= "</div>";
 		$output .= "</div>";
 		

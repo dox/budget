@@ -28,10 +28,7 @@ class User {
 			$this->loggedIn = true;
 		}
 	}
-
-	/**
-	 * Authenticate user against LDAP
-	 */
+	
 	public function authenticate(string $username, string $password): bool {
 		// Optional: bind with service account to search
 		if (defined('LDAP_BIND_USER') && defined('LDAP_BIND_PASS')) {
@@ -71,38 +68,46 @@ class User {
 	public function getUsername(): ?string {
 		return $this->userData['samaccountname'][0] ?? null;
 	}
-
-	/**
-	 * Check if user is member of a group
-	 */
-	public function memberOf(string $group): bool
-	{
+	
+	public function getEmail(): ?string {
+		return $this->userData['mail'][0] ?? null;
+	}
+	
+	public function getFullname(): ?string {
+		return $this->userData['name'][0] ?? null;
+	}
+	
+	public function isMemberOf(string $group): bool {
 		if (!$this->isLoggedIn()) return false;
-
-		if (!isset($this->userData['memberof'])) return false;
-
-		$groups = $this->userData['memberof'];
-
-		for ($i = 0; $i < $groups['count']; $i++) {
-			if (stripos($groups[$i], $group) !== false) {
-				return true;
-			}
+	
+		if (empty($this->memberOf())) return false;
+	
+		$groups = $this->memberOf();
+		
+		if (in_array($group, $groups)) {
+			return true;
 		}
-
+	
 		return false;
+	}
+	
+	public function memberOf(): array {
+		if (!$this->isLoggedIn()) return [];
+	
+		if (!isset($this->userData['memberof'])) return [];
+	
+		$groups = $this->userData['memberof'];
+	
+		if (isset($groups['count'])) {
+			unset($groups['count']);
+		}
+	
+		return $groups;
 	}
 	
 	public function logout(): void {
 		unset($_SESSION['user']);
 		$this->userData = [];
 		$this->loggedIn = false;
-	}
-
-	/**
-	 * Get raw LDAP data for debugging or extra info
-	 */
-	public function getData(): array
-	{
-		return $this->userData;
 	}
 }
