@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <?php
 include_once('inc/autoload.php');
 
@@ -5,14 +7,11 @@ include_once('inc/autoload.php');
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if ($user->authenticate($_POST['username'], $_POST['password'])) {
-		//echo "Welcome " . $user->getUsername() . "<br >";
 		header('Location: index.php');
 	} else {
 		$error = "<div class=\"alert alert-warning\" role=\"alert\">Username/password mismatch</div>";
 	}
 }
-
-
 
 // Check group membership
 if ($user->memberOf('finance-team')) {
@@ -24,13 +23,7 @@ if ($user->isLoggedIn()) {
 	echo "User is logged in";
 }
 
-?>
-
-<!DOCTYPE html>
-
-<?php
 include_once('inc/autoload.php');
-
 ?>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -74,7 +67,6 @@ include_once('inc/autoload.php');
 			</div>
 		</div>
 	</div>
-	
 	<?php include_once('layout/footer.php'); ?>
 </body>
 </html>

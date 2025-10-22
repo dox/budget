@@ -66,16 +66,4 @@ class Order {
 		if (!isset($this->uid)) return false;
 		return $this->db->query("DELETE FROM orders WHERE uid = ?", [$this->uid]);
 	}
-
-	public function toArray() {
-		return [
-			'uid'          => $this->uid,
-			'user_id'      => $this->user_id,
-			'budget_code'  => $this->budget_code,
-			'amount'       => $this->amount,
-			'description'  => $this->description,
-			'invoice_path' => $this->invoice_path,
-			'created_at'   => $this->created_at,
-		];
-	}
 }

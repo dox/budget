@@ -80,23 +80,41 @@
 	<input type="email" class="form-control" value="<?php echo $user->getEmail(); ?>" readonly>
 </div>
 
-<div class="mb-3">
-	<label class="form-label text-uppercase text-muted small">Member Of</label>
-	<ul class="list-group">
-		<?php
-		foreach ($user->memberOf() AS $group) {
-			echo "<li class=\"list-group-item\">" . $group . "</li>";
-		}
-		?>
-	</ul>
+<div class="row">
+	<div class="col-6 mb-3">
+		<label class="form-label text-uppercase text-muted small">Member Of</label>
+		<ul class="list-group">
+			<?php
+			$userGroups = $user->groups();
+			
+			foreach ($user->memberOf() AS $group) {
+				if (in_array($group, $userGroups)) {
+					$badge = "<span class=\"badge text-bg-primary rounded-pill\">Group</span>";
+				} else {
+					$badge = "";
+				}
+				echo "<li class=\"list-group-item d-flex justify-content-between align-items-start\">";
+				echo "<div class=\"ms-2 me-auto\">";
+				echo $group;
+				echo "</div>";
+				echo $badge;
+				echo "</li>";
+			}
+			?>
+		</ul>
+	</div>
+	<div class="col-6 mb-3">
+		
+	</div>
 </div>
+
 
 <div class="mb-3">
 	<label class="form-label text-uppercase text-muted small">Appearance</label>
 	<div class="dropdown">
 		<button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
 			<svg class="bi my-1 theme-icon-active" aria-hidden="true">
-				<use href="#circle-half"></use>
+				<use href="assets/icons/icons.svg#circle-half"></use>
 			</svg>
 			<span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
 		</button>
@@ -104,36 +122,36 @@
 			<li>
 				<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
 					<svg class="bi me-2 opacity-50" aria-hidden="true">
-						<use href="#sun-fill"></use>
+						<use href="assets/icons/icons.svg#sun-fill"></use>
 					</svg>
 	
 					Light
 					<svg class="bi ms-auto d-none" aria-hidden="true">
-						<use href="#check2"></use>
+						<use href="assets/icons/icons.svg#check2"></use>
 					</svg>
 				</button>
 			</li>
 			<li>
 				<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
 					<svg class="bi me-2 opacity-50" aria-hidden="true">
-						<use href="#moon-stars-fill"></use>
+						<use href="assets/icons/icons.svg#moon-stars-fill"></use>
 					</svg>
 	
 					Dark
 					<svg class="bi ms-auto d-none" aria-hidden="true">
-						<use href="#check2"></use>
+						<use href="assets/icons/icons.svg#check2"></use>
 					</svg>
 				</button>
 			</li>
 			<li>
 				<button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
 					<svg class="bi me-2 opacity-50" aria-hidden="true">
-						<use href="#circle-half"></use>
+						<use href="assets/icons/icons.svg#circle-half"></use>
 					</svg>
 	
 					Auto
 					<svg class="bi ms-auto d-none" aria-hidden="true">
-						<use href="#check2"></use>
+						<use href="assets/icons/icons.svg#check2"></use>
 					</svg>
 				</button>
 			</li>

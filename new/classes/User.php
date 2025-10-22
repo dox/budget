@@ -105,6 +105,20 @@ class User {
 		return $groups;
 	}
 	
+	public function groups(): array {
+		$ldapGroups = $this->memberOf();
+		
+		$groups = [];
+		foreach ($ldapGroups AS $ldapGroup) {
+			$userGroup = new UserGroup(null, $ldapGroup);
+			if ($userGroup->ou === $ldapGroup) {
+				$groups[] = $userGroup->ou;
+			}
+		}
+		
+		return $groups;
+	}
+	
 	public function logout(): void {
 		unset($_SESSION['user']);
 		$this->userData = [];
