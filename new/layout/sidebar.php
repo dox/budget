@@ -108,6 +108,14 @@
 					</a>
 				</li>
 				<li class="nav-item">
+					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=logs">
+						<svg class="bi" aria-hidden="true">
+							<use xlink:href="assets/icons/icons.svg#gear-wide-connected"></use>
+						</svg>
+						Logs
+					</a>
+				</li>
+				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="logout.php">
 						<svg class="bi" aria-hidden="true">
 							<use xlink:href="assets/icons/icons.svg#door-closed"></use>

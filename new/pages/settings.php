@@ -1,4 +1,3 @@
-<div class="row row-cols-4 row-cols-md-6 ">
 	<?php
 	$doc = new DOMDocument();
 	$doc->load('assets/icons/icons.svg');
@@ -14,16 +13,8 @@
 			$inner .= $doc->saveXML($child);
 		}
 	
-		$svg = "<svg viewBox=\"$viewBox\">$inner</svg>";
-		
-		$output  = "<div class=\"card\">";
-		$output .= "<div class=\"card-body\">";
-		$output .= $svg;
-		$output .= $id;
-		$output .= "</div>";
-		$output .= "</div>";
-		
-		echo $output;
+		$svg = "<svg class=\"me-2\" viewBox=\"$viewBox\" fill=\"currentColor\" width=\"2em\" xmlns=\"http://www.w3.org/2000/svg\">$inner</svg>";
+
+		echo "<button type=\"button\" class=\"p-2 btn btn-dark text-start\">" . $svg . $id . "</button>";
 	}
 	?>
-</div>

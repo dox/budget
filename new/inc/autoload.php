@@ -27,6 +27,7 @@ spl_autoload_register(function ($class) {
 	}
 });
 
+$log = new Log();
 $budgetyear = new BudgetYear();
 $user = new User();
 $orders = new Orders();

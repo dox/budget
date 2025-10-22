@@ -8,6 +8,8 @@ class User {
 	protected $baseDn;
 
 	public function __construct() {
+		global $log;
+		
 		// LDAP settings from constants (you can define these in config.php)
 		$this->ldapHost = defined('LDAP_HOST') ? LDAP_HOST : 'ldap://localhost';
 		$this->baseDn   = defined('LDAP_BASE_DN') ? LDAP_BASE_DN : 'dc=example,dc=com';
@@ -15,6 +17,7 @@ class User {
 		// Attempt connection
 		$this->ldapConn = ldap_connect($this->ldapHost);
 		if (!$this->ldapConn) {
+			$log->add("Could not connect to LDAP server: {$this->ldapHost}", Log::ERROR);
 			throw new Exception("Could not connect to LDAP server: {$this->ldapHost}");
 		}
 
@@ -30,6 +33,8 @@ class User {
 	}
 	
 	public function authenticate(string $username, string $password): bool {
+		global $log;
+		
 		// Optional: bind with service account to search
 		if (defined('LDAP_BIND_USER') && defined('LDAP_BIND_PASS')) {
 			@ldap_bind($this->ldapConn, LDAP_BIND_USER, LDAP_BIND_PASS);
@@ -39,12 +44,14 @@ class User {
 		$search = @ldap_search($this->ldapConn, $this->baseDn, $filter);
 	
 		if (!$search) {
+			$log->add("Unable to search LDAP base: {$this->baseDn}", Log::ERROR);
 			$this->logout();
 			return false;
 		}
 		
 		$entries = ldap_get_entries($this->ldapConn, $search);
 		if ($entries['count'] == 0) {
+			$log->add("No user found for: {$username}", Log::ERROR);
 			$this->logout();
 			return false;
 		}
@@ -54,6 +61,9 @@ class User {
 			$this->userData = $entries[0];
 			$this->loggedIn = true;
 			$_SESSION['user'] = $this->userData;
+
+			$log->add("User authenticated for: {$this->userData['samaccountname'][0]}", Log::INFO);
+
 			return true;
 		}
 		

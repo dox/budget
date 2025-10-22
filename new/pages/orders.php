@@ -6,7 +6,7 @@ $orders = $orders->allThisYear();
 	<h1 class="h2">Orders</h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
 		<div class="btn-group me-2">
-			<a href="#" class="btn btn-sm btn-outline-secondary">New</a>
+			<a href="index.php?page=orders_new" class="btn btn-sm btn-outline-secondary">New</a>
 		</div>
 		<div class="dropdown">
 			<button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
