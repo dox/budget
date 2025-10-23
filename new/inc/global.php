@@ -32,3 +32,10 @@ function printArray($data): void {
 	}
 	echo '</pre>';
 }
+
+function formatMoney(int|float $amount): string {
+	$currencySymbol = "£";
+	
+	// Ensure proper rounding and thousands separator
+	return $currencySymbol . number_format($amount, 2, '.', ',');
+}

@@ -33,7 +33,7 @@ class Log extends Model {
 	public function add(string $event, string $type = self::INFO): bool {
 		global $user;
 		
-		$level = strtoupper($level);
+		$type = strtoupper($type);
 	
 		$sql = "INSERT INTO " . static::$table . " (username, ip, event, type, date_created)
 				VALUES (:username, :ip, :event, :type, NOW())";

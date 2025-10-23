@@ -30,22 +30,28 @@ $orders = $orders->allThisYear();
 	<table class="table table-striped table-sm">
 		<thead>
 			<tr>
-				<th scope="col">#</th>
-				<th scope="col">Header</th>
-				<th scope="col">Header</th>
-				<th scope="col">Header</th>
-				<th scope="col">Header</th>
+				<th scope="col">Date</th>
+				<th scope="col">Cost Centre</th>
+				<th scope="col">Name</th>
+				<th scope="col">Value</th>
+				<th scope="col"></th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php
 			foreach ($orders AS $order) {
+				$costCentreURL = "index.php?page=order&id=" . $order->id;
+				$orderURL = "index.php?page=order&id=" . $order->id;
+				
 				$output  = "<tr>";
-				$output .= "<td>" . $order->uid . "</td>";
-				$output .= "<td>" . $order->costCenter() . "</td>";
-				$output .= "";
-				$output .= "";
-				$output .= "";
+				$output .= "<td>" . date("Y-m-d H:i", strtotime($order->date_created)) . "</td>";
+				$output .= "<td><a href=\"" . $costCentreURL . "\">" . $order->costCentre() . "</a></td>";
+				$output .= "<td><a href=\"" . $orderURL . "\"><strong>" . $order->po . "</strong> " . $order->name . "</a></td>";
+				$output .= "<td>" . formatMoney($order->value) . "</td>";
+				$output .= "<td>
+					<a href=\"#\"><i class=\"bi bi-pencil-square\"></i></a>
+					<a href=\"#\"><i class=\"bi bi-copy\"></i></a>
+				</td>";
 				$output .= "";
 				$output .= "</tr>";
 				
