@@ -120,13 +120,28 @@ class User {
 		
 		$groups = [];
 		foreach ($ldapGroups AS $ldapGroup) {
-			$userGroup = new UserGroup(null, $ldapGroup);
-			if ($userGroup->ou === $ldapGroup) {
-				$groups[] = $userGroup->ou;
+			
+			$userGroup = Group::findByOU($ldapGroup);
+			if (isset($userGroup['ou']) && $userGroup['ou'] === $ldapGroup) {
+				$groups[] = $userGroup['ou'];
 			}
 		}
 		
 		return $groups;
+	}
+	
+	public function loggedOnTime() {
+		global $db;
+	
+		$query = "SELECT TIMESTAMPDIFF(SECOND, MAX(date_created), NOW()) AS seconds_since_last_logon FROM new_logs WHERE username = ? AND type = 'INFO' AND event LIKE 'User authenticated%'";
+		
+		$row = $db->fetch($query, [$this->getUsername()]);
+		
+		if ($row) {
+			return $row['seconds_since_last_logon'];
+		}
+		
+		return null;
 	}
 	
 	public function logout(): void {

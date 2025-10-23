@@ -8,7 +8,7 @@
 		if ($user->isLoggedIn()) {
 			$text = "Logged in";
 			$class = "text-bg-success";
-			$subtext = "9 mins";
+			$subtext = timeAgoFromSeconds($user->loggedOnTime());
 		} else {
 			$text = "Not logged in";
 			$class = "text-bg-danger";

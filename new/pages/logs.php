@@ -1,4 +1,6 @@
-<i class="bi bi-alarm"></i>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+	<h1 class="h2">Logs</h1>
+</div>
 <?php
 $logs = $log->getRecent();
 ?>
@@ -16,11 +18,11 @@ $logs = $log->getRecent();
 	<tbody>
 		<?php foreach ($logs as $row): ?>
 			<tr>
-				<td><?= htmlspecialchars($row['date']) ?></td>
+				<td><?= htmlspecialchars($row['date_created']) ?></td>
 				<td><?= htmlspecialchars($row['type']) ?></td>
 				<td><?= htmlspecialchars($row['username'] ?? '') ?></td>
 				<td><?= htmlspecialchars($row['ip']) ?></td>
-				<td><?= nl2br(htmlspecialchars($row['description'])) ?></td>
+				<td><?= nl2br(htmlspecialchars($row['event'])) ?></td>
 			</tr>
 		<?php endforeach; ?>
 	</tbody>

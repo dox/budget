@@ -13,19 +13,50 @@ session_start();
 # 1. Load configuration
 # ------------------------------------------------------------
 $config = include(__DIR__ . '/../config/config.php');
+$config = include(__DIR__ . '/../inc/global.php');
 
 # ------------------------------------------------------------
-# 2. Register class autoloader
+# 2. Set debugging
 # ------------------------------------------------------------
-spl_autoload_register(function ($class) {
-	$baseDir = __DIR__ . '/../classes/';
-	$file = $baseDir . $class . '.php';
-	if (file_exists($file)) {
-		require_once $file;
-	} else {
-		error_log("Autoloader: could not load class {$class} ({$file})");
-	}
-});
+if (APP_DEBUG) {
+	ini_set('display_errors', '1');
+	ini_set('display_startup_errors', '1');
+	error_reporting(E_ALL);
+	
+	// optional: pretty formatting in browser
+	set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+		echo "<div class=\"alert alert-danger\" role=\"alert\">";
+		echo "<strong>PHP ERROR:</strong> [$errno] $errstr\n";
+		echo "In <strong>$errfile</strong> on line <strong>$errline</strong>\n";
+		echo "</div>";
+		return false;
+	});
+
+	set_exception_handler(function ($e) {
+		echo "<div class=\"alert alert-warning\" role=\"alert\">";
+		echo "<strong>UNCAUGHT EXCEPTION:</strong> " . get_class($e) . "\n";
+		echo $e->getMessage() . "\n\n" . $e->getTraceAsString();
+		echo "</div>";
+	});
+
+} else {
+	ini_set('display_errors', '0');
+	ini_set('display_startup_errors', '0');
+	error_reporting(0);
+
+	// log silently to file
+	ini_set('log_errors', '1');
+	ini_set('error_log', __DIR__ . '/php-error.log');
+}
+
+# ------------------------------------------------------------
+# 3. Register class autoloader
+# ------------------------------------------------------------
+require_once __DIR__ . '/../classes/Database.php';
+require_once __DIR__ . '/../classes/Model.php';
+require_once __DIR__ . '/../classes/Orders.php';
+require_once __DIR__ . '/../classes/Order.php';
+require_once __DIR__ . '/../classes/User.php';
 
 $log = new Log();
 $budgetyear = new BudgetYear();
@@ -33,7 +64,7 @@ $user = new User();
 $orders = new Orders();
 
 # ------------------------------------------------------------
-# 3. Initialise shared Database instance
+# 4. Initialise shared Database instance
 # ------------------------------------------------------------
 try {
 	$db = Database::getInstance();

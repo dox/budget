@@ -22,7 +22,7 @@ if (!$user->isLoggedIn()) {
 				// Determine which page to show
 				$page = $_GET['page'] ?? 'test';
 				$pageFile = "pages/{$page}.php";
-				if (!file_exists($pageFile)) $pageFile = 'pages/error.php';
+				if (!file_exists($pageFile)) $pageFile = 'pages/404.php';
 				
 				include($pageFile);
 				?>

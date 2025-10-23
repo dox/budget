@@ -19,7 +19,7 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=products">
+					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=cost_centres">
 						<i class="bi bi-receipt" aria-hidden="true"></i>
 						Cost Centres
 					</a>

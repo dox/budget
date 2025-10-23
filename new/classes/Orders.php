@@ -12,10 +12,9 @@ class Orders {
 	}
 	
 	public function allThisYear() {
-		global $budgetyear;
+		$budgetyear = new BudgetYear();
 		
-		$range = $budgetyear->getSqlRange();
-		$rows = $this->db->fetchAll("SELECT * FROM orders WHERE date BETWEEN '" . $range['start'] . "' AND '" . $range['end'] . "' ORDER BY date DESC");
+		$rows = $this->db->fetchAll("SELECT * FROM orders WHERE date BETWEEN '" . $budgetyear->getStart()->format('Y-m-d') . "' AND '" . $budgetyear->getEnd()->format('Y-m-d') . "' ORDER BY date DESC");
 		return array_map(fn($row) => new Order($row['uid']), $rows);
 	}
 
