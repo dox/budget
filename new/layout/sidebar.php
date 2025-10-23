@@ -8,49 +8,37 @@
 			<ul class="nav flex-column">
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="index.php">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#house-fill"></use>
-						</svg>
+						<i class="bi bi-house-fill" aria-hidden="true"></i>
 						Dashboard
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=orders">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#file-earmark"></use>
-						</svg>
+						<i class="bi bi-file-earmark" aria-hidden="true"></i>
 						Orders
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=products">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#receipt"></use>
-						</svg>
+						<i class="bi bi-receipt" aria-hidden="true"></i>
 						Cost Centres
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=customers">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#people"></use>
-						</svg>
+						<i class="bi bi-people" aria-hidden="true"></i>
 						Suppliers
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=reports">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#graph-up"></use>
-						</svg>
+						<i class="bi bi-graph-up" aria-hidden="true"></i>
 						Reports
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="integrations">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#puzzle"></use>
-						</svg>
+						<i class="bi bi-puzzle" aria-hidden="true"></i>
 						Integrations
 					</a>
 				</li>
@@ -58,33 +46,25 @@
 			<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
 				<span>Saved reports</span>
 				<a class="link-secondary" href="index.php?page=reports_new" aria-label="Add a new report">
-					<svg class="bi" aria-hidden="true">
-						<use xlink:href="assets/icons/icons.svg#plus-circle"></use>
-					</svg>
+					<i class="bi bi-plus-circle" aria-hidden="true"></i>
 				</a>
 			</h6>
 			<ul class="nav flex-column mb-auto">
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=report1">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#file-earmark-text"></use>
-						</svg>
+						<i class="bi bi-file-earmark-text" aria-hidden="true"></i>
 						Current month
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=report1">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#file-earmark-text"></use>
-						</svg>
+						<i class="bi bi-file-earmark-text" aria-hidden="true"></i>
 						Last month
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=report1">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#file-earmark-text"></use>
-						</svg>
+						<i class="bi bi-file-earmark-text" aria-hidden="true"></i>
 						Year-to-date
 					</a>
 				</li>
@@ -93,33 +73,25 @@
 			<ul class="nav flex-column mb-auto">
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=settings">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#gear-wide-connected"></use>
-						</svg>
+						<i class="bi bi-gear-wide-connected" aria-hidden="true"></i>
 						Settings
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=user">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#gear-wide-connected"></use>
-						</svg>
+						<i class="bi bi-person-fill" aria-hidden="true"></i>
 						Your Account
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=logs">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#gear-wide-connected"></use>
-						</svg>
+						<i class="bi bi-clock-history" aria-hidden="true"></i>
 						Logs
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="logout.php">
-						<svg class="bi" aria-hidden="true">
-							<use xlink:href="assets/icons/icons.svg#door-closed"></use>
-						</svg>
+						<i class="bi bi-door-closed" aria-hidden="true"></i>
 						Sign out
 					</a>
 				</li>

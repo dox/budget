@@ -12,10 +12,7 @@ echo "Budget year ends:   " . $budgetyear->getEnd()->format('Y-m-d') . "\n";
 			<button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
 		</div>
 		<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1">
-			<svg class="bi" aria-hidden="true">
-				<use xlink:href="#calendar3"></use>
-			</svg>
-
+			<i class="bi bi-calendar3" aria-hidden="true"></i>
 			This week
 		</button>
 	</div>

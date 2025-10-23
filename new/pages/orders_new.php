@@ -6,9 +6,7 @@
 		</div>
 		<div class="dropdown">
 			<button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-				<svg class="bi" aria-hidden="true">
-					<use xlink:href="assets/icons/icons.svg#calendar3"></use>
-				</svg> Edit
+				<i class="bi bi-calendar3" aria-hidden="true"></i> Edit
 			</button>
 			<ul class="dropdown-menu">
 				<li><a class="dropdown-item" href="#">Clone</a></li>

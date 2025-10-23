@@ -1,3 +1,4 @@
+<i class="bi bi-alarm"></i>
 <?php
 $logs = $log->getRecent();
 ?>

@@ -113,46 +113,29 @@
 	<label class="form-label text-uppercase text-muted small">Appearance</label>
 	<div class="dropdown">
 		<button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
-			<svg class="bi my-1 theme-icon-active" aria-hidden="true">
-				<use href="assets/icons/icons.svg#circle-half"></use>
-			</svg>
+			<i class="bi bi-circle-half" aria-hidden="true"></i>
 			<span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
 		</button>
 		<ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
 			<li>
 				<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
-					<svg class="bi me-2 opacity-50" aria-hidden="true">
-						<use href="assets/icons/icons.svg#sun-fill"></use>
-					</svg>
-	
+					<i class="bi me-2 opacity-50 bi-sun-fill" aria-hidden="true"></i>
 					Light
-					<svg class="bi ms-auto d-none" aria-hidden="true">
-						<use href="assets/icons/icons.svg#check2"></use>
-					</svg>
+					<i class="bi ms-auto d-none bi-check2" aria-hidden="true"></i>
 				</button>
 			</li>
 			<li>
 				<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
-					<svg class="bi me-2 opacity-50" aria-hidden="true">
-						<use href="assets/icons/icons.svg#moon-stars-fill"></use>
-					</svg>
-	
+					<i class="bi me-2 opacity-50 bi-moon-stars-fill" aria-hidden="true"></i>
 					Dark
-					<svg class="bi ms-auto d-none" aria-hidden="true">
-						<use href="assets/icons/icons.svg#check2"></use>
-					</svg>
+					<i class="bi ms-auto d-none bi-check2" aria-hidden="true"></i>
 				</button>
 			</li>
 			<li>
 				<button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
-					<svg class="bi me-2 opacity-50" aria-hidden="true">
-						<use href="assets/icons/icons.svg#circle-half"></use>
-					</svg>
-	
+					<i class="bi me-2 opacity-50 bi-circle-half" aria-hidden="true"></i>
 					Auto
-					<svg class="bi ms-auto d-none" aria-hidden="true">
-						<use href="assets/icons/icons.svg#check2"></use>
-					</svg>
+					<i class="bi ms-auto d-none bi-check2" aria-hidden="true"></i>
 				</button>
 			</li>
 		</ul>

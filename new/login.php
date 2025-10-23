@@ -35,9 +35,7 @@ include_once('inc/autoload.php');
 			<div class="col-12 col-sm-8 col-md-6 col-lg-4 mx-auto">
 				
 				<form class="form-signin" method="post">
-					<svg class="bi" aria-hidden="true">
-						<use xlink:href="assets/icons/icons.svg#piggy-bank"></use>
-					</svg>
+					<h1><i class="bi bi-piggy-bank" aria-hidden="true"></i></h1>
 					<h1 class="h3 mb-3 fw-normal"><?php echo APP_NAME; ?></h1>
 					
 					<?php
