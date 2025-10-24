@@ -1,17 +1,17 @@
 <?php
-$orders = $orders->allThisYear();
+$orders = new Orders();
+$ordersAll = $orders->allThisYear();
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 	<h1 class="h2">Orders</h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
 		<div class="btn-group me-2">
-			<a href="index.php?page=orders_new" class="btn btn-sm btn-outline-secondary">New</a>
+			<a href="index.php?page=orders_new" class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus-circle" aria-hidden="true"></i> New</a>
 		</div>
 		<div class="dropdown">
 			<button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-				<i class="bi bi-calendar3" aria-hidden="true"></i>
-				This year
+				<i class="bi bi-calendar3" aria-hidden="true"></i> This year
 			</button>
 			<ul class="dropdown-menu">
 				<li><a class="dropdown-item" href="#">Next year</a></li>
@@ -39,7 +39,7 @@ $orders = $orders->allThisYear();
 		</thead>
 		<tbody>
 			<?php
-			foreach ($orders AS $order) {
+			foreach ($ordersAll AS $order) {
 				$costCentreURL = "index.php?page=order&id=" . $order->id;
 				$orderURL = "index.php?page=order&id=" . $order->id;
 				

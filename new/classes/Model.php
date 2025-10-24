@@ -114,6 +114,11 @@ class CostCentres extends Model {
 	}
 }
 
+class Settings extends Model {
+	protected static string $table = 'new_settings';
+	
+}
+
 class BudgetYear extends Model {
 	private DateTime $today;
 	protected static string $table = 'new_groups';

@@ -61,7 +61,7 @@ require_once __DIR__ . '/../classes/User.php';
 $log = new Log();
 $budgetyear = new BudgetYear();
 $user = new User();
-$orders = new Orders();
+$settings = new Settings();
 
 # ------------------------------------------------------------
 # 4. Initialise shared Database instance

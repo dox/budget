@@ -23,14 +23,14 @@ function timeAgoFromSeconds($seconds) {
 }
 
 function printArray($data): void {
-	echo '<pre style="border:1px solid #ccc; padding:10px; font-family:monospace; font-size:14px;">';
+	echo "<div class=\"alert alert-info\" role=\"alert\" style=\"font-family:monospace;\"><pre>";
 	
 	if (is_array($data) || is_object($data)) {
 		echo htmlspecialchars(print_r($data, true));
 	} else {
 		echo htmlspecialchars(var_export($data, true));
 	}
-	echo '</pre>';
+	echo "</pre></div>";
 }
 
 function formatMoney(int|float $amount): string {
