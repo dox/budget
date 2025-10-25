@@ -9,6 +9,8 @@
 <link rel="canonical" href="https://budget.seh.ox.ac.uk">
 
 <script src="assets/js/colour-modes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous" class="astro-vvvwv3sm"></script>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" ntegrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
@@ -19,5 +21,5 @@
 <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
 <meta name="apple-mobile-web-app-title" content="<?php echo APP_NAME; ?>" />
-<link rel="manifest" href="/site.webmanifest" />
+<link rel="manifest" href="/new/site.webmanifest" />
 <meta name="theme-color" content="3b3a4a">

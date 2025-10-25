@@ -7,7 +7,7 @@ $ordersAll = $orders->allThisYear();
 	<h1 class="h2">Orders</h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
 		<div class="btn-group me-2">
-			<a href="index.php?page=orders_new" class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus-circle" aria-hidden="true"></i> New</a>
+			<a href="index.php?page=order_addedit&action=add" class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus-circle" aria-hidden="true"></i> New</a>
 		</div>
 		<div class="dropdown">
 			<button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -49,8 +49,10 @@ $ordersAll = $orders->allThisYear();
 				$output .= "<td><a href=\"" . $orderURL . "\"><strong>" . $order->po . "</strong> " . $order->name . "</a></td>";
 				$output .= "<td>" . formatMoney($order->value) . "</td>";
 				$output .= "<td>
-					<a href=\"#\"><i class=\"bi bi-pencil-square\"></i></a>
-					<a href=\"#\"><i class=\"bi bi-copy\"></i></a>
+					<div class=\"action-icons\">
+						<a href=\"index.php?page=order_addedit&action=edit&id=" . $order->id . "\"><i class=\"bi bi-pencil\"></i></a>
+						<a href=\"index.php?page=order_addedit&action=clone&id=" . $order->id . "\"><i class=\"bi bi-copy\"></i></a>
+					</div>
 				</td>";
 				$output .= "";
 				$output .= "</tr>";
@@ -61,3 +63,60 @@ $ordersAll = $orders->allThisYear();
 		</tbody>
 	</table>
 </div>
+
+<script>
+// ==== Data ====
+const data = {
+  labels: ['January', 'February', 'March', 'April', 'May'],
+  datasets: [
+	{
+	  label: 'Apples',
+	  data: [12, 19, 3, 5, 2],
+	  backgroundColor: '#007bff'
+	},
+	{
+	  label: 'Bananas',
+	  data: [2, 3, 20, 5, 1],
+	  backgroundColor: '#ffc107'
+	},
+	{
+	  label: 'Cherries',
+	  data: [3, 10, 13, 15, 22],
+	  backgroundColor: '#dc3545'
+	}
+  ]
+};
+
+// ==== Config ====
+const config = {
+  type: 'bar',
+  data: data,
+  options: {
+	plugins: {
+	  title: {
+		display: false,
+		text: 'Fruit Sales (Stacked Bar)'
+	  },
+	  legend: {
+		position: 'top'
+	  }
+	},
+	responsive: true,
+	scales: {
+	  x: {
+		stacked: true
+	  },
+	  y: {
+		stacked: true,
+		beginAtZero: true
+	  }
+	}
+  }
+};
+
+// ==== Render ====
+new Chart(
+  document.getElementById('myChart'),
+  config
+);
+</script>

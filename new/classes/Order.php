@@ -11,7 +11,7 @@ class Order {
 	public $value;
 	public $supplier;
 	public $description;
-	public $paid;
+	public $notes;
 
 	protected $db;
 	

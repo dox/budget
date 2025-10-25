@@ -35,14 +35,8 @@ include_once('inc/autoload.php');
 			<div class="col-12 col-sm-8 col-md-6 col-lg-4 mx-auto">
 				
 				<form class="form-signin" method="post">
-					<h1><i class="bi bi-piggy-bank" aria-hidden="true"></i></h1>
-					<h1 class="h3 mb-3 fw-normal"><?php echo APP_NAME; ?></h1>
+					<h1><i class="bi bi-piggy-bank bi-jumbo" aria-hidden="true"></i></h1>
 					
-					<?php
-					if ($error) {
-						echo $error;
-					}
-					?>
 					<div class="form-floating">
 						<input type="text" class="form-control" id="username" name="username" required>
 						<label for="username">Username</label>

@@ -25,6 +25,12 @@
   fill: currentColor
 }
 
+.bi-jumbo {
+  font-size: 20vw;
+  display: inline;
+}
+
+
 /*
  * Sidebar
  */
@@ -97,10 +103,6 @@
   height:100vh
 }
 
-.bi {
-  
-}
-
 .nav-scroller {
   position: relative;
   z-index: 2;
@@ -146,4 +148,19 @@
 
 .bd-mode-toggle .dropdown-menu .active .bi {
   display: block !important
+}
+
+
+
+
+
+/* Hide icons by default.  Show icons only when row hovered */
+
+.action-icons {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+tr:hover .action-icons {
+  opacity: 1;
 }
