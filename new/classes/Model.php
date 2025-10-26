@@ -19,6 +19,57 @@ abstract class Model {
 		$rows = $this->db->fetchAll($query);
 		return $rows;
 	}
+	
+	/**
+	 * Generic INSERT for all subclasses
+	 *
+	 * @param array $data  Associative array of column => value
+	 * @return int|false   Inserted row ID or false on failure
+	 */
+	public function insert(array $data, bool $log = true) {
+		if (empty($data)) {
+			throw new InvalidArgumentException("Insert data cannot be empty.");
+		}
+	
+		$columns = array_keys($data);
+		$placeholders = array_map(fn($c) => ':' . $c, $columns);
+	
+		$sql = sprintf(
+			"INSERT INTO %s (%s) VALUES (%s)",
+			static::$table,
+			implode(', ', $columns),
+			implode(', ', $placeholders)
+		);
+	
+		$params = [];
+		foreach ($data as $col => $val) {
+			$params[":$col"] = $val;
+		}
+	
+		$stmt = $this->db->query($sql, $params);
+		$insertId = $stmt ? $this->db->lastInsertId() : false;
+	
+		// ✅ Optional logging
+		if ($log && $insertId !== false && static::$table !== 'new_logs') {
+			$this->logInsert($insertId, $data);
+		}
+	
+		return $insertId;
+	}
+	
+	private function logInsert(int $id, array $data): void {
+		// We reference Log dynamically to avoid recursion
+		$log = new Log();
+	
+		$summary = sprintf(
+			'Inserted into %s (ID %d): %s',
+			static::$table,
+			$id,
+			json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+		);
+	
+		$log->add($summary, Log::INFO);
+	}
 }
 
 class Log extends Model {

@@ -1,6 +1,6 @@
 <?php
 
-class Order {
+class Order extends Model {
 	public $id;
 	public $username;
 	public $date_created;

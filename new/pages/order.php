@@ -6,6 +6,18 @@ if (isset($_GET['id']) && ctype_digit($_GET['id'])) {
 	// Handle invalid or missing ID
 	die('Invalid order ID.');
 }
+
+
+
+/*
+$order->insert([
+	'username'     => $user->getUsername(),
+	'cost_centre'           => '99',
+	'po'        => '12345',
+	'name'         => 'Test Order',
+	'value' => '99.99',
+]);
+*/
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
