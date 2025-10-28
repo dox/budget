@@ -31,6 +31,15 @@ abstract class Model {
 			throw new InvalidArgumentException("Insert data cannot be empty.");
 		}
 	
+		// JSON-encode arrays automatically
+		$params = [];
+		foreach ($data as $col => $val) {
+			if (is_array($val)) {
+				$val = json_encode($val); // <-- encode arrays
+			}
+			$params[":$col"] = $val;
+		}
+	
 		$columns = array_keys($data);
 		$placeholders = array_map(fn($c) => ':' . $c, $columns);
 	
@@ -41,15 +50,10 @@ abstract class Model {
 			implode(', ', $placeholders)
 		);
 	
-		$params = [];
-		foreach ($data as $col => $val) {
-			$params[":$col"] = $val;
-		}
-	
 		$stmt = $this->db->query($sql, $params);
 		$insertId = $stmt ? $this->db->lastInsertId() : false;
 	
-		// ✅ Optional logging
+		// Optional logging
 		if ($log && $insertId !== false && static::$table !== 'new_logs') {
 			$this->logInsert($insertId, $data);
 		}

@@ -32,18 +32,19 @@ switch ($action) {
 	<h1 class="h2"><?php echo $actionLabel; ?> Purchase Order <?php echo "#" . $order->id; ?></h1>
 </div>
 
-<form method="POST" action="save_order.php" class="needs-validation" novalidate>
+<form method="POST" id="order_insert" class="needs-validation" novalidate>
 	<!-- Order Details -->
 	<div class="card mb-4">
 	  <div class="card-header fw-bold">Order Details</div>
-	  <div class="card-body row g-3">
+	  <div class="card-body">
+		  <div class="row g-3">
 		<div class="col-md-4">
 		  <label for="orderNumber" class="form-label">Order Number</label>
-		  <input type="text" class="form-control" id="orderNumber" name="orderNumber" value="PO-2025-017" readonly>
+		  <input type="text" class="form-control" id="order_num" name="order_num" value="PO-2025-017" readonly>
 		</div>
 		<div class="col-md-4">
 		  <label for="orderDate" class="form-label">Order Date</label>
-		  <input type="date" class="form-control" id="orderDate" name="orderDate" value="2025-10-25" required>
+		  <input type="datetime-local" class="form-control" id="date_created" name="date_created" value="<?php echo date('Y-m-d H:i:s'); ?>" required>
 		</div>
 		<div class="col-md-4">
 		  <label for="status" class="form-label">Status</label>
@@ -54,33 +55,34 @@ switch ($action) {
 		  </select>
 		</div>
 	  </div>
-	</div>
-
-	<!-- Company Information -->
-	<div class="card mb-4">
-	  <div class="card-header fw-bold">Company Information</div>
-	  <div class="card-body row g-3">
-		<div class="col-md-6">
-		  <label for="companyName" class="form-label">Company Name</label>
-		  <input type="text" class="form-control" id="companyName" name="companyName" value="Oxford Supplies Ltd" required>
-		</div>
-		<div class="col-md-6">
-		  <label for="contactName" class="form-label">Contact Name</label>
-		  <input type="text" class="form-control" id="contactName" name="contactName" value="John Carter">
-		</div>
-		<div class="col-12">
-		  <label for="address" class="form-label">Address</label>
-		  <textarea class="form-control" id="address" name="address" rows="2" required>23 Broad Street, Oxford, OX1 3BE</textarea>
-		</div>
-		<div class="col-md-6">
-		  <label for="email" class="form-label">Email</label>
-		  <input type="email" class="form-control" id="email" name="email" value="orders@oxfordsupplies.co.uk">
-		</div>
-		<div class="col-md-6">
-		  <label for="phone" class="form-label">Phone</label>
-		  <input type="tel" class="form-control" id="phone" name="phone" value="+44 1865 123456">
-		</div>
+	  
+	  <div class="row g-3">
+		  <div class="col">
+			  <label for="cost_centre" class="form-label">Cost Centre</label>
+			  <input type="text" class="form-control" id="cost_centre" name="cost_centre" value="1" required>
+		  </div>
+		  
+		  <div class="col">
+			  <label for="supplier" class="form-label">Supplier</label>
+			  <input type="text" class="form-control" id="supplier" name="supplier" value="1" required>
+		  </div>
 	  </div>
+	  
+	  <div class="row g-3">
+		  <div class="col">
+			  <label for="value" class="form-label">Value</label>
+			  <input type="text" class="form-control" id="value" name="value" value="99.99" required>
+		  </div>
+		  
+		  <div class="col">
+			  <label for="name" class="form-label">Name</label>
+			  <input type="text" class="form-control" id="name" name="name" value="test" required>
+		  </div>
+	  </div>
+	  
+	  
+	  </div>
+	  
 	</div>
 
 	<!-- Line Items -->
@@ -102,7 +104,7 @@ switch ($action) {
 		  </thead>
 		  <tbody id="itemTable">
 			<tr>
-			  <td><input type="text" name="itemDesc[]" class="form-control" value="Network Switch (24-port)" required></td>
+			  <td><input type="text" name="itemName[]" class="form-control" value="Network Switch (24-port)" required></td>
 			  <td><input type="number" name="itemQty[]" class="form-control" value="2" min="1" required></td>
 			  <td><input type="number" name="itemPrice[]" class="form-control" value="350" step="0.01" required></td>
 			  <td class="text-end fw-semibold align-middle">700.00</td>
@@ -149,7 +151,7 @@ switch ($action) {
 	document.getElementById('addItem').addEventListener('click', () => {
 	  const row = document.createElement('tr');
 	  row.innerHTML = `
-		<td><input type="text" name="itemDesc[]" class="form-control" required></td>
+		<td><input type="text" name="itemName[]" class="form-control" required></td>
 		<td><input type="number" name="itemQty[]" class="form-control" value="1" min="1" required></td>
 		<td><input type="number" name="itemPrice[]" class="form-control" value="0" step="0.01" required></td>
 		<td class="text-end fw-semibold align-middle">0.00</td>
@@ -165,3 +167,29 @@ switch ($action) {
 	  }
 	});
   </script>
+
+
+
+
+<script>
+// Submit form via XHR
+document.getElementById('order_insert').addEventListener('submit', function(e) {
+	e.preventDefault();
+	const formData = new FormData(this);
+	
+	// Add the action manually
+	formData.append('action', 'order_insert');
+
+	fetch('action.php', {
+	  method: 'POST',
+	  body: formData
+	})
+	.then(res => res.json())
+	.then(data => {
+	  console.log('Server response:', data);
+	  if (data.success) alert('Order inserted!');
+	  else alert('Error: ' + (data.error || 'Unknown'));
+	})
+	.catch(err => console.error('XHR error:', err));
+  });
+</script>

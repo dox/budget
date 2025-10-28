@@ -8,6 +8,7 @@ class Order extends Model {
 	public $po;
 	public $order_num;
 	public $name;
+	public $items;
 	public $value;
 	public $supplier;
 	public $description;

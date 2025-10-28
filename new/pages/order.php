@@ -6,18 +6,6 @@ if (isset($_GET['id']) && ctype_digit($_GET['id'])) {
 	// Handle invalid or missing ID
 	die('Invalid order ID.');
 }
-
-
-
-/*
-$order->insert([
-	'username'     => $user->getUsername(),
-	'cost_centre'           => '99',
-	'po'        => '12345',
-	'name'         => 'Test Order',
-	'value' => '99.99',
-]);
-*/
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -62,25 +50,41 @@ $order->insert([
 		<tr>
 		  <th scope="col">#</th>
 		  <th scope="col">Description</th>
+		  <th scope="col">Qty.</th>
 		  <th scope="col" class="text-end">Price</th>
+		  <th scope="col" class="text-end">Total</th>
 		</tr>
 	  </thead>
 	  <tbody>
-		<tr>
-		  <td>1</td>
-		  <td>
-		  <?php echo $order->name;
+		
+		  
+		  <?php
+		  $i = 1;
+		  $items = json_decode($order->items, true);
+		  
+		  foreach ($items AS $item) {
+			  $output  = "<tr>";
+			  $output .= "<td>" . $i . "</td>";
+			  $output .= "<td>" . $item['item_name'] . "</td>";
+			  $output .= "<td>" . $item['item_qty'] . "</td>";
+			  $output .= "<td>" . $item['item_value'] . "</td>";
+			  $output .= "<td>" . $item['item_value'] . "</td>";
+			  $output .= "</tr>";
+			  
+			  echo $output;
+			  
+			  $i++;
+		  }
+		  
+		  echo $order->name;
 		  if ($order->description) {
 			  echo "<p class=\"small\">" . $order->description . "</p>";
 		  };
 		  ?>
-	  	  </td>
-		  <td class="text-end"><?php echo formatMoney($order->value); ?></td>
-		</tr>
 	  </tbody>
 	  <tfoot>
 		<tr>
-		  <th colspan="2" class="text-end">Total</th>
+		  <th colspan="4" class="text-end">Total</th>
 		  <th class="text-end"><?php echo formatMoney($order->value); ?></th>
 		</tr>
 	  </tfoot>
