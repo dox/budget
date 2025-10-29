@@ -89,11 +89,11 @@ switch ($action) {
 	<div class="card mb-4">
 	  <div class="card-header fw-bold d-flex justify-content-between align-items-center">
 		<span>Line Items</span>
-		<button type="button" class="btn btn-sm btn-outline-primary" id="addItem">Add Item</button>
+		<button type="button" class="btn btn-sm btn-outline-primary" id="addItem"><i class="bi bi-plus" aria-hidden="true"></i> Add Item</button>
 	  </div>
 	  <div class="card-body">
-		<table class="table table-bordered align-middle">
-		  <thead class="table-light">
+		<table class="table align-middle">
+		  <thead>
 			<tr>
 			  <th>Description</th>
 			  <th style="width: 100px;">Qty</th>
@@ -103,13 +103,22 @@ switch ($action) {
 			</tr>
 		  </thead>
 		  <tbody id="itemTable">
-			<tr>
-			  <td><input type="text" name="itemName[]" class="form-control" value="Network Switch (24-port)" required></td>
-			  <td><input type="number" name="itemQty[]" class="form-control" value="2" min="1" required></td>
-			  <td><input type="number" name="itemPrice[]" class="form-control" value="350" step="0.01" required></td>
-			  <td class="text-end fw-semibold align-middle">700.00</td>
-			  <td><button type="button" class="btn btn-outline-danger btn-sm remove-item">&times;</button></td>
-			</tr>
+			  <?php
+			  if ($action = "edit") {
+				  foreach ($order->items() AS $item) {
+					  $output  = "<tr>";
+					  $output .= "<td><input type=\"text\" name=\"itemName[]\" class=\"form-control\" value=\"" . $item['item_name'] . "\" required></td>";
+					  $output .= "<td><input type=\"number\" name=\"itemQty[]\" class=\"form-control\" value=\"" . $item['item_qty'] . "\" min=\"1\" required></td>";
+					  $output .= "<td><input type=\"number\" name=\"itemPrice[]\" class=\"form-control\" value=\"" . $item['item_value'] . "\" step=\"0.01\" required></td>";
+					  $output .= "<td class=\"text-end fw-semibold align-middle\">" . ($item['item_value'] * $item['item_qty']) . "</td>";
+					  $output .= "<td><button type=\"button\" class=\"btn btn-outline-danger btn-sm remove-item\">&times;</button></td>";
+					  $output .= "</tr>";
+					  
+					  echo $output;
+				  }
+			  }
+			  ?>
+			
 		  </tbody>
 		</table>
 	  </div>
@@ -146,32 +155,26 @@ switch ($action) {
   </form>
   
   
-  <script>
-	// Add new line item row
-	document.getElementById('addItem').addEventListener('click', () => {
-	  const row = document.createElement('tr');
-	  row.innerHTML = `
-		<td><input type="text" name="itemName[]" class="form-control" required></td>
-		<td><input type="number" name="itemQty[]" class="form-control" value="1" min="1" required></td>
-		<td><input type="number" name="itemPrice[]" class="form-control" value="0" step="0.01" required></td>
-		<td class="text-end fw-semibold align-middle">0.00</td>
-		<td><button type="button" class="btn btn-outline-danger btn-sm remove-item">&times;</button></td>
-	  `;
-	  document.getElementById('itemTable').appendChild(row);
-	});
-  
-	// Remove item row
-	document.addEventListener('click', (e) => {
-	  if (e.target.classList.contains('remove-item')) {
-		e.target.closest('tr').remove();
-	  }
-	});
-  </script>
-
-
-
-
 <script>
+// Add new line item row
+document.getElementById('addItem').addEventListener('click', () => {
+	const row = document.createElement('tr');
+	row.innerHTML = `
+	<td><input type="text" name="itemName[]" class="form-control" required></td>
+	<td><input type="number" name="itemQty[]" class="form-control" value="1" min="1" required></td>
+	<td><input type="number" name="itemPrice[]" class="form-control" value="0" step="0.01" required></td>
+	<td class="text-end fw-semibold align-middle">0.00</td>
+	<td><button type="button" class="btn btn-outline-danger btn-sm remove-item">&times;</button></td>`;
+	document.getElementById('itemTable').appendChild(row);
+});
+
+// Remove item row
+document.addEventListener('click', (e) => {
+	if (e.target.classList.contains('remove-item')) {
+		e.target.closest('tr').remove();
+	}
+});
+
 // Submit form via XHR
 document.getElementById('order_insert').addEventListener('submit', function(e) {
 	e.preventDefault();
@@ -180,16 +183,16 @@ document.getElementById('order_insert').addEventListener('submit', function(e) {
 	// Add the action manually
 	formData.append('action', 'order_insert');
 
-	fetch('action.php', {
-	  method: 'POST',
-	  body: formData
+	fetch('actions/order.php', {
+		method: 'POST',
+		body: formData
 	})
 	.then(res => res.json())
 	.then(data => {
-	  console.log('Server response:', data);
-	  if (data.success) alert('Order inserted!');
-	  else alert('Error: ' + (data.error || 'Unknown'));
+		console.log('Server response:', data);
+		if (data.success) alert('Order inserted!');
+		else alert('Error: ' + (data.error || 'Unknown'));
 	})
 	.catch(err => console.error('XHR error:', err));
-  });
+});
 </script>

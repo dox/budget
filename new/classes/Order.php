@@ -38,7 +38,19 @@ class Order extends Model {
 	}
 	
 	public function costCentre () {
-		return "XYZ";
+		return $this->cost_centre;
+	}
+	
+	public function name() {
+		$po = isset($this->po) ? $this->po : "No PO";
+	
+		$name = $this->name ?? (function() {
+			$items = json_decode($this->items, true) ?: [];
+			$itemNames = array_column($items, 'item_name');
+			return $itemNames ? implode(", ", $itemNames) : "No name";
+		})();
+	
+		return "<strong>{$po}</strong> {$name}";
 	}
 	
 	public function save() {
@@ -63,6 +75,20 @@ class Order extends Model {
 			$this->id = $this->db->lastInsertId();
 			return $this->id;
 		}
+	}
+	
+	public function items() {
+		$itemsArray = [];
+		
+		if (isset($this->items)) {
+			$items = json_decode($this->items, true);
+			
+			foreach ($items AS $item) {
+				$itemsArray[] = $item;
+			}
+		}
+		
+		return $itemsArray;
 	}
 
 	public function delete() {

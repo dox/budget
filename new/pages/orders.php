@@ -40,13 +40,13 @@ $ordersAll = $orders->allThisYear();
 		<tbody>
 			<?php
 			foreach ($ordersAll AS $order) {
-				$costCentreURL = "index.php?page=order&id=" . $order->id;
+				$costCentreURL = "index.php?page=cost_centre&id=" . $order->id;
 				$orderURL = "index.php?page=order&id=" . $order->id;
 				
 				$output  = "<tr>";
 				$output .= "<td>" . date("Y-m-d H:i", strtotime($order->date_created)) . "</td>";
 				$output .= "<td><a href=\"" . $costCentreURL . "\">" . $order->costCentre() . "</a></td>";
-				$output .= "<td><a href=\"" . $orderURL . "\"><strong>" . $order->po . "</strong> " . $order->name . "</a></td>";
+				$output .= "<td><a href=\"" . $orderURL . "\"><strong>" . $order->name() . "</a></td>";
 				$output .= "<td>" . formatMoney($order->value) . "</td>";
 				$output .= "<td>
 					<div class=\"action-icons\">
