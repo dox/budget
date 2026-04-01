@@ -46,12 +46,7 @@ foreach ($orders as $order) {
 	}
 }
 
-// Prepare dropdown options
-$yearOptions = [
-	['label' => 'Last Year', 'year' => BudgetYear::yearsAgo(1)->year],
-	['label' => 'This Year', 'year' => $currentBudgetYear->year],
-	['label' => 'Next Year', 'year' => BudgetYear::yearsFromNow(1)->year],
-];
+$yearOptions = BudgetYear::dropdownOptions();
 $currentLabel = $budgetYear->label();
 $status = $_GET['status'] ?? null;
 ?>
@@ -126,17 +121,17 @@ $status = $_GET['status'] ?? null;
 				<td class="numeric"><?= number_format($ytdBudget, 2) ?></td>
 				<td class="numeric"><?= number_format($ytdSpend, 2) ?></td>
 				<td class="text-end">
-					<div class="d-inline-flex gap-2">
-						<a href="index.php?page=budget_addedit&action=edit&id=<?= $cc->id ?>&year=<?= $selectedYear ?>" class="btn btn-sm btn-outline-secondary">
-							<i class="bi bi-pencil" aria-hidden="true"></i> <?= $cc->hasBudget ? 'Edit' : 'Add' ?>
+					<div class="action-icons d-inline-flex align-items-center gap-2">
+						<a href="index.php?page=budget_addedit&action=edit&id=<?= $cc->id ?>&year=<?= $selectedYear ?>" title="<?= $cc->hasBudget ? 'Edit budget' : 'Add budget' ?>" aria-label="<?= $cc->hasBudget ? 'Edit budget' : 'Add budget' ?>">
+							<i class="bi <?= $cc->hasBudget ? 'bi-pencil' : 'bi-plus-circle' ?>" aria-hidden="true"></i>
 						</a>
 						<?php if ($cc->hasBudget): ?>
-							<form method="post" action="actions/budget.php" onsubmit="return confirm('Delete this budget for <?= htmlspecialchars($budgetYear->label(), ENT_QUOTES) ?>?');">
+							<form method="post" action="actions/budget.php" onsubmit="return confirm('Delete this budget for <?= htmlspecialchars($budgetYear->label(), ENT_QUOTES) ?>?');" class="m-0">
 								<input type="hidden" name="action" value="delete">
 								<input type="hidden" name="cost_centre_id" value="<?= $cc->id ?>">
 								<input type="hidden" name="year" value="<?= $selectedYear ?>">
-								<button type="submit" class="btn btn-sm btn-outline-danger">
-									<i class="bi bi-trash" aria-hidden="true"></i> Delete
+								<button type="submit" class="btn btn-link p-0 text-danger" title="Delete budget" aria-label="Delete budget">
+									<i class="bi bi-trash" aria-hidden="true"></i>
 								</button>
 							</form>
 						<?php endif; ?>

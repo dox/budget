@@ -6,17 +6,81 @@ $status = $_GET['status'] ?? null;
 
 $orders = new Orders();
 $ordersAll = $orders->allForBudgetYear($budgetYear);
+$chartOrders = $orders->all();
 
-$yearOptions = [];
-for ($year = $currentBudgetYear->year; $year >= $currentBudgetYear->year - 4; $year--) {
-	$optionYear = new BudgetYear($year);
-	$yearOptions[] = [
-		'label' => $optionYear->label(),
-		'year' => $optionYear->year,
-	];
+$yearOptions = BudgetYear::dropdownOptions();
+$currentLabel = (new BudgetYear($selectedYear))->label();
+
+$chartMonthLabels = [];
+$chartMonthKeys = [];
+$chartStartMonth = new DateTime('first day of this month 00:00:00');
+$chartStartMonth->modify('-11 months');
+
+for ($monthIndex = 0; $monthIndex < 12; $monthIndex++) {
+	$monthDate = (clone $chartStartMonth)->modify('+' . $monthIndex . ' months');
+	$chartMonthKeys[] = $monthDate->format('Y-m');
+	$chartMonthLabels[] = $monthDate->format('M Y');
 }
 
-$currentLabel = (new BudgetYear($selectedYear))->label();
+$spendByCostCentreAndMonth = [];
+$costCentreLabelsById = [];
+
+foreach ($chartOrders as $order) {
+	$orderDate = new DateTime($order->date_created);
+	$monthKey = $orderDate->format('Y-m');
+
+	if (!in_array($monthKey, $chartMonthKeys, true)) {
+		continue;
+	}
+
+	$costCentreId = (int) $order->cost_centre;
+	if ($costCentreId <= 0) {
+		continue;
+	}
+
+	$spendByCostCentreAndMonth[$costCentreId] ??= array_fill_keys($chartMonthKeys, 0.0);
+	$spendByCostCentreAndMonth[$costCentreId][$monthKey] += (float) $order->value;
+
+	if (!isset($costCentreLabelsById[$costCentreId])) {
+		$linkedCostCentre = $order->costCentreModel();
+		$costCentreLabelsById[$costCentreId] = $linkedCostCentre
+			? $linkedCostCentre->code
+			: 'Cost centre #' . $costCentreId;
+	}
+}
+
+asort($costCentreLabelsById);
+
+$chartPalette = [
+	'#0d6efd',
+	'#198754',
+	'#fd7e14',
+	'#dc3545',
+	'#6f42c1',
+	'#20c997',
+	'#ffc107',
+	'#0dcaf0',
+	'#6610f2',
+	'#adb5bd',
+	'#6c757d',
+	'#1982c4',
+];
+
+$stackedSpendDatasets = [];
+$datasetIndex = 0;
+
+foreach ($costCentreLabelsById as $costCentreId => $costCentreLabel) {
+	$monthSpend = $spendByCostCentreAndMonth[$costCentreId] ?? array_fill_keys($chartMonthKeys, 0.0);
+	$stackedSpendDatasets[] = [
+		'label' => $costCentreLabel,
+		'data' => array_map(
+			fn(string $monthKey): float => round((float) ($monthSpend[$monthKey] ?? 0.0), 2),
+			$chartMonthKeys
+		),
+		'backgroundColor' => $chartPalette[$datasetIndex % count($chartPalette)],
+	];
+	$datasetIndex++;
+}
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -101,34 +165,19 @@ $currentLabel = (new BudgetYear($selectedYear))->label();
 </div>
 
 <script>
-// ==== Data ====
-const data = {
-  labels: ['January', 'February', 'March', 'April', 'May'],
-  datasets: [
-	{
-	  label: 'Apples',
-	  data: [12, 19, 3, 5, 2],
-	},
-	{
-	  label: 'Bananas',
-	  data: [2, 3, 20, 5, 1],
-	},
-	{
-	  label: 'Cherries',
-	  data: [3, 10, 13, 15, 22],
-	}
-  ]
-};
+const spendChartLabels = <?= json_encode($chartMonthLabels, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
+const spendChartDatasets = <?= json_encode($stackedSpendDatasets, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
 
-// ==== Config ====
 const config = {
   type: 'bar',
-  data: data,
+  data: {
+	labels: spendChartLabels,
+	datasets: spendChartDatasets
+  },
   options: {
 	plugins: {
 	  title: {
-		display: false,
-		text: 'Fruit Sales (Stacked Bar)'
+		display: false
 	  },
 	  legend: {
 		position: 'top'
@@ -141,13 +190,16 @@ const config = {
 	  },
 	  y: {
 		stacked: true,
-		beginAtZero: true
+		beginAtZero: true,
+		title: {
+			display: true,
+			text: 'Spend (£)'
+		}
 	  }
 	}
   }
 };
 
-// ==== Render ====
 new Chart(
   document.getElementById('myChart'),
   config

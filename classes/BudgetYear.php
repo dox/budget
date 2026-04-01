@@ -35,6 +35,21 @@ class BudgetYear {
 		return new self(self::current()->year + $years);
 	}
 
+	public static function dropdownOptions(int $yearsBack = 4, int $yearsForward = 0): array {
+		$currentYear = self::current()->year;
+		$options = [];
+
+		for ($year = $currentYear + $yearsForward; $year >= $currentYear - $yearsBack; $year--) {
+			$budgetYear = new self($year);
+			$options[] = [
+				'label' => $budgetYear->label(),
+				'year' => $budgetYear->year,
+			];
+		}
+
+		return $options;
+	}
+
 	public static function fromRequest(string $key = 'year'): self {
 		$currentYear = self::current()->year;
 		$selectedYear = filter_input(INPUT_POST, $key, FILTER_VALIDATE_INT);

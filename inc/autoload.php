@@ -88,6 +88,7 @@ require_once __DIR__ . '/../classes/Database.php';
 require_once __DIR__ . '/../classes/Model.php';
 require_once __DIR__ . '/../classes/BudgetYear.php';
 require_once __DIR__ . '/../classes/CostCentre.php';
+require_once __DIR__ . '/../classes/Supplier.php';
 require_once __DIR__ . '/../classes/Orders.php';
 require_once __DIR__ . '/../classes/Order.php';
 require_once __DIR__ . '/../classes/User.php';

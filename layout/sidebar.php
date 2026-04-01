@@ -31,7 +31,7 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=customers">
+					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=suppliers">
 						<i class="bi bi-people" aria-hidden="true"></i>
 						Suppliers
 					</a>

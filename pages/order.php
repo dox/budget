@@ -3,8 +3,14 @@ if (isset($_GET['id']) && ctype_digit($_GET['id'])) {
 	$id = (int) $_GET['id'];
 	$order = new Order($id);
 	$costCentre = $order->costCentreModel();
+	$supplierName = trim((string) ($order->supplier ?? ''));
+	$supplierLabel = $supplierName !== '' ? $supplierName : 'Unknown supplier';
+	$supplier = Supplier::findByName($supplierName);
+	$supplierUrl = 'index.php?page=supplier&name=' . urlencode($supplierLabel);
 	$attachments = $order->attachments();
 	$attachmentStatus = $_GET['attachment_status'] ?? null;
+	$items = json_decode((string) $order->items, true);
+	$items = is_array($items) ? $items : [];
 } else {
 	// Handle invalid or missing ID
 	die('Invalid order ID.');
@@ -57,10 +63,27 @@ if (isset($_GET['id']) && ctype_digit($_GET['id'])) {
 	</div>
 	<div class="col-md-6 text-md-end">
 	  <h6 class="text-uppercase text-muted">To</h6>
-	  <p class="mb-1 fw-semibold"><?php echo $order->supplier; ?></p>
-	  <p class="mb-1"><?php echo "Order #:" . $order->order_num; ?></p>
-	  <p class="mb-1">123 Industrial Road, Reading RG1 2CD</p>
-	  <p class="mb-0">sales@abcsupplies.co.uk</p>
+	  <p class="mb-1 fw-semibold">
+	  	<a href="<?= htmlspecialchars($supplierUrl) ?>"><?= htmlspecialchars($supplier?->name() ?? $supplierLabel) ?></a>
+	  </p>
+	  <p class="mb-1"><?php echo "Order #:" . htmlspecialchars((string) $order->order_num); ?></p>
+	  <?php if ($supplier?->accountNumber()): ?>
+	  	<p class="mb-1">Account #: <?= htmlspecialchars($supplier->accountNumber()) ?></p>
+	  <?php endif; ?>
+	  <?php foreach ($supplier?->addressLines() ?? [] as $addressLine): ?>
+	  	<p class="mb-1"><?= htmlspecialchars($addressLine) ?></p>
+	  <?php endforeach; ?>
+	  <?php if ($supplier?->telephone()): ?>
+	  	<p class="mb-1">Tel: <?= htmlspecialchars($supplier->telephone()) ?></p>
+	  <?php endif; ?>
+	  <?php if ($supplier?->mobile()): ?>
+	  	<p class="mb-1">Mobile: <?= htmlspecialchars($supplier->mobile()) ?></p>
+	  <?php endif; ?>
+	  <?php if ($supplier?->email()): ?>
+	  	<p class="mb-0"><?= htmlspecialchars($supplier->email()) ?></p>
+	  <?php elseif ($supplier?->website()): ?>
+	  	<p class="mb-0"><?= htmlspecialchars($supplier->website()) ?></p>
+	  <?php endif; ?>
 	</div>
   </div>
 
@@ -77,27 +100,24 @@ if (isset($_GET['id']) && ctype_digit($_GET['id'])) {
 		</tr>
 	  </thead>
 	  <tbody>
-		
-		  
 		  <?php
 		  $i = 1;
-		  $items = json_decode($order->items, true);
-		  
-		  foreach ($items AS $item) {
-			  $output  = "<tr>";
-			  $output .= "<td>" . $i . "</td>";
-			  $output .= "<td>" . $item['item_name'] . "</td>";
-			  $output .= "<td>" . $item['item_qty'] . "</td>";
-			  $output .= "<td>" . $item['item_value'] . "</td>";
-			  $output .= "<td>" . $item['item_value'] . "</td>";
-			  $output .= "</tr>";
-			  
-			  echo $output;
-			  
+
+		  foreach ($items as $item) {
+			  $quantity = (float) ($item['item_qty'] ?? 0);
+			  $price = (float) ($item['item_value'] ?? 0);
+			  $lineTotal = $quantity * $price;
+			  ?>
+			  <tr>
+			  	<td><?= $i ?></td>
+			  	<td><?= htmlspecialchars((string) ($item['item_name'] ?? '')) ?></td>
+			  	<td><?= htmlspecialchars((string) ($item['item_qty'] ?? '')) ?></td>
+			  	<td class="text-end"><?= htmlspecialchars(formatMoney($price)) ?></td>
+			  	<td class="text-end"><?= htmlspecialchars(formatMoney($lineTotal)) ?></td>
+			  </tr>
+			  <?php
 			  $i++;
 		  }
-		  
-		  echo $order->name;
 		  ?>
 	  </tbody>
 	  <tfoot>
@@ -147,7 +167,7 @@ if (isset($_GET['id']) && ctype_digit($_GET['id'])) {
 	  	<?php
 		  if ($order->notes) {
 			  echo "<h6 class=\"text-uppercase text-muted\">Notes</h6>";
-				echo "<p>" . $order->notes . "</p>";
+				echo "<p>" . htmlspecialchars((string) $order->notes) . "</p>";
 			};
 			?>
 		</p>
