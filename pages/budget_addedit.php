@@ -51,6 +51,6 @@ $costCentre = new CostCentre($id, $budgetYear);
 
 	<div class="text-end">
 		<button type="submit" class="btn btn-primary"><?= $costCentre->hasBudget ? 'Save Budget' : 'Create Budget' ?></button>
-		<a href="index.php?page=budget&year=<?= $budgetYear->year ?>" class="btn btn-secondary">Cancel</a>
+		<a href="index.php?page=cost_centres&year=<?= $budgetYear->year ?>" class="btn btn-secondary">Cancel</a>
 	</div>
 </form>

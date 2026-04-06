@@ -3,30 +3,111 @@ $currentBudgetYear = BudgetYear::current();
 $budgetYear = BudgetYear::fromRequest();
 $selectedYear = $budgetYear->year;
 $costCentres = CostCentre::all($budgetYear);
+$orders = (new Orders())->allForBudgetYear($budgetYear);
+
+$today = new DateTime();
+$ytdCutoff = clone $budgetYear->endDate;
+$elapsedRatio = 1.0;
+
+if ($today <= $budgetYear->startDate) {
+	$ytdCutoff = clone $budgetYear->startDate;
+	$elapsedRatio = 0.0;
+} elseif ($today < $budgetYear->endDate) {
+	$ytdCutoff = $today;
+
+	$totalBudgetYearSeconds = max(
+		1,
+		$budgetYear->endDate->getTimestamp() - $budgetYear->startDate->getTimestamp()
+	);
+	$elapsedBudgetYearSeconds = max(
+		0,
+		$today->getTimestamp() - $budgetYear->startDate->getTimestamp()
+	);
+
+	$elapsedRatio = min(1, $elapsedBudgetYearSeconds / $totalBudgetYearSeconds);
+}
+
+$ytdSpendByCostCentre = [];
+foreach ($costCentres as $costCentre) {
+	$ytdSpendByCostCentre[$costCentre->id] = 0.0;
+}
+
+foreach ($orders as $order) {
+	$orderDate = new DateTime($order->date_created);
+	if ($orderDate > $ytdCutoff) {
+		continue;
+	}
+
+	foreach ($costCentres as $costCentre) {
+		if ((int) $order->cost_centre === $costCentre->id) {
+			$ytdSpendByCostCentre[$costCentre->id] += (float) $order->value;
+			break;
+		}
+	}
+}
 
 $status = $_GET['status'] ?? null;
+$yearOptions = BudgetYear::dropdownOptions();
+$currentLabel = $budgetYear->label();
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 	<h1 class="h2">Cost Centres</h1>
 
 	<div class="btn-toolbar mb-2 mb-md-0">
+		<div class="dropdown me-2">
+			<button
+				class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1"
+				type="button"
+				id="costCentreBudgetYearDropdown"
+				data-bs-toggle="dropdown"
+				aria-expanded="false"
+			>
+				<i class="bi bi-calendar3" aria-hidden="true"></i>
+				<?= htmlspecialchars($currentLabel) ?>
+			</button>
+
+			<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="costCentreBudgetYearDropdown">
+				<?php foreach ($yearOptions as $opt): ?>
+					<li>
+						<form method="post" class="dropdown-item p-0">
+							<input type="hidden" name="page" value="cost_centres">
+							<input type="hidden" name="year" value="<?= $opt['year'] ?>">
+							<button type="submit" class="btn btn-link w-100 text-start px-3 py-1">
+								<?= htmlspecialchars($opt['label']) ?>
+							</button>
+						</form>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+
 		<div class="btn-group me-2">
-			<a href="index.php?page=cost_centre_addedit&action=add" class="btn btn-sm btn-outline-secondary">
+			<a href="index.php?page=cost_centre_addedit&action=add&year=<?= $selectedYear ?>" class="btn btn-sm btn-outline-secondary">
 				<i class="bi bi-plus-circle" aria-hidden="true"></i> New
 			</a>
 		</div>
 	</div>
 </div>
 
-<?php if ($status === 'created'): ?>
+<p class="text-muted">
+	Manage cost centre details and this year&apos;s budget allocation from one place.
+</p>
+
+<?php if ($status === 'cost_centre_created'): ?>
 	<div class="alert alert-success" role="alert">Cost centre created.</div>
-<?php elseif ($status === 'updated'): ?>
+<?php elseif ($status === 'cost_centre_updated'): ?>
 	<div class="alert alert-success" role="alert">Cost centre updated.</div>
-<?php elseif ($status === 'deleted'): ?>
+<?php elseif ($status === 'cost_centre_deleted'): ?>
 	<div class="alert alert-success" role="alert">Cost centre deleted.</div>
+<?php elseif ($status === 'budget_created'): ?>
+	<div class="alert alert-success" role="alert">Budget created.</div>
+<?php elseif ($status === 'budget_updated'): ?>
+	<div class="alert alert-success" role="alert">Budget updated.</div>
+<?php elseif ($status === 'budget_deleted'): ?>
+	<div class="alert alert-success" role="alert">Budget deleted.</div>
 <?php elseif ($status === 'error'): ?>
-	<div class="alert alert-danger" role="alert">There was a problem saving that cost centre.</div>
+	<div class="alert alert-danger" role="alert">There was a problem saving that change.</div>
 <?php endif; ?>
 
 <table class="table table-striped">
@@ -35,27 +116,72 @@ $status = $_GET['status'] ?? null;
 			<th>Code</th>
 			<th>Name</th>
 			<th>Description</th>
+			<th class="numeric">Budget (£)</th>
+			<th class="numeric">YTD Budget (£)</th>
+			<th class="numeric">YTD Spend (£)</th>
 			<th class="text-end">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php foreach ($costCentres as $cc): ?>
+			<?php
+			$ytdBudget = $cc->budgetValue * $elapsedRatio;
+			$ytdSpend = $ytdSpendByCostCentre[$cc->id] ?? 0.0;
+			$costCentreUrl = 'index.php?page=cost_centre&id=' . $cc->id . '&year=' . $selectedYear;
+			?>
 			<tr>
-				<td><?= htmlspecialchars($cc->code) ?></td>
-				<td><?= htmlspecialchars($cc->name) ?></td>
+				<td><a href="<?= htmlspecialchars($costCentreUrl) ?>"><?= htmlspecialchars($cc->code) ?></a></td>
+				<td><a href="<?= htmlspecialchars($costCentreUrl) ?>"><?= htmlspecialchars($cc->name) ?></a></td>
 				<td><?= htmlspecialchars($cc->description ?? '') ?></td>
+				<td class="numeric"><?= number_format($cc->budgetValue, 2) ?></td>
+				<td class="numeric"><?= number_format($ytdBudget, 2) ?></td>
+				<td class="numeric"><?= number_format($ytdSpend, 2) ?></td>
 				<td class="text-end">
-					<div class="d-inline-flex gap-2">
-						<a href="index.php?page=cost_centre_addedit&action=edit&id=<?= $cc->id ?>" class="btn btn-sm btn-outline-secondary">
-							<i class="bi bi-pencil" aria-hidden="true"></i> Edit
-						</a>
-						<form method="post" action="actions/cost_centre.php" onsubmit="return confirm('Delete this cost centre and all of its yearly budgets?');">
-							<input type="hidden" name="action" value="delete">
-							<input type="hidden" name="id" value="<?= $cc->id ?>">
-							<button type="submit" class="btn btn-sm btn-outline-danger">
-								<i class="bi bi-trash" aria-hidden="true"></i> Delete
-							</button>
-						</form>
+					<div class="dropdown">
+						<button
+							class="btn btn-sm btn-outline-secondary dropdown-toggle"
+							type="button"
+							data-bs-toggle="dropdown"
+							aria-expanded="false"
+						>
+							Actions
+						</button>
+						<ul class="dropdown-menu dropdown-menu-end">
+							<li>
+								<a href="index.php?page=budget_addedit&action=edit&id=<?= $cc->id ?>&year=<?= $selectedYear ?>" class="dropdown-item">
+									<i class="bi <?= $cc->hasBudget ? 'bi-cash-stack' : 'bi-plus-circle' ?>" aria-hidden="true"></i>
+									<?= $cc->hasBudget ? 'Edit Budget' : 'Add Budget' ?>
+								</a>
+							</li>
+							<?php if ($cc->hasBudget): ?>
+								<li>
+									<form method="post" action="actions/budget.php" onsubmit="return confirm('Delete this budget for <?= htmlspecialchars($budgetYear->label(), ENT_QUOTES) ?>?');">
+										<input type="hidden" name="action" value="delete">
+										<input type="hidden" name="cost_centre_id" value="<?= $cc->id ?>">
+										<input type="hidden" name="year" value="<?= $selectedYear ?>">
+										<button type="submit" class="dropdown-item text-danger">
+											<i class="bi bi-trash" aria-hidden="true"></i> Delete Budget
+										</button>
+									</form>
+								</li>
+							<?php endif; ?>
+							<li><hr class="dropdown-divider"></li>
+							<li>
+								<a href="index.php?page=cost_centre_addedit&action=edit&id=<?= $cc->id ?>&year=<?= $selectedYear ?>" class="dropdown-item">
+									<i class="bi bi-pencil" aria-hidden="true"></i> Edit Details
+								</a>
+							</li>
+							<li>
+								<form method="post" action="actions/cost_centre.php" onsubmit="return confirm('Delete this cost centre and all of its yearly budgets?');">
+									<input type="hidden" name="action" value="delete">
+									<input type="hidden" name="id" value="<?= $cc->id ?>">
+									<input type="hidden" name="year" value="<?= $selectedYear ?>">
+									<button type="submit" class="dropdown-item text-danger">
+										<i class="bi bi-trash" aria-hidden="true"></i> Delete Cost Centre
+									</button>
+								</form>
+							</li>
+						</ul>
 					</div>
 				</td>
 			</tr>

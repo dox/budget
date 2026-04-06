@@ -9,6 +9,8 @@ if (!$user->isLoggedIn()) {
 }
 
 $action = $_POST['action'] ?? '';
+$year = filter_input(INPUT_POST, 'year', FILTER_VALIDATE_INT);
+$year = $year !== false && $year !== null ? $year : BudgetYear::current()->year;
 $status = 'error';
 
 try {
@@ -18,7 +20,7 @@ try {
 			'name' => $_POST['name'] ?? '',
 			'description' => $_POST['description'] ?? null,
 		]);
-		$status = $created ? 'created' : 'error';
+		$status = $created ? 'cost_centre_created' : 'error';
 	} elseif ($action === 'update') {
 		$id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 		if ($id === false || $id === null) {
@@ -30,7 +32,7 @@ try {
 			'name' => $_POST['name'] ?? '',
 			'description' => $_POST['description'] ?? null,
 		]);
-		$status = $updated ? 'updated' : 'error';
+		$status = $updated ? 'cost_centre_updated' : 'error';
 	} elseif ($action === 'delete') {
 		$id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 		if ($id === false || $id === null) {
@@ -38,11 +40,11 @@ try {
 		}
 
 		$deleted = CostCentre::deleteById($id);
-		$status = $deleted ? 'deleted' : 'error';
+		$status = $deleted ? 'cost_centre_deleted' : 'error';
 	}
 } catch (Throwable $e) {
 	$status = 'error';
 }
 
-header('Location: ../index.php?page=cost_centres&status=' . urlencode($status));
+header('Location: ../index.php?page=cost_centres&year=' . urlencode((string) $year) . '&status=' . urlencode($status));
 exit;

@@ -45,12 +45,13 @@ if ($action === 'edit') {
 	</div>
 
 	<input type="hidden" name="action" value="<?= $action === 'add' ? 'create' : 'update' ?>">
+	<input type="hidden" name="year" value="<?= $budgetYear->year ?>">
 	<?php if ($costCentre): ?>
 		<input type="hidden" name="id" value="<?= $costCentre->id ?>">
 	<?php endif; ?>
 
 	<div class="text-end">
 		<button type="submit" class="btn btn-primary"><?= $action === 'add' ? 'Create Cost Centre' : 'Save Changes' ?></button>
-		<a href="index.php?page=cost_centres" class="btn btn-secondary">Cancel</a>
+		<a href="index.php?page=cost_centres&year=<?= $budgetYear->year ?>" class="btn btn-secondary">Cancel</a>
 	</div>
 </form>

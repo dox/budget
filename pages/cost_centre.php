@@ -13,7 +13,7 @@ $orders = (new Orders())->forCostCentre($budgetYear, $costCentre);
 	<h1 class="h2"><?= htmlspecialchars($costCentre->code) ?> <?= htmlspecialchars($costCentre->name) ?></h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
 		<div class="btn-group me-2">
-			<a href="index.php?page=budget&year=<?= $budgetYear->year ?>" class="btn btn-sm btn-outline-secondary">Back to Budget</a>
+			<a href="index.php?page=cost_centres&year=<?= $budgetYear->year ?>" class="btn btn-sm btn-outline-secondary">Back to Cost Centres</a>
 			<a href="index.php?page=orders&year=<?= $budgetYear->year ?>" class="btn btn-sm btn-outline-secondary">All Orders</a>
 		</div>
 	</div>

@@ -35,7 +35,7 @@ class BudgetYear {
 		return new self(self::current()->year + $years);
 	}
 
-	public static function dropdownOptions(int $yearsBack = 4, int $yearsForward = 0): array {
+	public static function dropdownOptions(int $yearsBack = 4, int $yearsForward = 1): array {
 		$currentYear = self::current()->year;
 		$options = [];
 

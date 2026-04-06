@@ -19,12 +19,6 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=budget">
-						<i class="bi bi-receipt" aria-hidden="true"></i>
-						Budget
-					</a>
-				</li>
-				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=cost_centres">
 						<i class="bi bi-tags" aria-hidden="true"></i>
 						Cost Centres

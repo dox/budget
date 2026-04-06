@@ -28,14 +28,14 @@ try {
 
 		$costCentre = new CostCentre($costCentreId, $budgetYear);
 		$saved = CostCentre::saveBudget($costCentreId, $budgetYear, (float) $budgetValue);
-		$status = $saved ? ($costCentre->hasBudget ? 'updated' : 'created') : 'error';
+		$status = $saved ? ($costCentre->hasBudget ? 'budget_updated' : 'budget_created') : 'error';
 	} elseif ($action === 'delete') {
 		$deleted = CostCentre::deleteBudget($costCentreId, $budgetYear);
-		$status = $deleted ? 'deleted' : 'error';
+		$status = $deleted ? 'budget_deleted' : 'error';
 	}
 } catch (Throwable $e) {
 	$status = 'error';
 }
 
-header('Location: ../index.php?page=budget&year=' . urlencode((string) $budgetYear->year) . '&status=' . urlencode($status));
+header('Location: ../index.php?page=cost_centres&year=' . urlencode((string) $budgetYear->year) . '&status=' . urlencode($status));
 exit;
