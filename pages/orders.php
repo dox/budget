@@ -115,7 +115,7 @@ foreach ($costCentreLabelsById as $costCentreId => $costCentreLabel) {
 	<div class="alert alert-danger" role="alert">Unable to complete that order action.</div>
 <?php endif; ?>
 
-<div>
+<div class="w-100 mb-4" style="height: 320px;">
   <canvas id="myChart"></canvas>
 </div>
 
@@ -127,6 +127,7 @@ foreach ($costCentreLabelsById as $costCentreId => $costCentreLabel) {
 			<tr>
 				<th scope="col">Date</th>
 				<th scope="col">Cost Centre</th>
+				<th scope="col">Supplier</th>
 				<th scope="col">Name</th>
 				<th scope="col">Value</th>
 				<th scope="col"></th>
@@ -141,11 +142,13 @@ foreach ($costCentreLabelsById as $costCentreId => $costCentreLabel) {
 					? "index.php?page=cost_centre&id=" . $linkedCostCentre->id . "&year=" . $orderBudgetYear->year
 					: '#';
 				$costCentreLabel = $linkedCostCentre ? $linkedCostCentre->code : (string) $order->cost_centre;
+				$supplierLabel = trim((string) ($order->supplier ?? '')) !== '' ? (string) $order->supplier : 'Unknown supplier';
 				$orderURL = "index.php?page=order&id=" . $order->id;
 				
 				$output  = "<tr>";
 				$output .= "<td>" . date("Y-m-d H:i", strtotime($order->date_created)) . "</td>";
 				$output .= "<td><a href=\"" . $costCentreURL . "\">" . htmlspecialchars($costCentreLabel) . "</a></td>";
+				$output .= "<td>" . htmlspecialchars($supplierLabel) . "</td>";
 				$output .= "<td><a href=\"" . $orderURL . "\"><strong>" . $order->name() . "</a></td>";
 				$output .= "<td>" . formatMoney($order->value) . "</td>";
 				$output .= "<td>
@@ -184,6 +187,7 @@ const config = {
 	  }
 	},
 	responsive: true,
+	maintainAspectRatio: false,
 	scales: {
 	  x: {
 		stacked: true

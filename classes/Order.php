@@ -101,6 +101,9 @@ class Order extends Model {
 	public static function nextPoReferencePreview(): ?string
 	{
 		$db = Database::getInstance();
+
+		// Prefer the database's own auto-increment value so the preview matches the
+		// real order number as closely as possible.
 		$row = $db->fetch(
 			"SELECT auto_increment
 			FROM information_schema.tables
@@ -113,7 +116,21 @@ class Order extends Model {
 			]
 		);
 
-		$nextId = (int) ($row['auto_increment'] ?? 0);
+		$nextId = (int) (
+			$row['auto_increment']
+			?? $row['AUTO_INCREMENT']
+			?? 0
+		);
+
+		if ($nextId <= 0) {
+			// Fall back to the highest stored ID when schema metadata is unavailable.
+			$row = $db->fetch(
+				"SELECT COALESCE(MAX(id), 0) + 1 AS next_id
+				FROM " . static::$table
+			);
+
+			$nextId = (int) ($row['next_id'] ?? $row['NEXT_ID'] ?? 0);
+		}
 
 		return $nextId > 0 ? self::generatePoReference($nextId) : null;
 	}

@@ -29,7 +29,12 @@ $actionLabel = match ($action) {
 };
 
 $formAction = $action === 'edit' ? 'order_update' : 'order_insert';
-$formBudgetYear = $isExistingOrder ? $order->budgetYear() : BudgetYear::current();
+$formDateCreated = $action === 'clone'
+	? null
+	: ($order->date_created ?? null);
+$formBudgetYear = $action === 'clone'
+	? BudgetYear::current()
+	: ($isExistingOrder ? $order->budgetYear() : BudgetYear::current());
 $availableCostCentres = CostCentre::withBudget($formBudgetYear);
 $budgetOptionsByYear = CostCentre::budgetOptionsByYear();
 $selectedCostCentre = (int) ($order->cost_centre ?? 0);
@@ -45,7 +50,7 @@ $formTitleSuffix = $action === 'add'
 	: ($action === 'clone' ? '' : ' #' . $order->id);
 $items = $order->items();
 $existingAttachments = $action === 'edit' ? $order->attachments() : [];
-$poPreview = $action === 'add'
+$poPreview = in_array($action, ['add', 'clone'], true)
 	? (Order::nextPoReferencePreview() ?? 'Generated on save')
 	: ((isset($order->po) && trim((string) $order->po) !== '') ? (string) $order->po : 'Generated on save');
 
@@ -74,7 +79,7 @@ if ($items === []) {
 						class="form-control"
 						id="date_created"
 						name="date_created"
-						value="<?= htmlspecialchars(Order::formatDateTimeLocal($order->date_created ?? null)) ?>"
+						value="<?= htmlspecialchars(Order::formatDateTimeLocal($formDateCreated)) ?>"
 						required
 					>
 				</div>
@@ -96,7 +101,7 @@ if ($items === []) {
 				<div class="col-md-6">
 					<label class="form-label">PO Reference</label>
 					<input type="text" class="form-control" value="<?= htmlspecialchars($poPreview) ?>" readonly>
-					<div class="form-text">Assigned automatically when the order is saved.</div>
+					<div class="form-text">Preview of the next PO reference. It is assigned automatically when the order is saved.</div>
 				</div>
 				<div class="col-md-6">
 					<label for="supplier" class="form-label">Supplier</label>

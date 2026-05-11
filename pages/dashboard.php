@@ -183,7 +183,7 @@ $pieChartData = [
 					<table class="table table-striped mt-3">
 						<thead>
 							<tr>
-								<th>Order ID</th>
+								<th>Supplier</th>
 								<th>Description</th>
 								<th>Amount</th>
 							</tr>
@@ -191,7 +191,7 @@ $pieChartData = [
 						<tbody>
 							<?php foreach ($recentOrders as $order): ?>
 								<tr>
-									<td><?= htmlspecialchars($order->order_num ?: ('#' . $order->id)) ?></td>
+									<td><?= htmlspecialchars(trim((string) ($order->supplier ?? '')) !== '' ? (string) $order->supplier : 'Unknown supplier') ?></td>
 									<td><a href="index.php?page=order&id=<?= $order->id ?>"><?= strip_tags($order->name()) ?></a></td>
 									<td><?= htmlspecialchars(formatMoney((float) $order->value)) ?></td>
 								</tr>

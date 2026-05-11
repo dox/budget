@@ -12,12 +12,19 @@
 						Dashboard
 					</a>
 				</li>
+				<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+					<span>Orders</span>
+					<a class="link-secondary" href="index.php?page=order_addedit&action=add" aria-label="Add a new order">
+						<i class="bi bi-plus-circle" aria-hidden="true"></i>
+					</a>
+				</h6>
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=orders">
 						<i class="bi bi-file-earmark" aria-hidden="true"></i>
-						Orders
+						This Year's Orders
 					</a>
 				</li>
+				<hr class="my-3">
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=cost_centres">
 						<i class="bi bi-tags" aria-hidden="true"></i>
@@ -37,7 +44,7 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link d-flex align-items-center gap-2" href="integrations">
+					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=integrations">
 						<i class="bi bi-puzzle" aria-hidden="true"></i>
 						Integrations
 					</a>
@@ -95,6 +102,7 @@
 						Logs
 					</a>
 				</li>
+				<hr class="my-3">
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="logout.php">
 						<i class="bi bi-door-closed" aria-hidden="true"></i>
