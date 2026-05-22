@@ -24,6 +24,31 @@
 						This Year's Orders
 					</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=orders&year=<?= BudgetYear::yearsAgo(1)->year ?>">
+						<i class="bi bi-file-earmark" aria-hidden="true"></i>
+						Last Year's Orders
+					</a>
+				</li>
+				<br>
+				<form method="get" action="index.php" class="px-3 pb-3">
+					<input type="hidden" name="page" value="order_search">
+					<div class="input-group input-group-sm">
+						<input
+							type="search"
+							class="form-control"
+							id="order_search_sidebar"
+							name="q"
+							value="<?= htmlspecialchars((string) ($_GET['q'] ?? '')) ?>"
+							placeholder="PO, supplier, item..."
+							aria-label="Search all orders"
+						>
+						<button class="btn btn-outline-secondary" type="submit" aria-label="Search orders">
+							<i class="bi bi-search" aria-hidden="true"></i>
+						</button>
+					</div>
+				</form>
+				
 				<hr class="my-3">
 				<li class="nav-item">
 					<a class="nav-link d-flex align-items-center gap-2" href="index.php?page=cost_centres">

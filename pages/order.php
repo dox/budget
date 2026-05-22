@@ -11,6 +11,7 @@ if (isset($_GET['id']) && ctype_digit($_GET['id'])) {
 	$attachmentStatus = $_GET['attachment_status'] ?? null;
 	$items = json_decode((string) $order->items, true);
 	$items = is_array($items) ? $items : [];
+	$poReference = $order->poReference();
 } else {
 	// Handle invalid or missing ID
 	die('Invalid order ID.');
@@ -18,7 +19,7 @@ if (isset($_GET['id']) && ctype_digit($_GET['id'])) {
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-	<h1 class="h2">Purchase Order <?php echo "#" . $order->id; ?></h1>
+	<h1 class="h2">Purchase Order <?= htmlspecialchars($poReference) ?></h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
 		<div class="btn-group me-2">
 			<a href="index.php?page=order_addedit&action=edit&id=<?php echo $order->id; ?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil" aria-hidden="true"></i> Edit</a>

@@ -89,6 +89,18 @@ class Order extends Model {
 		return "<strong>{$po}</strong> {$name}";
 	}
 
+	public function poReference(): string
+	{
+		$po = trim((string) ($this->po ?? ''));
+		if ($po !== '') {
+			return $po;
+		}
+
+		$orderId = (int) ($this->id ?? 0);
+
+		return $orderId > 0 ? self::generatePoReference($orderId) : 'No PO';
+	}
+
 	public static function generatePoReference(int $orderId): string
 	{
 		if ($orderId <= 0) {

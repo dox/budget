@@ -32,6 +32,34 @@ class Orders {
 		return $this->allForBudgetYear(BudgetYear::current());
 	}
 
+	public function search(string $query, int $limit = 100): array {
+		$query = trim($query);
+
+		if ($query === '') {
+			return [];
+		}
+
+		$limit = max(1, min($limit, 250));
+		$likeQuery = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $query) . '%';
+
+		$sql = "SELECT * FROM " . static::$table . "
+			WHERE CAST(id AS CHAR) LIKE ? ESCAPE '\\\\'
+			   OR CAST(value AS CHAR) LIKE ? ESCAPE '\\\\'
+			   OR DATE_FORMAT(date_created, '%Y-%m-%d') LIKE ? ESCAPE '\\\\'
+			   OR po LIKE ? ESCAPE '\\\\'
+			   OR order_num LIKE ? ESCAPE '\\\\'
+			   OR name LIKE ? ESCAPE '\\\\'
+			   OR supplier LIKE ? ESCAPE '\\\\'
+			   OR notes LIKE ? ESCAPE '\\\\'
+			   OR items LIKE ? ESCAPE '\\\\'
+			ORDER BY date_created DESC
+			LIMIT {$limit}";
+
+		$rows = $this->db->fetchAll($sql, array_fill(0, 9, $likeQuery));
+
+		return array_map(fn($row) => new Order($row['id']), $rows);
+	}
+
 	public function forCostCentre(BudgetYear $budgetYear, CostCentre $costCentre): array
 	{
 		return array_values(array_filter(

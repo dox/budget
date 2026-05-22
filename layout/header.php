@@ -15,7 +15,8 @@
 			</button>
 		</li>
 	</ul>
-	<div id="navbarSearch" class="navbar-search w-100 collapse">
-		<input class="form-control w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
-	</div>
+	<form id="navbarSearch" class="navbar-search w-100 collapse" method="get" action="index.php">
+		<input type="hidden" name="page" value="order_search">
+		<input class="form-control w-100 rounded-0 border-0" type="search" name="q" value="<?= htmlspecialchars((string) ($_GET['q'] ?? '')) ?>" placeholder="Search orders" aria-label="Search all orders">
+	</form>
 </header>
