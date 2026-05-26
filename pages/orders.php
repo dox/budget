@@ -1,12 +1,14 @@
 <?php
-$currentBudgetYear = BudgetYear::current();
 $budgetYear = BudgetYear::fromRequest();
 $selectedYear = $budgetYear->year;
 $status = $_GET['status'] ?? null;
+$query = trim((string) ($_GET['q'] ?? ''));
+$isLegacySearchPage = ($_GET['page'] ?? '') === 'order_search';
+$isSearch = $query !== '' || $isLegacySearchPage;
 
 $orders = new Orders();
-$ordersAll = $orders->allForBudgetYear($budgetYear);
-$chartOrders = $orders->all();
+$ordersAll = $isSearch ? ($query !== '' ? $orders->search($query) : []) : $orders->allForBudgetYear($budgetYear);
+$chartOrders = $isSearch ? [] : $orders->all();
 
 $yearOptions = BudgetYear::dropdownOptions();
 $currentLabel = (new BudgetYear($selectedYear))->label();
@@ -84,28 +86,30 @@ foreach ($costCentreLabelsById as $costCentreId => $costCentreLabel) {
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-	<h1 class="h2">Orders</h1>
+	<h1 class="h2"><?= $isSearch ? 'Order Search' : 'Orders' ?></h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
 		<div class="btn-group me-2">
 			<a href="index.php?page=order_addedit&action=add" class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus-circle" aria-hidden="true"></i> New</a>
 		</div>
-		<div class="dropdown">
-			<button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-				<i class="bi bi-calendar3" aria-hidden="true"></i> <?= htmlspecialchars($currentLabel) ?>
-			</button>
-			<ul class="dropdown-menu dropdown-menu-end">
-				<?php foreach ($yearOptions as $option): ?>
-					<li>
-						<form method="post" class="dropdown-item p-0">
-							<input type="hidden" name="year" value="<?= $option['year'] ?>">
-							<button type="submit" class="btn btn-link w-100 text-start px-3 py-1">
-								<?= htmlspecialchars($option['label']) ?>
-							</button>
-						</form>
-					</li>
-				<?php endforeach; ?>
-			</ul>
-		</div>
+		<?php if (!$isSearch): ?>
+			<div class="dropdown">
+				<button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<i class="bi bi-calendar3" aria-hidden="true"></i> <?= htmlspecialchars($currentLabel) ?>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end">
+					<?php foreach ($yearOptions as $option): ?>
+						<li>
+							<form method="post" class="dropdown-item p-0">
+								<input type="hidden" name="year" value="<?= $option['year'] ?>">
+								<button type="submit" class="btn btn-link w-100 text-start px-3 py-1">
+									<?= htmlspecialchars($option['label']) ?>
+								</button>
+							</form>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		<?php endif; ?>
 	</div>
 </div>
 
@@ -115,14 +119,53 @@ foreach ($costCentreLabelsById as $costCentreId => $costCentreLabel) {
 	<div class="alert alert-danger" role="alert">Unable to complete that order action.</div>
 <?php endif; ?>
 
-<div class="w-100 mb-4" style="height: 320px;">
-  <canvas id="myChart"></canvas>
-</div>
+<form method="get" action="index.php" class="mb-4">
+	<input type="hidden" name="page" value="orders">
+	<label for="order_search_page" class="form-label">Search all orders</label>
+	<div class="input-group">
+		<input
+			type="search"
+			class="form-control"
+			id="order_search_page"
+			name="q"
+			value="<?= htmlspecialchars($query) ?>"
+			placeholder="PO, supplier, item, notes, value..."
+			aria-label="Search all orders"
+		>
+		<button class="btn btn-outline-secondary" type="submit">
+			<i class="bi bi-search" aria-hidden="true"></i>
+			<span class="visually-hidden">Search</span>
+		</button>
+		<?php if ($isSearch): ?>
+			<a href="index.php?page=orders" class="btn btn-outline-secondary">Clear</a>
+		<?php endif; ?>
+	</div>
+</form>
 
-<h2>Orders (<?= htmlspecialchars((string) $budgetYear) ?>)</h2>
+<?php if (!$isSearch): ?>
+	<div class="w-100 mb-4" style="height: 320px;">
+	  <canvas id="myChart"></canvas>
+	</div>
+<?php endif; ?>
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+	<h2 class="<?= $isSearch ? 'h5' : '' ?> mb-0">
+		<?php if ($isSearch): ?>
+			<?= $query !== '' ? 'Results for &ldquo;' . htmlspecialchars($query) . '&rdquo;' : 'Search all orders' ?>
+		<?php else: ?>
+			Orders (<?= htmlspecialchars((string) $budgetYear) ?>)
+		<?php endif; ?>
+	</h2>
+	<?php if ($isSearch && $query !== ''): ?>
+		<span class="badge text-bg-secondary"><?= count($ordersAll) ?> found</span>
+	<?php endif; ?>
+</div>
+<?php if ($isSearch && $query === ''): ?>
+	<div class="alert alert-info" role="alert">Enter a search term to find orders across every budget year.</div>
+<?php else: ?>
 <div class="table-responsive small">
 	
-	<table class="table table-striped table-sm">
+	<table class="table table-striped table-sm align-middle">
 		<thead>
 			<tr>
 				<th scope="col">Date</th>
@@ -134,8 +177,8 @@ foreach ($costCentreLabelsById as $costCentreId => $costCentreLabel) {
 			</tr>
 		</thead>
 		<tbody>
-			<?php
-			foreach ($ordersAll AS $order) {
+			<?php foreach ($ordersAll AS $order): ?>
+				<?php
 				$orderBudgetYear = BudgetYear::fromDate($order->date_created);
 				$linkedCostCentre = $order->costCentreModel();
 				$costCentreURL = $linkedCostCentre
@@ -144,29 +187,39 @@ foreach ($costCentreLabelsById as $costCentreId => $costCentreLabel) {
 				$costCentreLabel = $linkedCostCentre ? $linkedCostCentre->code : (string) $order->cost_centre;
 				$supplierLabel = trim((string) ($order->supplier ?? '')) !== '' ? (string) $order->supplier : 'Unknown supplier';
 				$orderURL = "index.php?page=order&id=" . $order->id;
-				
-				$output  = "<tr>";
-				$output .= "<td>" . date("Y-m-d H:i", strtotime($order->date_created)) . "</td>";
-				$output .= "<td><a href=\"" . $costCentreURL . "\">" . htmlspecialchars($costCentreLabel) . "</a></td>";
-				$output .= "<td>" . htmlspecialchars($supplierLabel) . "</td>";
-				$output .= "<td><a href=\"" . $orderURL . "\"><strong>" . $order->name() . "</a></td>";
-				$output .= "<td>" . formatMoney($order->value) . "</td>";
-				$output .= "<td>
-					<div class=\"action-icons\">
-						<a href=\"index.php?page=order_addedit&action=edit&id=" . $order->id . "\"><i class=\"bi bi-pencil\"></i></a>
-						<a href=\"index.php?page=order_addedit&action=clone&id=" . $order->id . "\"><i class=\"bi bi-copy\"></i></a>
-					</div>
-				</td>";
-				$output .= "";
-				$output .= "</tr>";
-				
-				echo $output;
-			}
-			?>
+				?>
+				<tr>
+					<td><?= htmlspecialchars(date("Y-m-d H:i", strtotime($order->date_created))) ?></td>
+					<td><a href="<?= htmlspecialchars($costCentreURL) ?>"><?= htmlspecialchars($costCentreLabel) ?></a></td>
+					<td><?= htmlspecialchars($supplierLabel) ?></td>
+					<td>
+						<a href="<?= htmlspecialchars($orderURL) ?>">
+							<?= $order->name() ?>
+						</a>
+					</td>
+					<td><?= htmlspecialchars(formatMoney((float) $order->value)) ?></td>
+					<td>
+						<div class="action-icons">
+							<a href="index.php?page=order_addedit&action=edit&id=<?= (int) $order->id ?>"><i class="bi bi-pencil"></i></a>
+							<a href="index.php?page=order_addedit&action=clone&id=<?= (int) $order->id ?>"><i class="bi bi-copy"></i></a>
+						</div>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+
+			<?php if ($ordersAll === []): ?>
+				<tr>
+					<td colspan="6" class="text-muted">
+						<?= $isSearch ? 'No orders found across any budget year.' : 'No orders for this budget year.' ?>
+					</td>
+				</tr>
+			<?php endif; ?>
 		</tbody>
 	</table>
 </div>
+<?php endif; ?>
 
+<?php if (!$isSearch): ?>
 <script>
 const spendChartLabels = <?= json_encode($chartMonthLabels, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
 const spendChartDatasets = <?= json_encode($stackedSpendDatasets, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
@@ -209,3 +262,4 @@ new Chart(
   config
 );
 </script>
+<?php endif; ?>

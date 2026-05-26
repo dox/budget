@@ -22,6 +22,9 @@ if (!$user->isLoggedIn()) {
 				<?php
 				// Determine which page to show
 				$page = $_GET['page'] ?? 'dashboard';
+				if ($page === 'order_search') {
+					$page = 'orders';
+				}
 				$pageFile = "pages/{$page}.php";
 				if (!file_exists($pageFile)) $pageFile = 'pages/404.php';
 				

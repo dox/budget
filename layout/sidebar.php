@@ -32,7 +32,7 @@
 				</li>
 				<br>
 				<form method="get" action="index.php" class="px-3 pb-3">
-					<input type="hidden" name="page" value="order_search">
+					<input type="hidden" name="page" value="orders">
 					<div class="input-group input-group-sm">
 						<input
 							type="search"
