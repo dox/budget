@@ -236,8 +236,8 @@ if ($items === []) {
 
 			<div>
 				<label for="attachments" class="form-label">Add Files</label>
-				<input type="file" class="form-control" id="attachments" name="attachments[]" multiple>
-				<div class="form-text">Attach PDFs or any other supporting files when creating or editing this order.</div>
+				<input type="file" class="form-control" id="attachments" name="attachments[]" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,application/pdf,image/jpeg,image/png,image/gif,image/webp" multiple>
+				<div class="form-text">Allowed file types: PDF, JPG, JPEG, PNG, GIF, and WEBP.</div>
 			</div>
 		</div>
 	</div>

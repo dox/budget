@@ -2,6 +2,13 @@
 declare(strict_types=1);
 require_once '../inc/autoload.php';
 
+if (!$user->isLoggedIn()) {
+	http_response_code(403);
+	header('Content-Type: application/json');
+	echo json_encode(['success' => false, 'error' => 'Forbidden']);
+	exit;
+}
+
 $response = ['success' => false];
 $log = $log ?? new Log();
 
@@ -10,6 +17,13 @@ $log->add("Action received: $action", Log::INFO);
 
 switch ($action) {
 	case 'order_insert':
+		try {
+			validateOrderAttachmentUploads(normaliseUploadedFilesArray($_FILES['attachments'] ?? null));
+		} catch (Throwable $e) {
+			$response['error'] = $e->getMessage();
+			break;
+		}
+
 		$data = buildOrderPayload();
 		$order = new Order();
 		$createdId = $order->insert($data);
@@ -134,6 +148,7 @@ function processOrderAttachments(int $orderId, array $existingAttachments): arra
 	$attachmentsToDelete = is_array($attachmentsToDelete) ? $attachmentsToDelete : [$attachmentsToDelete];
 	$attachmentsToDelete = array_values(array_filter(array_map('strval', $attachmentsToDelete)));
 	$uploadedAttachments = normaliseUploadedFilesArray($_FILES['attachments'] ?? null);
+	$validatedUploads = array_map('validateOrderAttachmentUpload', $uploadedAttachments);
 
 	if (!Order::hasAttachmentsColumn()) {
 		if ($attachmentsToDelete !== [] || hasUploadedAttachments($uploadedAttachments)) {
@@ -168,25 +183,17 @@ function processOrderAttachments(int $orderId, array $existingAttachments): arra
 
 	$targetDirectory = Order::ensureAttachmentDirectory($orderId);
 
-	foreach ($uploadedAttachments as $uploadedFile) {
-		$errorCode = (int) ($uploadedFile['error'] ?? UPLOAD_ERR_NO_FILE);
-		if ($errorCode === UPLOAD_ERR_NO_FILE) {
+	foreach ($uploadedAttachments as $index => $uploadedFile) {
+		$validatedFile = $validatedUploads[$index];
+		if ($validatedFile === null) {
 			continue;
 		}
 
-		if ($errorCode !== UPLOAD_ERR_OK) {
-			throw new RuntimeException(uploadErrorMessage($errorCode));
-		}
-
 		$tmpName = (string) ($uploadedFile['tmp_name'] ?? '');
-		if ($tmpName === '' || !is_uploaded_file($tmpName)) {
-			throw new RuntimeException('Uploaded attachment could not be validated.');
-		}
-
-		$originalName = Order::sanitiseAttachmentName((string) ($uploadedFile['name'] ?? 'attachment'));
-		$extension = pathinfo($originalName, PATHINFO_EXTENSION);
+		$originalName = $validatedFile['name'];
+		$extension = $validatedFile['extension'];
 		$token = Order::attachmentToken();
-		$storedName = $token . ($extension !== '' ? '.' . strtolower($extension) : '');
+		$storedName = $token . '.' . $extension;
 		$destination = $targetDirectory . DIRECTORY_SEPARATOR . $storedName;
 
 		if (!move_uploaded_file($tmpName, $destination)) {
@@ -198,7 +205,7 @@ function processOrderAttachments(int $orderId, array $existingAttachments): arra
 			'original_name' => $originalName,
 			'stored_name' => $storedName,
 			'path' => Order::relativeAttachmentPath($orderId, $storedName),
-			'mime_type' => Order::detectMimeType($destination),
+			'mime_type' => $validatedFile['mime_type'],
 			'size' => filesize($destination) ?: 0,
 			'uploaded_at' => date('Y-m-d H:i:s'),
 		];
@@ -229,6 +236,54 @@ function normaliseUploadedFilesArray($files): array {
 	}
 
 	return $normalised;
+}
+
+function validateOrderAttachmentUploads(array $uploadedFiles): void {
+	foreach ($uploadedFiles as $uploadedFile) {
+		validateOrderAttachmentUpload($uploadedFile);
+	}
+}
+
+function validateOrderAttachmentUpload(array $uploadedFile): ?array {
+	$errorCode = (int) ($uploadedFile['error'] ?? UPLOAD_ERR_NO_FILE);
+	if ($errorCode === UPLOAD_ERR_NO_FILE) {
+		return null;
+	}
+
+	if ($errorCode !== UPLOAD_ERR_OK) {
+		throw new RuntimeException(uploadErrorMessage($errorCode));
+	}
+
+	$tmpName = (string) ($uploadedFile['tmp_name'] ?? '');
+	if ($tmpName === '' || !is_uploaded_file($tmpName)) {
+		throw new RuntimeException('Uploaded attachment could not be validated.');
+	}
+
+	$originalName = Order::sanitiseAttachmentName((string) ($uploadedFile['name'] ?? 'attachment'));
+	$extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+	$allowedMimeTypes = [
+		'pdf' => ['application/pdf'],
+		'jpg' => ['image/jpeg'],
+		'jpeg' => ['image/jpeg'],
+		'png' => ['image/png'],
+		'gif' => ['image/gif'],
+		'webp' => ['image/webp'],
+	];
+
+	if (!isset($allowedMimeTypes[$extension])) {
+		throw new RuntimeException('Only PDF, JPG, JPEG, PNG, GIF, and WEBP attachments are allowed.');
+	}
+
+	$mimeType = Order::detectMimeType($tmpName);
+	if (!in_array($mimeType, $allowedMimeTypes[$extension], true)) {
+		throw new RuntimeException('Attachment content does not match its file type.');
+	}
+
+	return [
+		'name' => $originalName,
+		'extension' => $extension,
+		'mime_type' => $mimeType,
+	];
 }
 
 function uploadErrorMessage(int $errorCode): string {
